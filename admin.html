@@ -1,0 +1,1128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f1f3d">
+<title>Admin – Uganda Smart Learning</title>
+<meta name="description" content="Learning notes, past-paper practice, timed exams and a voice tutor for Ugandan secondary students, S1 to S6.">
+<style>
+/* Uganda Smart Learning — shared styles. System fonts only (low bandwidth). */
+:root{
+  --navy:#0b1f4d; --navy-2:#243a6b; --orange:#2563eb; --orange-d:#1d4ed8; --orange-soft:#eaf1ff; /* 'orange' names kept for code compatibility; the accent is now blue */
+  --bg:#ffffff; --soft:#f5f7fb; --line:#e3e8f0; --muted:#5a6784; --ok:#16794a; --ok-soft:#e6f6ee;
+  --bad:#b42318; --bad-soft:#fdecea; --warn:#8a5a00; --warn-soft:#fff6dd; --info:#1f4fa3; --info-soft:#e8f0fd;
+  --r:20px; --shadow:0 1px 2px rgba(15,31,61,.06),0 6px 18px rgba(15,31,61,.06);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--navy);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+h1,h2,h3,h4{line-height:1.2;margin:0 0 .5em;color:var(--navy)}
+h1{font-size:clamp(1.6rem,4.5vw,2.4rem)} h2{font-size:clamp(1.25rem,3vw,1.6rem)} h3{font-size:1.1rem}
+p{margin:0 0 .9em} a{color:var(--orange-d)} img{max-width:100%}
+.muted{color:var(--muted)} .small{font-size:.875rem} .center{text-align:center} .right{text-align:right}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px;border-radius:6px}
+.skip{position:absolute;left:-999px;top:0;background:var(--navy);color:#fff;padding:.6rem 1rem;z-index:100}
+.skip:focus{left:8px;top:8px}
+.container{width:100%;max-width:1100px;margin:0 auto;padding:0 16px}
+main.container{padding-top:20px;padding-bottom:96px;min-height:70vh}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:40;background:#fff;border-bottom:1px solid var(--line)}
+.topbar .container{display:flex;align-items:center;gap:14px;min-height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--navy);text-decoration:none;white-space:nowrap}
+.logo{width:34px;height:34px;border-radius:10px;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:1rem;position:relative}
+.logo::after{content:"";position:absolute;right:-3px;bottom:-3px;width:12px;height:12px;border-radius:50%;background:var(--orange);border:2px solid #fff}
+.nav{display:flex;gap:4px;margin-left:12px;flex:1}
+.nav a{padding:8px 12px;border-radius:10px;color:var(--navy-2);text-decoration:none;font-weight:600;font-size:.95rem}
+.nav a:hover{background:var(--soft)} .nav a[aria-current=page]{background:var(--orange-soft);color:var(--orange-d)}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font-weight:700;font-size:.85rem;text-decoration:none;border:1px solid var(--line);background:var(--soft);color:var(--navy)}
+.pill.trial{background:var(--warn-soft);border-color:#f3dfa0;color:var(--warn)}
+.pill.paid{background:var(--ok-soft);border-color:#b8e3cc;color:var(--ok)}
+.pill.expired,.pill.ready{background:var(--orange-soft);border-color:#bcd2ff;color:var(--orange-d)}
+.bottomnav{display:none}
+@media (max-width:820px){
+  .nav{display:none}
+  .bottomnav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);z-index:40;padding-bottom:env(safe-area-inset-bottom)}
+  .bottomnav a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;min-height:56px;font-size:.72rem;font-weight:700;color:var(--muted);text-decoration:none}
+  .bottomnav a span{font-size:1.25rem;line-height:1}
+  .bottomnav a[aria-current=page]{color:var(--orange-d)}
+  .brand small{display:none}
+}
+
+/* cards, grid */
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+.card.flat{box-shadow:none} .card.soft{background:var(--soft);box-shadow:none}
+.card.accent{border-color:#bcd2ff;background:linear-gradient(135deg,#eaf1ff,#f6f9ff);box-shadow:none}
+.grid{display:grid;gap:14px} .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+.auto{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+@media (max-width:820px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.g2,.g3,.g4{grid-template-columns:1fr}.g-keep2{grid-template-columns:repeat(2,1fr)!important}}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap} .between{justify-content:space-between}
+.stack>*+*{margin-top:14px} .mt{margin-top:16px} .mt2{margin-top:28px} .mb0{margin-bottom:0}
+.stat{padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.stat b{display:block;font-size:1.6rem;line-height:1.1} .stat span{color:var(--muted);font-size:.85rem}
+
+/* buttons & forms */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 18px;border-radius:12px;border:1px solid var(--navy);background:var(--navy);color:#fff;font:inherit;font-weight:700;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--navy-2)} .btn.orange{background:linear-gradient(135deg,#1d4ed8,#3b82f6);border-color:#1d4ed8} .btn.orange:hover{background:linear-gradient(135deg,#1e40af,#2563eb)}
+.btn.ghost{background:#fff;color:var(--navy);border-color:var(--line)} .btn.ghost:hover{background:var(--soft)}
+.btn.danger{background:var(--bad);border-color:var(--bad)} .btn.sm{min-height:36px;padding:6px 12px;font-size:.875rem;border-radius:10px}
+.btn[disabled]{opacity:.5;cursor:not-allowed} .btn.block{width:100%}
+label{display:block;font-weight:700;font-size:.9rem;margin:0 0 6px}
+input,select,textarea{width:100%;min-height:44px;padding:10px 12px;border:1px solid #c9d2e0;border-radius:12px;background:#fff;color:var(--navy);font:inherit}
+textarea{min-height:110px;resize:vertical} input[type=checkbox],input[type=radio]{width:auto;min-height:0;accent-color:var(--orange)}
+.field{margin-bottom:14px} .check{display:flex;gap:10px;align-items:flex-start;font-weight:500} .check input{margin-top:5px}
+.hint{font-size:.82rem;color:var(--muted);margin-top:4px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;-webkit-overflow-scrolling:touch}
+.tab{white-space:nowrap;min-height:40px;padding:8px 14px;border:1px solid var(--line);background:#fff;border-radius:999px;font:inherit;font-weight:700;color:var(--navy-2);cursor:pointer}
+.tab[aria-selected=true]{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* badges, alerts */
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.75rem;font-weight:800;letter-spacing:.01em;background:var(--soft);color:var(--navy-2);border:1px solid var(--line);vertical-align:middle}
+.badge.ok{background:var(--ok-soft);color:var(--ok);border-color:#b8e3cc} .badge.warn{background:var(--warn-soft);color:var(--warn);border-color:#f3dfa0}
+.badge.bad{background:var(--bad-soft);color:var(--bad);border-color:#f5c2bd} .badge.info{background:var(--info-soft);color:var(--info);border-color:#c6d8f7}
+.badge.orange{background:var(--orange-soft);color:var(--orange-d);border-color:#bcd2ff}
+.alert{padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--soft);font-size:.92rem}
+.alert.warn{background:var(--warn-soft);border-color:#f3dfa0;color:#5f3d00} .alert.bad{background:var(--bad-soft);border-color:#f5c2bd;color:#7a1a12}
+.alert.ok{background:var(--ok-soft);border-color:#b8e3cc;color:#0e5232} .alert.info{background:var(--info-soft);border-color:#c6d8f7;color:#173a78}
+.progress{height:10px;background:var(--soft);border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.progress>i{display:block;height:100%;background:linear-gradient(90deg,#1d4ed8,#38bdf8);border-radius:999px;transition:width .3s}
+.progress.ok>i{background:var(--ok)} .progress.bad>i{background:var(--bad)}
+
+/* hero (welcome) */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:start;padding:24px 0}
+.hero h1 span{color:var(--orange)} .hero .lead{font-size:1.1rem;color:var(--muted);max-width:34em}
+.feature{display:flex;gap:12px} .feature .ico{flex:none;width:44px;height:44px;border-radius:12px;background:var(--orange-soft);display:grid;place-items:center;font-size:1.3rem}
+.feature h3{margin:0 0 2px;font-size:1rem} .feature p{margin:0;color:var(--muted);font-size:.9rem}
+@media (max-width:820px){.hero{grid-template-columns:1fr}}
+
+/* lists & tables */
+.list{list-style:none;margin:0;padding:0} .list li{padding:12px 0;border-bottom:1px solid var(--line)} .list li:last-child{border:0}
+.item{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;font-size:.9rem} th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--soft);font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)} tr:last-child td{border:0}
+.subject-card{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff;cursor:pointer;text-align:left;font:inherit;width:100%}
+.subject-card:hover,.subject-card[aria-pressed=true]{border-color:var(--orange);background:var(--orange-soft)}
+.crumbs{font-size:.85rem;color:var(--muted);margin-bottom:8px}
+.notes h3{margin-top:1.2em} .notes ul{padding-left:1.2em} .notes .box{background:var(--soft);border-left:4px solid var(--orange);padding:10px 14px;border-radius:8px;margin:12px 0}
+
+/* modal & toast */
+.overlay{position:fixed;inset:0;background:rgba(15,31,61,.55);display:grid;place-items:center;z-index:80;padding:16px}
+.modal{background:#fff;border-radius:18px;max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal.wide{max-width:820px}
+#toasts{position:fixed;left:0;right:0;bottom:76px;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:90;pointer-events:none;padding:0 12px}
+.toast{pointer-events:auto;background:var(--navy);color:#fff;padding:12px 16px;border-radius:12px;max-width:520px;font-size:.92rem;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.toast.bad{background:var(--bad)} .toast.ok{background:var(--ok)}
+
+/* tutor chat */
+.chat{display:flex;flex-direction:column;gap:10px;min-height:320px;max-height:56vh;overflow-y:auto;padding:12px;background:var(--soft);border-radius:14px;border:1px solid var(--line)}
+.bubble{max-width:88%;padding:10px 14px;border-radius:16px;font-size:.96rem;white-space:pre-wrap}
+.bubble.me{align-self:flex-end;background:var(--navy);color:#fff;border-bottom-right-radius:4px}
+.bubble.bot{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-left-radius:4px}
+.bubble .src{display:block;margin-top:8px;font-size:.8rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:6px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-height:38px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;font:inherit;font-weight:700;font-size:.88rem;color:var(--navy-2);cursor:pointer}
+.chip:hover{border-color:var(--orange);background:var(--orange-soft)}
+.mic{width:48px;height:48px;border-radius:50%;border:0;background:var(--orange);color:#fff;font-size:1.3rem;cursor:pointer;flex:none}
+.mic.on{background:var(--bad);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 10px rgba(180,35,24,.15)}}
+.speechbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.speechbar select{width:auto;min-height:36px;padding:4px 8px}
+
+/* quiz / exam */
+.opt{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer;background:#fff;font-weight:500}
+.opt:hover{border-color:var(--orange)} .opt.sel{border-color:var(--orange);background:var(--orange-soft)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)} .opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt input{margin-top:5px}
+.examtop{position:sticky;top:60px;z-index:30;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 14px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.2rem} .timer.low{color:var(--bad)}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:6px}
+.qn{min-height:42px;border-radius:10px;border:1px solid var(--line);background:#fff;font:inherit;font-weight:700;cursor:pointer}
+.qn.done{background:var(--orange-soft);border-color:#bcd2ff} .qn.cur{background:var(--navy);color:#fff;border-color:var(--navy)} .qn.flag{outline:2px solid var(--warn)}
+.exam-layout{display:grid;grid-template-columns:1fr 260px;gap:14px;align-items:start}
+@media (max-width:820px){.exam-layout{grid-template-columns:1fr}.examtop{top:60px}}
+.model{background:var(--info-soft);border:1px solid #c6d8f7;border-radius:12px;padding:12px;margin-top:8px}
+.bar{display:grid;grid-template-columns:150px 1fr 60px;gap:10px;align-items:center;margin:8px 0;font-size:.9rem}
+@media (max-width:560px){.bar{grid-template-columns:100px 1fr 48px}}
+.demo-box{border:2px dashed #b9a06a;background:#fffbe9;border-radius:14px;padding:14px}
+.hidden{display:none!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{.topbar,.bottomnav,.btn{display:none!important}}
+
+/* ===== landing page (blue take on the reference design) ===== */
+body.land{background:#e6eeff}
+.land main{padding:14px 14px 40px}
+.sheet{max-width:1180px;margin:0 auto;background:#f8faff;border-radius:30px;box-shadow:0 10px 40px rgba(29,78,216,.15);overflow:hidden;border:1px solid #d5e2ff}
+.l-nav{display:flex;align-items:center;gap:16px;padding:16px 28px}
+.l-nav .links{display:flex;gap:22px;margin-left:24px;flex:1}
+.l-nav .links a{color:var(--navy-2);text-decoration:none;font-weight:600;font-size:.95rem}
+.l-nav .links a:hover{color:var(--orange-d)}
+.l-nav .btns{display:flex;gap:10px;margin-left:auto}
+.btn.pillbtn{border-radius:999px}
+.l-hero{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;padding:34px 28px 44px;align-items:center}
+.l-hero h1{font-size:clamp(2rem,5vw,3.3rem);letter-spacing:-.02em;margin-bottom:14px}
+.l-hero h1 span{background:linear-gradient(90deg,#1d4ed8,#38bdf8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.l-hero .lead{color:var(--muted);font-size:1.08rem;max-width:32em}
+.l-art{position:relative;min-height:340px;display:grid;place-items:center}
+.l-art .blob{width:min(320px,80%);aspect-ratio:1;border-radius:46% 54% 48% 52%/52% 46% 54% 48%;background:linear-gradient(145deg,#1d4ed8,#60a5fa 70%,#a5d8ff);display:grid;place-items:center;font-size:7rem;box-shadow:0 20px 50px rgba(29,78,216,.35)}
+.l-art .fl{position:absolute;background:#fff;border-radius:16px;padding:10px 14px;box-shadow:0 8px 24px rgba(29,78,216,.2);font-weight:700;font-size:.85rem;display:flex;gap:8px;align-items:center}
+.fl.a{left:2%;top:14%}.fl.b{right:0;top:34%}.fl.c{left:8%;bottom:8%}
+.band{background:linear-gradient(135deg,#1d4ed8,#2f6df0 60%,#4f8cf7);color:#fff;padding:18px 28px;display:flex;gap:10px 30px;flex-wrap:wrap;justify-content:center;align-items:center;font-weight:800;font-size:1.05rem}
+.band span{opacity:.95}
+.l-sec{padding:44px 28px}
+.l-sec h2{font-size:clamp(1.5rem,3.5vw,2.1rem);text-align:center}
+.l-sec .sub{text-align:center;color:var(--muted);max-width:40em;margin:0 auto 24px}
+.searchbar{display:flex;gap:10px;max-width:560px;margin:0 auto 22px;background:#fff;border:1px solid #cfdcff;border-radius:999px;padding:6px 6px 6px 18px;box-shadow:var(--shadow)}
+.searchbar input{border:0;min-height:40px;padding:0;background:transparent;box-shadow:none}
+.searchbar input:focus{outline:none}
+.benefit{display:grid;grid-template-columns:.9fr 1.1fr;gap:30px;align-items:center;background:#fff;border:1px solid #d5e2ff;border-radius:28px;padding:28px}
+.artgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;border:2px dashed #93b4ff;border-radius:30px}
+.artgrid div{aspect-ratio:1;border-radius:24px;display:grid;place-items:center;font-size:3rem;background:linear-gradient(145deg,#dbe7ff,#bcd2ff)}
+.artgrid div:nth-child(2),.artgrid div:nth-child(3){background:linear-gradient(145deg,#1d4ed8,#60a5fa);color:#fff}
+.benefit .feature+.feature{margin-top:14px}
+.ccard{background:#fff;border:1px solid #d5e2ff;border-radius:22px;padding:16px;box-shadow:var(--shadow)}
+.ccard .thumb{height:110px;border-radius:16px;background:linear-gradient(135deg,#1d4ed8,#60a5fa);color:#fff;display:grid;place-items:center;font-size:2.2rem;font-weight:800;margin-bottom:12px}
+.steps{counter-reset:s}
+.step{background:#fff;border:1px solid #d5e2ff;border-radius:22px;padding:18px 18px 18px 64px;position:relative}
+.step::before{counter-increment:s;content:counter(s);position:absolute;left:16px;top:16px;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#fff;display:grid;place-items:center;font-weight:800}
+.step h3{margin:0 0 4px;font-size:1rem}.step p{margin:0;color:var(--muted);font-size:.9rem}
+.cta{margin:0 28px 44px;border-radius:28px;background:linear-gradient(135deg,#1d4ed8,#2f6df0 60%,#4f8cf7);color:#fff;padding:32px;display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center}
+.cta h2,.cta h3{color:#fff;text-align:left}.cta p{opacity:.95}
+.cta .btn.ghost{background:#fff;color:var(--orange-d);border-color:#fff}
+.cta ul{margin:0;padding-left:1.1em}
+.price{background:#fff;border:1px solid #bcd2ff;border-radius:26px;padding:26px;text-align:center;box-shadow:0 10px 30px rgba(29,78,216,.15)}
+.price b.big{font-size:2.6rem;display:block;color:var(--orange-d);line-height:1.1}
+.price ul{text-align:left;display:inline-block;margin:12px 0}
+#join{scroll-margin-top:16px;background:#eaf1ff}
+.l-foot{padding:22px 28px;text-align:center;color:var(--muted);font-size:.85rem;border-top:1px solid #d5e2ff}
+@media (max-width:860px){.l-nav .links{display:none}.l-nav{padding:14px 16px}.l-hero,.benefit,.cta{grid-template-columns:1fr}.l-hero{padding:20px 16px 30px}.l-sec{padding:34px 16px}.cta{margin:0 14px 30px;padding:24px}.l-art{min-height:280px}.l-art .blob{font-size:5rem}}
+
+</style>
+</head>
+<body>
+<main id="main" class="container" tabindex="-1"><p class="muted">Loading…</p></main>
+<noscript><p class="container">Please enable JavaScript to use Uganda Smart Learning.</p></noscript>
+<script>
+/* Uganda Smart Learning — SAMPLE seed content.
+   Everything here is demo material written for this prototype. It is NOT official NCDC syllabus text,
+   NOT a UNEB paper and NOT an official marking scheme. Replace through the Admin dashboard. */
+(function (r) {
+  const SAMPLE = 'Sample content (not official)';
+  const classes = [
+    { id: 'S1', name: 'Senior One', level: 'Lower secondary', focus: 'Introduction to the lower secondary curriculum' },
+    { id: 'S2', name: 'Senior Two', level: 'Lower secondary', focus: 'Building foundational knowledge and skills' },
+    { id: 'S3', name: 'Senior Three', level: 'Lower secondary', focus: 'Developing deeper subject understanding' },
+    { id: 'S4', name: 'Senior Four', level: 'UCE', focus: 'UCE candidate preparation and revision' },
+    { id: 'S5', name: 'Senior Five', level: 'Advanced', focus: 'Advanced secondary subjects and concepts' },
+    { id: 'S6', name: 'Senior Six', level: 'UACE', focus: 'UACE candidate preparation and revision' }
+  ];
+  // Subject catalogue is configurable in Admin → Catalogue. This is only a starting point.
+  const subjects = [
+    { id: 'math', name: 'Mathematics', classes: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'] },
+    { id: 'eng', name: 'English Language', classes: ['S1', 'S2', 'S3', 'S4'] },
+    { id: 'bio', name: 'Biology', classes: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'] },
+    { id: 'phy', name: 'Physics', classes: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'] },
+    { id: 'chem', name: 'Chemistry', classes: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'] },
+    { id: 'hist', name: 'History', classes: ['S1', 'S2', 'S3', 'S4'] },
+    { id: 'geo', name: 'Geography', classes: ['S1', 'S2', 'S3', 'S4'] },
+    { id: 'econ', name: 'Economics', classes: ['S5', 'S6'] },
+    { id: 'gp', name: 'General Paper', classes: ['S5', 'S6'] }
+  ];
+  const orgs = [
+    { id: 'o_usl', name: 'Uganda Smart Learning (sample content)' },
+    { id: 'o_school', name: 'Sample School (demo teacher)' },
+    { id: 'o_uneb', name: 'UNEB (add only authorised papers)' },
+    { id: 'o_ncdc', name: 'NCDC (add only authorised sample assessments)' }
+  ];
+
+  const L = (id, cls, subject, topic, subtopic, title, objectives, notes, example, quiz) => ({
+    id, cls, subject, topic, subtopic, title, objectives, notes, example, quiz,
+    status: 'published', review: 'sample', source: SAMPLE, permission: 'Own sample content', submittedBy: 'system'
+  });
+
+  const lessons = [
+    L('s1-math-sets', 'S1', 'math', 'Sets', 'Basic set ideas', 'Introduction to sets',
+      ['Define a set and its elements', 'Use set notation', 'Find the union and intersection of two sets'],
+      '<p>A <b>set</b> is a well-defined collection of objects. The objects are called <b>elements</b> (or members). We list them inside curly brackets, for example <b>A = {1, 2, 3, 4}</b>.</p><h3>Notation</h3><ul><li>3 ∈ A means "3 is an element of A".</li><li>n(A) is the number of elements in A.</li><li>A ∪ B (union) contains everything that is in A or in B or in both.</li><li>A ∩ B (intersection) contains only the elements found in both sets.</li><li>∅ is the empty set, which has no elements.</li></ul><div class="box">Useful formula: n(A ∪ B) = n(A) + n(B) − n(A ∩ B)</div>',
+      'Let A = {1, 2, 3, 4} and B = {3, 4, 5}. Then A ∪ B = {1, 2, 3, 4, 5} and A ∩ B = {3, 4}. Check: n(A ∪ B) = 4 + 3 − 2 = 5.',
+      [{ q: 'How many elements are in {a, b, c, d}?', o: ['3', '4', '5', '6'], a: 1 },
+       { q: 'If A = {1, 2, 3} and B = {2, 3, 4}, what is A ∩ B?', o: ['{1, 2, 3, 4}', '{2, 3}', '{1, 4}', '{3}'], a: 1 },
+       { q: 'Which symbol means "is an element of"?', o: ['∪', '∩', '∈', '∅'], a: 2 }]),
+    L('s1-bio-cell', 'S1', 'bio', 'Cells', 'Cell structure', 'The cell: the unit of life',
+      ['Name the main parts of a cell', 'State the function of each part', 'Compare plant and animal cells'],
+      '<p>All living things are made of <b>cells</b>. Most cells have three basic parts:</p><ul><li><b>Cell membrane</b> – controls what enters and leaves the cell.</li><li><b>Cytoplasm</b> – jelly-like fluid where many chemical reactions happen.</li><li><b>Nucleus</b> – controls the activities of the cell and contains the genetic material.</li></ul><h3>Plant cells also have</h3><ul><li><b>Cell wall</b> – a rigid layer that supports the cell.</li><li><b>Chloroplasts</b> – contain chlorophyll for photosynthesis.</li><li>A large <b>vacuole</b> filled with cell sap.</li></ul>',
+      'A cell from a leaf has chloroplasts and a cell wall, so it is a plant cell. A cheek cell has neither, so it is an animal cell.',
+      [{ q: 'Which part controls the activities of the cell?', o: ['Cytoplasm', 'Nucleus', 'Cell wall', 'Vacuole'], a: 1 },
+       { q: 'Where does photosynthesis take place in a plant cell?', o: ['Nucleus', 'Cell membrane', 'Chloroplast', 'Cytoplasm'], a: 2 },
+       { q: 'Which structure is found in plant cells but not animal cells?', o: ['Cell membrane', 'Nucleus', 'Cytoplasm', 'Cell wall'], a: 3 }]),
+    L('s2-chem-states', 'S2', 'chem', 'States of matter', 'Particles and changes of state', 'Solids, liquids and gases',
+      ['Describe particle arrangement in the three states', 'Name the changes of state'],
+      '<p>Matter exists mainly as a <b>solid</b>, a <b>liquid</b> or a <b>gas</b>.</p><ul><li><b>Solid</b> – particles packed closely in fixed positions; they only vibrate.</li><li><b>Liquid</b> – particles close together but able to slide past each other.</li><li><b>Gas</b> – particles far apart and moving freely in all directions.</li></ul><h3>Changes of state</h3><ul><li>Melting: solid → liquid. Freezing: liquid → solid.</li><li>Boiling/evaporation: liquid → gas. Condensation: gas → liquid.</li><li>Sublimation: solid → gas directly (or the reverse).</li></ul>',
+      'Heating ice turns it to water (melting). Heating the water further turns it to steam (boiling).',
+      [{ q: 'What is the change from solid directly to gas called?', o: ['Melting', 'Sublimation', 'Condensation', 'Freezing'], a: 1 },
+       { q: 'Particles in a gas are…', o: ['packed in fixed positions', 'close but sliding', 'far apart and moving freely', 'not moving at all'], a: 2 },
+       { q: 'Liquid to solid is called…', o: ['Boiling', 'Melting', 'Condensation', 'Freezing'], a: 3 }]),
+    L('s3-phy-speed', 'S3', 'phy', 'Motion', 'Speed and velocity', 'Speed and velocity',
+      ['Calculate speed from distance and time', 'Distinguish speed from velocity'],
+      '<p><b>Speed</b> tells us how fast an object moves: <b>speed = distance ÷ time</b>. The SI unit is metres per second (m/s); km/h is also common.</p><p><b>Velocity</b> is speed in a stated direction, so velocity is a vector quantity while speed is a scalar.</p>',
+      'A boda-boda rider covers 150 m in 30 s. Speed = 150 ÷ 30 = 5 m/s.',
+      [{ q: 'A car travels 240 km in 3 hours. What is its average speed?', o: ['60 km/h', '70 km/h', '80 km/h', '90 km/h'], a: 2 },
+       { q: 'What is the SI unit of speed?', o: ['km/h', 'm/s', 'm', 's'], a: 1 },
+       { q: 'What does velocity have that speed does not?', o: ['Direction', 'Units', 'Time', 'Distance'], a: 0 }]),
+    L('s4-math-quad', 'S4', 'math', 'Quadratic equations', 'Solving by factorising and formula', 'Solving quadratic equations',
+      ['Solve quadratics by factorising', 'Use the quadratic formula', 'Use the discriminant'],
+      '<p>A quadratic equation has the form <b>ax² + bx + c = 0</b>.</p><h3>Factorising</h3><p>Write the expression as a product of two brackets and set each bracket to zero.</p><h3>Formula</h3><div class="box">x = (−b ± √(b² − 4ac)) ÷ 2a</div><p>The <b>discriminant</b> b² − 4ac tells us the roots: positive → two different real roots; zero → one repeated root; negative → no real roots.</p>',
+      'Solve x² − 5x + 6 = 0. Factorise: (x − 2)(x − 3) = 0, so x = 2 or x = 3.',
+      [{ q: 'Solve x² − 5x + 6 = 0.', o: ['x = 2 or 3', 'x = −2 or −3', 'x = 1 or 6', 'x = 5 or 1'], a: 0 },
+       { q: 'What is the discriminant of x² + 2x + 1?', o: ['0', '4', '8', '−4'], a: 0 },
+       { q: 'Solve x² − 9 = 0.', o: ['x = 3 only', 'x = ±3', 'x = ±9', 'x = 0'], a: 1 }]),
+    L('s4-bio-photo', 'S4', 'bio', 'Photosynthesis', 'Process and requirements', 'Photosynthesis',
+      ['State the word and chemical equation', 'List the conditions required', 'Explain what happens to the products'],
+      '<p><b>Photosynthesis</b> is the process by which green plants make glucose from carbon dioxide and water using light energy absorbed by chlorophyll.</p><div class="box">carbon dioxide + water → glucose + oxygen (light, chlorophyll)<br>6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂</div><p>It takes place in <b>chloroplasts</b>. Excess glucose is converted to starch for storage; oxygen is released through the stomata.</p>',
+      'A plant kept in the dark cannot photosynthesise, so a leaf tested for starch after several days in darkness gives a negative result.',
+      [{ q: 'Which gas is absorbed by plants during photosynthesis?', o: ['Oxygen', 'Nitrogen', 'Carbon dioxide', 'Hydrogen'], a: 2 },
+       { q: 'Where does photosynthesis take place?', o: ['Mitochondria', 'Chloroplasts', 'Nucleus', 'Ribosomes'], a: 1 },
+       { q: 'In what form is excess glucose stored in plants?', o: ['Protein', 'Fat', 'Starch', 'Glycogen'], a: 2 }]),
+    L('s4-phy-elec', 'S4', 'phy', 'Electricity', "Ohm's law and resistors", "Ohm's law and resistance",
+      ["State Ohm's law", 'Calculate current, voltage or resistance', 'Add resistances in series'],
+      "<p><b>Ohm's law</b>: the current through a conductor is proportional to the voltage across it, provided temperature stays constant.</p><div class=\"box\">V = I × R &nbsp;(V in volts, I in amperes, R in ohms Ω)</div><p>For resistors in <b>series</b> the total resistance is the sum: R = R₁ + R₂ + …</p>",
+      'A 4 Ω resistor is connected across a 12 V supply. I = V ÷ R = 12 ÷ 4 = 3 A.',
+      [{ q: 'What current flows when 6 V is applied across 3 Ω?', o: ['1 A', '2 A', '3 A', '18 A'], a: 1 },
+       { q: 'What is the unit of resistance?', o: ['Volt', 'Ampere', 'Ohm', 'Watt'], a: 2 },
+       { q: 'Two resistors of 2 Ω and 3 Ω are in series. Total resistance?', o: ['1 Ω', '1.2 Ω', '5 Ω', '6 Ω'], a: 2 }]),
+    L('s4-chem-acids', 'S4', 'chem', 'Acids, bases and salts', 'pH and neutralisation', 'Acids, bases and salts',
+      ['Use the pH scale', 'Describe neutralisation', 'Write a simple neutralisation equation'],
+      '<p>The <b>pH scale</b> runs from 0 to 14: below 7 is acidic, 7 is neutral, above 7 is alkaline. Acids turn blue litmus red; alkalis turn red litmus blue.</p><p><b>Neutralisation</b>: acid + base → salt + water.</p><div class="box">HCl + NaOH → NaCl + H₂O</div>',
+      'Hydrochloric acid reacts with sodium hydroxide to give sodium chloride (table salt) and water.',
+      [{ q: 'What is the pH of a neutral solution?', o: ['0', '7', '10', '14'], a: 1 },
+       { q: 'HCl + NaOH produces…', o: ['NaCl and water', 'NaOH and water', 'Cl₂ and Na', 'NaCl and hydrogen'], a: 0 },
+       { q: 'Blue litmus paper in acid turns…', o: ['green', 'yellow', 'red', 'stays blue'], a: 2 }]),
+    L('s5-phy-kin', 'S5', 'phy', 'Kinematics', 'Equations of uniformly accelerated motion', 'Equations of motion',
+      ['Apply v = u + at, s = ut + ½at² and v² = u² + 2as'],
+      '<p>For motion in a straight line with <b>constant acceleration a</b>, initial velocity <b>u</b>, final velocity <b>v</b>, time <b>t</b> and displacement <b>s</b>:</p><div class="box">v = u + at<br>s = ut + ½at²<br>v² = u² + 2as</div><p>Choose the equation that contains the three quantities you know and the one you want.</p>',
+      'A car starts from rest (u = 0) with a = 2 m/s² for 5 s. v = 0 + 2×5 = 10 m/s and s = ½×2×5² = 25 m.',
+      [{ q: 'u = 2 m/s, a = 3 m/s², t = 4 s. Find v.', o: ['10 m/s', '12 m/s', '14 m/s', '16 m/s'], a: 2 },
+       { q: 'u = 0, a = 4 m/s², t = 3 s. Find s.', o: ['12 m', '18 m', '24 m', '36 m'], a: 1 },
+       { q: 'u = 0, a = 2 m/s², s = 9 m. Find v.', o: ['3 m/s', '6 m/s', '9 m/s', '18 m/s'], a: 1 }]),
+    L('s5-math-diff', 'S5', 'math', 'Differentiation', 'Differentiating powers of x', 'Introduction to differentiation',
+      ['Differentiate polynomials', 'Find the gradient of a curve at a point'],
+      '<p>The <b>derivative</b> dy/dx gives the gradient of a curve. For powers of x:</p><div class="box">If y = xⁿ then dy/dx = n·xⁿ⁻¹</div><p>The derivative of a constant is 0, and each term of a polynomial is differentiated separately.</p>',
+      'y = 3x⁴ − 2x² + 5 gives dy/dx = 12x³ − 4x. At x = 1 the gradient is 12 − 4 = 8.',
+      [{ q: 'Differentiate y = x³.', o: ['x²', '3x²', '3x', 'x⁴/4'], a: 1 },
+       { q: 'Differentiate y = 5x.', o: ['5', '5x', 'x', '0'], a: 0 },
+       { q: 'What is the derivative of a constant?', o: ['1', 'The constant', '0', 'x'], a: 2 }]),
+    L('s6-math-integ', 'S6', 'math', 'Integration', 'Integrating powers of x', 'Introduction to integration',
+      ['Integrate powers of x', 'Evaluate a definite integral'],
+      '<p>Integration reverses differentiation:</p><div class="box">∫ xⁿ dx = xⁿ⁺¹ ÷ (n + 1) + C &nbsp;(n ≠ −1)</div><p>For a <b>definite integral</b> from a to b, integrate, then subtract the value at a from the value at b. The constant C cancels out.</p>',
+      '∫₀² 3x² dx = [x³] from 0 to 2 = 8 − 0 = 8.',
+      [{ q: '∫ 2x dx =', o: ['x² + C', '2x² + C', 'x + C', '2 + C'], a: 0 },
+       { q: '∫₀¹ x dx =', o: ['1', '1/2', '2', '0'], a: 1 },
+       { q: '∫₀² 3x² dx =', o: ['4', '6', '8', '12'], a: 2 }]),
+    L('s6-chem-equil', 'S6', 'chem', 'Chemical equilibrium', "Le Chatelier's principle", 'Chemical equilibrium',
+      ['Describe dynamic equilibrium', "Apply Le Chatelier's principle"],
+      "<p>In a reversible reaction at <b>dynamic equilibrium</b> the forward and reverse reaction rates are equal, so concentrations stay constant.</p><p><b>Le Chatelier's principle</b>: if a change is imposed on a system at equilibrium, the position shifts to oppose the change.</p><ul><li>Raising pressure favours the side with fewer moles of gas.</li><li>A catalyst speeds up both directions equally and does <b>not</b> change the position of equilibrium.</li></ul>",
+      'N₂ + 3H₂ ⇌ 2NH₃: 4 moles of gas on the left and 2 on the right, so higher pressure shifts the equilibrium to the right.',
+      [{ q: 'What effect does a catalyst have on the position of equilibrium?', o: ['Shifts right', 'Shifts left', 'None', 'Stops the reaction'], a: 2 },
+       { q: 'At equilibrium, the forward rate is…', o: ['greater than the reverse', 'less than the reverse', 'equal to the reverse', 'zero'], a: 2 },
+       { q: 'Increasing pressure on N₂ + 3H₂ ⇌ 2NH₃ shifts the position…', o: ['to the right', 'to the left', 'not at all', 'to the left then right'], a: 0 }]),
+    L('s6-bio-enzymes', 'S6', 'bio', 'Enzymes', 'Properties and factors', 'Enzymes',
+      ['State what enzymes are', 'Explain the effect of temperature and pH'],
+      '<p><b>Enzymes</b> are biological catalysts made of protein. Each enzyme has an <b>active site</b> whose shape fits a specific substrate (lock-and-key model).</p><ul><li>Rate rises with temperature up to an optimum.</li><li>Above the optimum the enzyme is <b>denatured</b>: the active site changes shape and the substrate no longer fits.</li><li>Each enzyme works best at an optimum pH.</li></ul>',
+      'Amylase in saliva breaks starch down to maltose. Boiling it first destroys its activity.',
+      [{ q: 'Enzymes are made of…', o: ['Lipids', 'Proteins', 'Carbohydrates', 'Minerals'], a: 1 },
+       { q: 'What happens to an enzyme at very high temperature?', o: ['It works faster', 'It is denatured', 'It becomes a substrate', 'Nothing'], a: 1 },
+       { q: 'The substrate binds to the…', o: ['active site', 'cell wall', 'nucleus', 'membrane'], a: 0 }])
+  ];
+
+  const M = (id, topic, marks, text, o, a) => ({ id, type: 'mcq', topic, marks, text, o, a });
+  const S = (id, topic, marks, text, model) => ({ id, type: 'struct', topic, marks, text, model });
+  const P = (o) => Object.assign({
+    level: '', org: 'Uganda Smart Learning (sample content)', category: 'AI-generated practice', hasGuide: true,
+    verified: false, permission: 'Own sample content', reviewer: 'Not yet human-verified', status: 'published',
+    submittedBy: 'system', createdAt: 0, instructions: 'Answer all questions. This is sample practice material, not an official UNEB paper.'
+  }, o);
+
+  const papers = [
+    P({ id: 'p-s4-math-1', title: 'SAMPLE Mathematics Practice – Paper 1', cls: 'S4', subject: 'math', year: 2026, paperNo: 1, duration: 20,
+      questions: [
+        M('q1', 'Quadratic equations', 2, 'Solve x² − 7x + 12 = 0.', ['x = 3 or 4', 'x = −3 or −4', 'x = 2 or 6', 'x = 1 or 12'], 0),
+        M('q2', 'Algebra', 2, 'Simplify 3(x + 2) − 2x.', ['x + 6', '5x + 6', 'x + 2', '5x + 2'], 0),
+        M('q3', 'Sets', 2, 'If A = {1, 2, 3} and B = {3, 4}, find A ∪ B.', ['{3}', '{1, 2, 3, 4}', '{1, 2, 4}', '{1, 2, 3}'], 1),
+        M('q4', 'Indices', 2, 'Evaluate 2³ × 2².', ['10', '32', '64', '12'], 1),
+        M('q5', 'Coordinate geometry', 2, 'Find the gradient of the line through (0, 1) and (2, 5).', ['1', '2', '3', '4'], 1),
+        S('q6', 'Quadratic equations', 4, 'Solve 2x² + 3x − 2 = 0.', 'Factorise: (2x − 1)(x + 2) = 0, so x = 1/2 or x = −2.\nCheck x = −2: 2(4) − 6 − 2 = 0 ✓.'),
+        S('q7', 'Quadratic equations', 3, 'A rectangle has length (x + 3) cm and width x cm. Its area is 40 cm². Form and solve an equation to find x.', 'x(x + 3) = 40 → x² + 3x − 40 = 0 → (x + 8)(x − 5) = 0.\nx cannot be negative, so x = 5 cm (length 8 cm). Check: 5 × 8 = 40 ✓.')
+      ] }),
+    P({ id: 'p-s4-bio-1', title: 'SAMPLE Biology Practice – Paper 1 (objective)', cls: 'S4', subject: 'bio', year: 2026, paperNo: 1, duration: 10,
+      questions: [
+        M('q1', 'Photosynthesis', 1, 'Which organelle is the site of photosynthesis?', ['Mitochondrion', 'Chloroplast', 'Nucleus', 'Ribosome'], 1),
+        M('q2', 'Diffusion and osmosis', 1, 'Movement of water across a semi-permeable membrane from a dilute to a concentrated solution is called…', ['Diffusion', 'Osmosis', 'Active transport', 'Transpiration'], 1),
+        M('q3', 'Transport in animals', 1, 'Which blood cells carry oxygen?', ['White blood cells', 'Platelets', 'Red blood cells', 'Plasma'], 2),
+        M('q4', 'Nutrition', 1, 'Which enzyme in saliva digests starch?', ['Pepsin', 'Lipase', 'Amylase', 'Trypsin'], 2),
+        M('q5', 'Plant structure', 1, 'A main function of roots is to…', ['make food', 'absorb water and mineral salts', 'attract insects', 'store oxygen'], 1)
+      ] }),
+    P({ id: 'p-s4-bio-2', title: 'SAMPLE Biology Practice – Paper 2 (structured)', cls: 'S4', subject: 'bio', year: 2026, paperNo: 2, duration: 20,
+      questions: [
+        S('q1', 'Diffusion and osmosis', 3, 'Define diffusion and give one example in living organisms.', 'Diffusion is the net movement of particles from a region of higher concentration to a region of lower concentration, down a concentration gradient.\nExample: oxygen moving from the alveoli into the blood.'),
+        S('q2', 'Photosynthesis', 4, 'Write the word equation for photosynthesis and name two conditions required.', 'carbon dioxide + water → glucose + oxygen (in light, using chlorophyll).\nAny two: light, chlorophyll, carbon dioxide, water.'),
+        S('q3', 'Enzymes', 3, 'Explain why enzymes stop working at very high temperatures.', 'High temperature changes the shape of the active site (denaturation), so the substrate no longer fits and the enzyme cannot catalyse the reaction.')
+      ] }),
+    P({ id: 'p-s6-phy-1', title: 'SAMPLE Physics Practice – Paper 1', cls: 'S6', subject: 'phy', year: 2026, paperNo: 1, duration: 15,
+      questions: [
+        M('q1', 'Kinematics', 2, 'A car accelerates from rest at 2 m/s² for 5 s. Its final velocity is…', ['5 m/s', '10 m/s', '15 m/s', '25 m/s'], 1),
+        M('q2', 'Kinematics', 2, 'The distance travelled by the car in that time is…', ['10 m', '20 m', '25 m', '50 m'], 2),
+        M('q3', 'Dynamics', 1, 'The SI unit of force is the…', ['joule', 'newton', 'watt', 'pascal'], 1),
+        M('q4', 'Electricity', 2, 'A 4 Ω resistor across a 12 V supply carries a current of…', ['0.33 A', '3 A', '8 A', '48 A'], 1),
+        M('q5', 'Dynamics', 1, 'Which of these is a vector quantity?', ['Mass', 'Speed', 'Energy', 'Velocity'], 3),
+        S('q6', 'Dynamics', 4, 'A body of mass 2 kg accelerates at 3 m/s². Calculate the resultant force and state Newton\'s second law.', 'F = ma = 2 × 3 = 6 N.\nNewton\'s second law: the resultant force on a body is proportional to its rate of change of momentum; for constant mass F = ma.')
+      ] }),
+    P({ id: 'p-s4-chem-1-mock', title: 'SAMPLE Chemistry Teacher Mock – Paper 1 (no marking guide)', cls: 'S4', subject: 'chem', year: 2025, paperNo: 1, duration: 8,
+      org: 'Sample School (demo teacher)', category: 'Teacher-created assessment', hasGuide: false, permission: 'Own sample content',
+      reviewer: 'Reviewed (sample data)', verified: true,
+      questions: [
+        { id: 'q1', type: 'mcq', topic: 'Acids, bases and salts', marks: 1, text: 'What is the pH of pure water at 25 °C?', o: ['1', '7', '10', '14'] },
+        { id: 'q2', type: 'mcq', topic: 'Atomic structure', marks: 1, text: 'The atomic number of an element is the number of its…', o: ['neutrons', 'protons', 'electrons plus neutrons', 'shells'] },
+        { id: 'q3', type: 'mcq', topic: 'Acids, bases and salts', marks: 1, text: 'Which gas forms when zinc reacts with dilute hydrochloric acid?', o: ['Oxygen', 'Carbon dioxide', 'Hydrogen', 'Chlorine'] }
+      ] }),
+    P({ id: 'p-s6-chem-1-pending', title: 'SAMPLE Chemistry Contributor Submission – Paper 1', cls: 'S6', subject: 'chem', year: 2026, paperNo: 1, duration: 6,
+      org: 'Sample School (demo teacher)', category: 'Teacher-created assessment', status: 'pending', verified: false, reviewer: 'Pending review',
+      submittedBy: 'teacher@usl.demo', permission: 'Own sample content',
+      questions: [
+        M('q1', 'Chemical equilibrium', 1, 'A catalyst changes the position of equilibrium.', ['True', 'False'], 1),
+        M('q2', 'Chemical equilibrium', 1, 'At dynamic equilibrium the forward and reverse rates are…', ['equal', 'zero', 'different', 'increasing'], 0)
+      ] })
+  ];
+
+  r.USL_DATA = { classes, subjects, orgs, lessons, papers, SAMPLE };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* Uganda Smart Learning — shared engine.
+   IMPORTANT: this prototype has no real backend. `Server` below simulates one inside the browser
+   (localStorage) so every rule can be seen working: trial, subscription, device lock, roles, review,
+   payment verification. For production, replace each Server method with a call to a real API
+   (FastAPI/NestJS + PostgreSQL) — the page code only talks to `Server`, never to storage directly. */
+(function (root) {
+  'use strict';
+  const KEY = 'usl_db_v1', TOK = 'usl_token', DEV = 'usl_device', DAY = 864e5;
+  /* Storage that never throws: some browsers/previews block localStorage. Fall back to memory (works for this page only). */
+  const LS = (function () {
+    try { const t = '__usl_t'; root.localStorage.setItem(t, '1'); root.localStorage.removeItem(t); return root.localStorage; } catch (e) { /* blocked */ }
+    const m = {}; root.USL_STORAGE_BLOCKED = true;
+    return { getItem: k => (k in m ? m[k] : null), setItem: (k, v) => { m[k] = String(v); }, removeItem: k => { delete m[k]; } };
+  })();
+  const isBrowser = typeof document !== 'undefined';
+  const DEFAULT_CFG = { price: 20000, currency: 'UGX', days: 30, trialMinutes: 15, sandbox: true, aiDailyLimit: 30, aiCostPerCall: 30, payNumber: '0773014995', whatsappNumber: '0773014995', whatsappNotify: true };
+  const CATEGORIES = ['Official UNEB past paper', 'NCDC sample assessment', 'School mock', 'Teacher-created assessment', 'Licensed publisher material', 'AI-generated practice'];
+  const PERMS = ['Own content (author holds the rights)', 'Licensed / written permission held', 'Authorised by UNEB / NCDC', 'Permission pending'];
+  const ROLE_PERMS = { admin: ['*'], reviewer: ['review', 'submit'], contributor: ['submit'], student: [] };
+
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => [...(r || document).querySelectorAll(s)];
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const now = () => Date.now();
+  const clone = o => JSON.parse(JSON.stringify(o));
+  const hex = b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+  const rnd = n => { const a = new Uint8Array(n); (root.crypto || {}).getRandomValues ? root.crypto.getRandomValues(a) : a.forEach((_, i) => a[i] = Math.floor(Math.random() * 256)); return hex(a); };
+  const uid = p => p + '_' + rnd(5);
+  const err = m => ({ ok: false, error: m });
+  const okr = (o) => Object.assign({ ok: true }, o || {});
+  const fmtUGX = n => 'UGX ' + Number(n).toLocaleString('en-US');
+  const fmtDate = t => t ? new Date(t).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+  const fmtMs = ms => { ms = Math.max(0, ms); const s = Math.floor(ms / 1000), d = Math.floor(s / 86400); if (d >= 1) return d + 'd ' + Math.floor((s % 86400) / 3600) + 'h'; const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60; return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(x).padStart(2, '0'); };
+  const today = () => new Date().toISOString().slice(0, 10);
+
+  /* ---------- crypto ---------- */
+  async function hash(pw, salt) {
+    try {
+      if (root.crypto && root.crypto.subtle) {
+        const k = await root.crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveBits']);
+        const b = await root.crypto.subtle.deriveBits({ name: 'PBKDF2', salt: new TextEncoder().encode(salt), iterations: 100000, hash: 'SHA-256' }, k, 256);
+        return 'p1:' + hex(b);
+      }
+    } catch (e) { /* fall through */ }
+    let h = 5381; const s = salt + pw; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+    return 'w0:' + (h >>> 0).toString(16); // weak fallback for insecure contexts; production uses Argon2/bcrypt server-side
+  }
+  async function sha(s) {
+    if (root.crypto && root.crypto.subtle) return hex(await root.crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));
+    let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return 'w0:' + (h >>> 0).toString(16);
+  }
+
+  /* ---------- storage ---------- */
+  let db = null;
+  const load = () => { try { db = JSON.parse(LS.getItem(KEY)); } catch (e) { db = null; } if (db) { db.cfg = Object.assign({}, DEFAULT_CFG, db.cfg); db.outbox = db.outbox || []; } return db; };
+  const save = () => LS.setItem(KEY, JSON.stringify(db));
+  const audit = (action, userId, detail) => { db.audit.unshift({ id: uid('a'), at: now(), action, userId: userId || null, detail: detail || '' }); if (db.audit.length > 500) db.audit.length = 500; };
+  /* WhatsApp: a browser cannot send WhatsApp messages by itself. The server queues each message here;
+     in production a backend job sends it through the WhatsApp Business Cloud API (or a provider such as Twilio).
+     In this prototype the Admin → Outbox tab shows the queue with a one-tap "Send on WhatsApp" button. */
+  function queueWhatsApp(kind, text, paymentId) {
+    if (!db.cfg.whatsappNotify) return; const to = normContact(db.cfg.whatsappNumber); if (!to || to.includes('@')) return;
+    db.outbox.unshift({ id: uid('wa'), channel: 'whatsapp', to, kind, text, paymentId: paymentId || null, at: now(), status: 'queued' });
+    if (db.outbox.length > 300) db.outbox.length = 300;
+  }
+  function payMessage(p, kind) {
+    const u = db.users.find(x => x.id === p.userId) || {}, c = (db.classes.find(x => x.id === u.classId) || {}).id || '—', s = db.subs.find(x => x.paymentId === p.id);
+    if (kind === 'reversed') return '⚠️ Payment reversed\nStudent: ' + u.name + ' (' + c + ')\nAmount: ' + fmtUGX(p.amount) + '\nRef: ' + p.ref + '\nAccess for this payment was removed.';
+    return '✅ New subscription\nStudent: ' + u.name + ' (' + c + ')\nContact: ' + u.contact + '\nAmount: ' + fmtUGX(p.amount) + ' via ' + p.provider + '\nRef: ' + p.ref + (p.txId ? '\nProvider tx: ' + p.txId : '') + '\nActive until: ' + (s ? new Date(s.expires).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—');
+  }
+  const notify = (userId, msg) => db.notifications.unshift({ id: uid('n'), userId, msg, at: now(), read: false });
+
+  async function seed() {
+    const D = root.USL_DATA;
+    const staff = [['admin@usl.demo', 'Admin User', 'admin', 'Admin@123'], ['reviewer@usl.demo', 'Reviewer Demo', 'reviewer', 'Review@123'], ['teacher@usl.demo', 'Teacher Demo', 'contributor', 'Teach@123']];
+    const users = [];
+    for (const [c, n, role, pw] of staff) {
+      const salt = uid('s');
+      users.push({ id: uid('u'), role, name: n, contact: c, classId: null, subjects: [], salt, pw: await hash(pw, salt), verified: true, status: 'active', createdAt: now(), deviceId: null, deviceSince: null, trialStartedAt: null, trialEndsAt: null, dailyGoal: 2, failed: 0, lockUntil: 0 });
+    }
+    const teacher = users.find(u => u.role === 'contributor');
+    const papers = clone(D.papers).map(p => { p.createdAt = now(); p.level = (D.classes.find(c => c.id === p.cls) || {}).level || ''; if (p.submittedBy !== 'system') p.submittedBy = teacher.id; return p; });
+    const lessons = clone(D.lessons);
+    const syllabus = [];
+    D.subjects.forEach(s => s.classes.forEach(c => syllabus.push({ classId: c, subjectId: s.id, ref: '', version: '', note: '' })));
+    db = { v: 1, cfg: Object.assign({}, DEFAULT_CFG), classes: clone(D.classes), subjects: clone(D.subjects), orgs: clone(D.orgs), lessons, papers, syllabus, users, sessions: {}, otps: {}, subs: [], payments: [], progress: {}, attempts: [], aiUsage: {}, notifications: [], reviews: [], audit: [], secret: rnd(16) };
+    audit('system.seeded', null, 'Sample content loaded');
+  }
+  const ready = (async () => { load(); if (!db || db.v !== 1) { await seed(); save(); } })();
+
+  /* ---------- helpers ---------- */
+  function normContact(c) {
+    c = (c || '').trim().toLowerCase();
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(c)) return c;
+    const d = c.replace(/[\s\-()]/g, ''); const m = d.match(/^(?:\+?256|0)(7\d{8})$/);
+    return m ? '+256' + m[1] : null;
+  }
+  const pwOk = p => typeof p === 'string' && p.length >= 8 && /[A-Za-z]/.test(p) && /\d/.test(p);
+  const can = (u, perm) => { const p = ROLE_PERMS[u.role] || []; return p.includes('*') || p.includes(perm); };
+  const deviceId = () => { let d = LS.getItem(DEV); if (!d) { d = uid('dev'); LS.setItem(DEV, d); } return d; };
+  function makeOtp(contact, purpose) {
+    const a = new Uint32Array(1); root.crypto && root.crypto.getRandomValues ? root.crypto.getRandomValues(a) : (a[0] = Math.floor(Math.random() * 4e9));
+    const code = String(100000 + (a[0] % 900000));
+    db.otps[contact + '|' + purpose] = { code, exp: now() + 10 * 60000, tries: 0 };
+    return code; // DEMO ONLY: in production this is sent by SMS/email and never returned to the browser
+  }
+  function checkOtp(contact, purpose, code) {
+    const k = contact + '|' + purpose, o = db.otps[k];
+    if (!o || o.exp < now()) return 'The code has expired. Request a new one.';
+    if (o.tries >= 5) return 'Too many wrong codes. Request a new one.';
+    if (String(code).trim() !== o.code) { o.tries++; return 'That code is not correct.'; }
+    delete db.otps[k]; return null;
+  }
+  function startSession(u) {
+    Object.keys(db.sessions).forEach(t => { if (db.sessions[t].userId === u.id) delete db.sessions[t]; }); // one active session per account
+    const t = rnd(24); db.sessions[t] = { userId: u.id, deviceId: u.deviceId, at: now() };
+    LS.setItem(TOK, t); audit('login.ok', u.id, 'device ' + u.deviceId.slice(-6)); save();
+    return okr({ role: u.role });
+  }
+  function sessionUser() {
+    load(); if (!db) return { reason: '' };
+    const t = LS.getItem(TOK), s = t && db.sessions[t];
+    if (!s) return { reason: t ? 'Your session ended. Please log in again.' : '' };
+    const u = db.users.find(x => x.id === s.userId);
+    if (!u || u.status !== 'active') return { reason: 'This account is not active.' };
+    if (s.deviceId !== u.deviceId || s.deviceId !== deviceId()) return { reason: 'This account is now active on another device. Log in again to switch back.' };
+    return { user: u, session: s };
+  }
+  function auth(perm) {
+    const r = sessionUser(); if (!r.user) return { e: err('Please log in.') };
+    if (perm && !can(r.user, perm)) { audit('permission.denied', r.user.id, perm); save(); return { e: err('You do not have permission to do that.') }; }
+    return { u: r.user };
+  }
+  function accessOf(u) {
+    if (!u) return { state: 'none' };
+    if (u.role !== 'student') return { state: 'staff' };
+    const t = now();
+    const sub = db.subs.filter(s => s.userId === u.id && s.status === 'active' && s.expires > t).sort((a, b) => b.expires - a.expires)[0];
+    if (sub) return { state: 'paid', expires: sub.expires, msLeft: sub.expires - t };
+    const hadSub = db.subs.some(s => s.userId === u.id);
+    if (u.trialStartedAt) { const left = u.trialEndsAt - t; if (left > 0) return { state: 'trial', msLeft: left }; return { state: 'expired', hadSub }; }
+    return hadSub ? { state: 'expired', hadSub } : { state: 'trial_ready' };
+  }
+  const allowed = a => ['paid', 'trial', 'staff'].includes(a.state);
+  const requireAccess = u => { const a = accessOf(u); return allowed(a) ? null : err('A subscription or active trial is required.'); };
+
+  function textToHtml(t) {
+    const out = []; let list = false;
+    String(t || '').split(/\n/).forEach(line => {
+      const l = line.trim();
+      if (/^[-*•]\s+/.test(l)) { if (!list) { out.push('<ul>'); list = true; } out.push('<li>' + esc(l.replace(/^[-*•]\s+/, '')) + '</li>'); }
+      else { if (list) { out.push('</ul>'); list = false; } if (l) out.push('<p>' + esc(l) + '</p>'); }
+    });
+    if (list) out.push('</ul>'); return out.join('');
+  }
+  function parseQuestions(text, needKeys) {
+    const qs = [], errors = [];
+    String(text || '').split(/\n/).map(s => s.trim()).filter(Boolean).forEach((line, i) => {
+      const p = line.split('|').map(s => s.trim()); const n = 'Line ' + (i + 1) + ': ';
+      const type = (p[0] || '').toUpperCase();
+      if (type !== 'MCQ' && type !== 'STRUCT') return errors.push(n + 'start with MCQ or STRUCT.');
+      const marks = parseInt(p[2], 10); if (!(marks > 0 && marks <= 50)) return errors.push(n + 'marks must be 1–50.');
+      if (!p[1] || !p[3]) return errors.push(n + 'topic and question text are required.');
+      const q = { id: 'q' + (qs.length + 1), type: type === 'MCQ' ? 'mcq' : 'struct', topic: p[1], marks, text: p[3] };
+      if (type === 'MCQ') {
+        q.o = (p[4] || '').split(';;').map(s => s.trim()).filter(Boolean);
+        if (q.o.length < 2) return errors.push(n + 'give at least two options separated by ;;');
+        if (p[5]) { const a = parseInt(p[5], 10) - 1; if (!(a >= 0 && a < q.o.length)) return errors.push(n + 'answer number is outside the options.'); q.a = a; }
+        else if (needKeys) return errors.push(n + 'a marking guide was promised, so give the correct option number.');
+      } else {
+        if (p[4]) q.model = p.slice(4).join(' | ').replace(/\\n/g, '\n'); else if (needKeys) return errors.push(n + 'a marking guide was promised, so give a model answer.');
+      }
+      qs.push(q);
+    });
+    return { questions: qs, errors };
+  }
+  function parseQuiz(text) {
+    const qs = [], errors = [];
+    String(text || '').split(/\n/).map(s => s.trim()).filter(Boolean).forEach((line, i) => {
+      const p = line.split('|').map(s => s.trim()), o = (p[1] || '').split(';;').map(s => s.trim()).filter(Boolean), a = parseInt(p[2], 10) - 1;
+      if (!p[0] || o.length < 2 || !(a >= 0 && a < o.length)) return errors.push('Quiz line ' + (i + 1) + ': use  question | A ;; B ;; C | correct option number');
+      qs.push({ q: p[0], o, a });
+    });
+    return { quiz: qs, errors };
+  }
+
+  /* ---------- the simulated server ---------- */
+  const Server = {
+    async register(f) {
+      const name = (f.name || '').trim(), contact = normContact(f.contact);
+      if (name.length < 2) return err('Enter your full name.');
+      if (!contact) return err('Enter a valid email address or Ugandan phone number (e.g. 0772 123456).');
+      if (!pwOk(f.password)) return err('Password needs at least 8 characters with letters and numbers.');
+      if (!f.consent) return err('Please confirm you are 18+, or that a parent/guardian consents to your use of this app.');
+      const salt = uid('s'), pw = await hash(f.password, salt);
+      await ready; load();
+      if (!db.classes.find(c => c.id === f.classId)) return err('Choose your class.');
+      if (db.users.find(u => u.contact === contact)) return err('An account with this contact already exists. Please log in.');
+      const u = { id: uid('u'), role: 'student', name, contact, classId: f.classId, subjects: [], schoolCode: (f.schoolCode || '').trim(), salt, pw, verified: false, status: 'active', createdAt: now(), consentAt: now(), deviceId: null, deviceSince: null, trialStartedAt: null, trialEndsAt: null, dailyGoal: 2, failed: 0, lockUntil: 0 };
+      db.users.push(u); const code = makeOtp(contact, 'verify'); audit('user.registered', u.id, contact); save();
+      return okr({ contact, demoOtp: code });
+    },
+    async resendCode(contact, purpose) { contact = normContact(contact); load(); const u = db.users.find(x => x.contact === contact); if (!u) return err('Unknown account.'); const c = makeOtp(contact, purpose || 'verify'); save(); return okr({ demoOtp: c }); },
+    async verifyRegistration(contact, code) {
+      contact = normContact(contact); load(); const u = db.users.find(x => x.contact === contact); if (!u) return err('Unknown account.');
+      const e = checkOtp(contact, 'verify', code); if (e) { save(); return err(e); }
+      u.verified = true; u.deviceId = deviceId(); u.deviceSince = now(); audit('user.verified', u.id); notify(u.id, 'Welcome! Your account is verified. You can start your free 15-minute trial from the dashboard.');
+      return startSession(u);
+    },
+    async login(contact, password) {
+      const c = normContact(contact); if (!c) return err('Enter the email or phone number you registered with.');
+      await ready; load(); let u = db.users.find(x => x.contact === c);
+      if (u && u.lockUntil > now()) return err('Too many attempts. Try again in ' + Math.ceil((u.lockUntil - now()) / 1000) + ' seconds.');
+      const good = u ? (await hash(password || '', u.salt)) === u.pw : false;
+      load(); u = u && db.users.find(x => x.id === u.id);
+      if (!u || !good) {
+        if (u) { u.failed++; audit('login.failed', u.id); if (u.failed >= 5) { u.lockUntil = now() + 60000; u.failed = 0; audit('login.locked', u.id, '5 failed attempts'); notify(u.id, 'Several wrong password attempts were made on your account.'); } save(); }
+        return err('Incorrect contact or password.');
+      }
+      if (u.status !== 'active') return err('This account is suspended. Please contact support.');
+      if (!u.verified) { const code = makeOtp(c, 'verify'); save(); return okr({ needsVerify: true, contact: c, demoOtp: code }); }
+      u.failed = 0; const dev = deviceId();
+      if (!u.deviceId) { u.deviceId = dev; u.deviceSince = now(); audit('device.registered', u.id); }
+      else if (u.deviceId !== dev) {
+        const code = makeOtp(c, 'transfer'); audit('login.new_device', u.id, 'blocked pending verification'); notify(u.id, 'Someone tried to log in from a new device. If this was not you, change your password.'); save();
+        return okr({ needsTransfer: true, contact: c, demoOtp: code });
+      }
+      return startSession(u);
+    },
+    async completeTransfer(contact, code) {
+      contact = normContact(contact); load(); const u = db.users.find(x => x.contact === contact); if (!u) return err('Unknown account.');
+      const e = checkOtp(contact, 'transfer', code); if (e) { save(); return err(e); }
+      u.deviceId = deviceId(); u.deviceSince = now(); audit('device.transferred', u.id); notify(u.id, 'Your account was moved to a new device. The old device has been signed out.');
+      return startSession(u);
+    },
+    logout() { load(); const t = LS.getItem(TOK); if (t && db.sessions[t]) { audit('logout', db.sessions[t].userId); delete db.sessions[t]; save(); } LS.removeItem(TOK); return okr(); },
+    currentUser() { const r = sessionUser(); return r.user ? { user: r.user } : { reason: r.reason }; },
+    access(u) { load(); return accessOf(u); },
+    cfg() { load(); return db.cfg; },
+    data() { load(); return db; },
+    startTrial() {
+      const r = auth(); if (r.e) return r.e; const u = r.u;
+      if (u.role !== 'student') return err('Staff accounts do not need a trial.');
+      if (u.trialStartedAt) { return err('Your one free trial has already been used on this account.'); }
+      if (db.subs.some(s => s.userId === u.id && s.status === 'active' && s.expires > now())) return err('You already have an active subscription.');
+      u.trialStartedAt = now(); u.trialEndsAt = now() + db.cfg.trialMinutes * 60000; audit('trial.started', u.id); save(); return okr({ ends: u.trialEndsAt });
+    },
+    updateProfile(p) {
+      const r = auth(); if (r.e) return r.e; const u = r.u;
+      if (p.classId && db.classes.find(c => c.id === p.classId) && u.role === 'student') { if (u.classId !== p.classId) u.subjects = []; u.classId = p.classId; }
+      if (Array.isArray(p.subjects)) u.subjects = p.subjects.filter(s => db.subjects.find(x => x.id === s));
+      if (p.dailyGoal) u.dailyGoal = Math.min(10, Math.max(1, parseInt(p.dailyGoal, 10) || 2));
+      if (p.name && p.name.trim().length > 1) u.name = p.name.trim();
+      save(); return okr();
+    },
+    notifications() { const r = auth(); if (r.e) return []; return db.notifications.filter(n => n.userId === r.u.id).slice(0, 10); },
+    markNotificationsRead() { const r = auth(); if (r.e) return; db.notifications.forEach(n => { if (n.userId === r.u.id) n.read = true; }); save(); },
+
+    /* content (paid features are gated on the server side of the boundary) */
+    getLesson(id) {
+      const r = auth(); if (r.e) return r.e; const g = requireAccess(r.u); if (g) return g;
+      const l = db.lessons.find(x => x.id === id && x.status === 'published'); return l ? okr({ lesson: l }) : err('Lesson not found.');
+    },
+    getPaper(id, forReview) {
+      const r = auth(); if (r.e) return r.e; const g = requireAccess(r.u); if (g) return g;
+      const p = db.papers.find(x => x.id === id); if (!p) return err('Paper not found.');
+      if (p.status !== 'published' && !(forReview && can(r.u, 'review'))) return err('This paper is not published.');
+      return okr({ paper: p });
+    },
+    saveQuiz(lessonId, score, total) {
+      const r = auth(); if (r.e) return r.e; const g = requireAccess(r.u); if (g) return g;
+      const m = db.progress[r.u.id] = db.progress[r.u.id] || {}; const p = m[lessonId] = m[lessonId] || {};
+      p.quiz = { score, total, at: now() }; p.completed = true; p.updatedAt = now(); save(); return okr();
+    },
+    markComplete(lessonId, done) {
+      const r = auth(); if (r.e) return r.e; const g = requireAccess(r.u); if (g) return g;
+      const m = db.progress[r.u.id] = db.progress[r.u.id] || {}; const p = m[lessonId] = m[lessonId] || {}; p.completed = !!done; p.updatedAt = now(); p.opened = p.opened || now(); save(); return okr();
+    },
+    touchLesson(lessonId) { const r = auth(); if (r.e) return; const m = db.progress[r.u.id] = db.progress[r.u.id] || {}; const p = m[lessonId] = m[lessonId] || {}; p.opened = now(); p.updatedAt = p.updatedAt || 0; p.lastOpen = now(); save(); },
+    progress() { const r = auth(); if (r.e) return {}; return db.progress[r.u.id] || {}; },
+
+    /* exam attempts */
+    startAttempt(paperId) {
+      const r = auth(); if (r.e) return r.e; const g = requireAccess(r.u); if (g) return g;
+      const p = db.papers.find(x => x.id === paperId && x.status === 'published'); if (!p) return err('Paper not available.');
+      let a = db.attempts.find(x => x.userId === r.u.id && x.paperId === paperId && x.status === 'in_progress');
+      if (a && a.startedAt + a.durationMs <= now()) { Server._finish(a, p); a = null; }
+      if (!a) { a = { id: uid('at'), userId: r.u.id, paperId, startedAt: now(), durationMs: p.duration * 60000, answers: {}, flags: {}, status: 'in_progress' }; db.attempts.push(a); audit('exam.started', r.u.id, paperId); save(); }
+      return okr({ attempt: a, paper: p, resumed: false });
+    },
+    saveAnswers(attemptId, answers, flags) {
+      const r = auth(); if (r.e) return r.e; const a = db.attempts.find(x => x.id === attemptId && x.userId === r.u.id); if (!a) return err('Attempt not found.');
+      if (a.status !== 'in_progress') return err('This attempt is already submitted.');
+      if (now() > a.startedAt + a.durationMs + 5000) return err('Time is up.');
+      a.answers = answers || {}; a.flags = flags || {}; a.savedAt = now(); save(); return okr({ savedAt: a.savedAt });
+    },
+    _finish(a, p) {
+      let got = 0, max = 0, scored = false; const ts = {};
+      p.questions.forEach(q => {
+        if (q.type === 'mcq' && typeof q.a === 'number') {
+          scored = true; max += q.marks; const ok = a.answers[q.id] === q.a; if (ok) got += q.marks;
+          const k = p.subject + '|' + q.topic; ts[k] = ts[k] || { got: 0, max: 0 }; ts[k].max += q.marks; ts[k].got += ok ? q.marks : 0;
+        }
+      });
+      a.status = 'submitted'; a.submittedAt = now(); a.objective = { got, max, scored }; a.topicStats = ts; a.selfMarks = a.selfMarks || {};
+    },
+    submitAttempt(attemptId, answers, flags) {
+      const r = auth(); if (r.e) return r.e; const a = db.attempts.find(x => x.id === attemptId && x.userId === r.u.id); if (!a) return err('Attempt not found.');
+      if (a.status === 'in_progress') { if (answers) a.answers = answers; if (flags) a.flags = flags; Server._finish(a, db.papers.find(x => x.id === a.paperId)); audit('exam.submitted', r.u.id, a.paperId); save(); }
+      return okr({ attempt: a });
+    },
+    getAttempt(id) { const r = auth(); if (r.e) return r.e; const a = db.attempts.find(x => x.id === id && x.userId === r.u.id); return a ? okr({ attempt: a }) : err('Attempt not found.'); },
+    selfMark(attemptId, marks) {
+      const r = auth(); if (r.e) return r.e; const g = requireAccess(r.u); if (g) return g;
+      const a = db.attempts.find(x => x.id === attemptId && x.userId === r.u.id && x.status === 'submitted'); if (!a) return err('Attempt not found.');
+      const p = db.papers.find(x => x.id === a.paperId); a.selfMarks = {};
+      p.questions.forEach(q => { if (q.type === 'struct' && marks[q.id] != null && marks[q.id] !== '') { const v = Math.max(0, Math.min(q.marks, parseFloat(marks[q.id]) || 0)); a.selfMarks[q.id] = v; } });
+      // rebuild topic stats: objective part + self-marked structured part
+      const ts = {}; p.questions.forEach(q => {
+        const k = p.subject + '|' + q.topic;
+        if (q.type === 'mcq' && typeof q.a === 'number') { ts[k] = ts[k] || { got: 0, max: 0 }; ts[k].max += q.marks; ts[k].got += a.answers[q.id] === q.a ? q.marks : 0; }
+        if (q.type === 'struct' && a.selfMarks[q.id] != null) { ts[k] = ts[k] || { got: 0, max: 0 }; ts[k].max += q.marks; ts[k].got += a.selfMarks[q.id]; }
+      }); a.topicStats = ts; save(); return okr({ attempt: a });
+    },
+    myAttempts() { const r = auth(); if (r.e) return []; return db.attempts.filter(a => a.userId === r.u.id).sort((a, b) => b.startedAt - a.startedAt); },
+    weakTopics() {
+      const r = auth(); if (r.e) return []; const m = {};
+      db.attempts.filter(a => a.userId === r.u.id && a.topicStats).forEach(a => Object.entries(a.topicStats).forEach(([k, v]) => { m[k] = m[k] || { got: 0, max: 0 }; m[k].got += v.got; m[k].max += v.max; }));
+      const pr = db.progress[r.u.id] || {};
+      Object.entries(pr).forEach(([lid, p]) => { const l = db.lessons.find(x => x.id === lid); if (l && p.quiz) { const k = l.subject + '|' + l.topic; m[k] = m[k] || { got: 0, max: 0 }; m[k].got += p.quiz.score; m[k].max += p.quiz.total; } });
+      return Object.entries(m).filter(([, v]) => v.max > 0).map(([k, v]) => { const [subject, topic] = k.split('|'); return { subject, topic, got: v.got, max: v.max, pct: Math.round(v.got / v.max * 100) }; }).filter(x => x.pct < 60).sort((a, b) => a.pct - b.pct);
+    },
+
+    /* AI usage limits & monitoring */
+    aiUse(chars) {
+      const r = auth(); if (r.e) return r.e; const g = requireAccess(r.u); if (g) return g;
+      const k = r.u.id + '|' + today(); const x = db.aiUsage[k] = db.aiUsage[k] || { calls: 0, chars: 0 };
+      if (x.calls >= db.cfg.aiDailyLimit) return err('You have reached today\'s tutor limit (' + db.cfg.aiDailyLimit + ' questions). It resets tomorrow.');
+      x.calls++; x.chars += chars || 0; save(); return okr({ left: db.cfg.aiDailyLimit - x.calls });
+    },
+    aiLeft() { const r = auth(); if (r.e) return 0; const x = db.aiUsage[r.u.id + '|' + today()]; return db.cfg.aiDailyLimit - (x ? x.calls : 0); },
+
+    /* payments */
+    initiatePayment(provider, phone) {
+      const r = auth(); if (r.e) return r.e; const u = r.u; if (u.role !== 'student') return err('Only students subscribe.');
+      const ph = normContact(phone); if (!ph || ph.includes('@')) return err('Enter a valid Ugandan mobile money number, e.g. 0772 123456.');
+      if (!['MTN Mobile Money', 'Airtel Money'].includes(provider)) return err('Choose a payment provider.');
+      let p = db.payments.find(x => x.userId === u.id && x.status === 'pending' && now() - x.createdAt < 15 * 60000);
+      if (p) return okr({ payment: p, reused: true });
+      p = { id: uid('pay'), ref: 'USL-' + rnd(4).toUpperCase(), userId: u.id, provider, phone: ph, amount: db.cfg.price, currency: db.cfg.currency, days: db.cfg.days, payTo: normContact(db.cfg.payNumber), status: 'pending', createdAt: now(), updatedAt: now(), txId: null };
+      db.payments.unshift(p); audit('payment.initiated', u.id, p.ref + ' ' + fmtUGX(p.amount)); save(); return okr({ payment: p });
+    },
+    myPayments() { const r = auth(); if (r.e) return []; return db.payments.filter(p => p.userId === r.u.id); },
+    /* The ONLY path that can activate a subscription: an authenticated provider callback. */
+    async handleCallback(payload, signature) {
+      load(); const expect = await sha(db.secret + '|' + payload.ref + '|' + payload.status + '|' + payload.amount + '|' + (payload.txId || ''));
+      if (signature !== expect) { audit('payment.bad_signature', null, String(payload.ref)); save(); return err('Invalid signature — callback rejected.'); }
+      const p = db.payments.find(x => x.ref === payload.ref); if (!p) { audit('payment.unknown_ref', null, String(payload.ref)); save(); return err('Unknown transaction reference.'); }
+      if (Number(payload.amount) !== p.amount) { audit('payment.amount_mismatch', p.userId, p.ref); save(); return err('Amount does not match the expected price.'); }
+      if (payload.status === 'success') {
+        if (p.status === 'success') { audit('payment.duplicate_ignored', p.userId, p.ref); save(); return okr({ duplicate: true, message: 'Duplicate confirmation ignored — no extra days added.' }); }
+        if (p.status === 'reversed') { audit('payment.late_success_ignored', p.userId, p.ref); save(); return err('This transaction was already reversed.'); }
+        const latest = db.subs.filter(s => s.userId === p.userId && s.status === 'active').reduce((m, s) => Math.max(m, s.expires), 0);
+        const start = Math.max(now(), latest);
+        db.subs.push({ id: uid('sub'), userId: p.userId, paymentId: p.id, start, expires: start + p.days * DAY, status: 'active' });
+        p.status = 'success'; p.txId = payload.txId || null; p.updatedAt = now(); audit('payment.success', p.userId, p.ref); queueWhatsApp('subscription', payMessage(p, 'success'), p.id); notify(p.userId, 'Payment received. Your subscription is active for ' + p.days + ' days.'); save(); return okr({ message: 'Payment verified. Subscription activated.' });
+      }
+      if (payload.status === 'failed') { if (p.status === 'pending') { p.status = 'failed'; p.updatedAt = now(); audit('payment.failed', p.userId, p.ref); notify(p.userId, 'Your payment did not go through. No money was taken for the subscription.'); save(); } return okr({ message: 'Marked failed.' }); }
+      if (payload.status === 'reversed') {
+        if (p.status !== 'success') return okr({ message: 'Nothing to reverse.' });
+        p.status = 'reversed'; p.updatedAt = now(); const s = db.subs.find(x => x.paymentId === p.id); if (s) { s.status = 'revoked'; }
+        audit('payment.reversed', p.userId, p.ref); queueWhatsApp('reversal', payMessage(p, 'reversed'), p.id); notify(p.userId, 'A payment was reversed, so the matching subscription days were removed.'); save(); return okr({ message: 'Payment reversed; access removed.' });
+      }
+      return err('Unknown status.');
+    },
+
+    /* admin / reviewer / contributor */
+    adminStats() {
+      const r = auth('*'); if (r.e) return r.e; const t = now(); const st = db.users.filter(u => u.role === 'student');
+      const active = st.filter(u => accessOf(u).state === 'paid').length, trial = st.filter(u => accessOf(u).state === 'trial').length;
+      const rev = db.payments.filter(p => p.status === 'success').reduce((s, p) => s + p.amount, 0);
+      const ai = Object.entries(db.aiUsage).reduce((s, [, v]) => s + v.calls, 0);
+      return okr({ students: st.length, active, trial, revenue: rev, published: db.papers.filter(p => p.status === 'published').length, pending: db.papers.filter(p => p.status === 'pending').length + db.lessons.filter(l => l.status === 'pending').length, aiCalls: ai, aiCost: ai * db.cfg.aiCostPerCall, attempts: db.attempts.length, lessons: db.lessons.filter(l => l.status === 'published').length });
+    },
+    listStudents() { const r = auth('*'); if (r.e) return r.e; return okr({ students: db.users.map(u => ({ id: u.id, name: u.name, contact: u.contact, role: u.role, classId: u.classId, status: u.status, verified: u.verified, device: u.deviceId, access: accessOf(u).state, createdAt: u.createdAt })) }); },
+    setUserStatus(id, status) { const r = auth('*'); if (r.e) return r.e; const u = db.users.find(x => x.id === id); if (!u || u.id === r.u.id) return err('Cannot change that account.'); u.status = status === 'suspended' ? 'suspended' : 'active'; if (u.status !== 'active') Object.keys(db.sessions).forEach(t => { if (db.sessions[t].userId === id) delete db.sessions[t]; }); audit('user.' + u.status, r.u.id, u.contact); save(); return okr(); },
+    resetDevice(id) { const r = auth('*'); if (r.e) return r.e; const u = db.users.find(x => x.id === id); if (!u) return err('Not found.'); u.deviceId = null; Object.keys(db.sessions).forEach(t => { if (db.sessions[t].userId === id) delete db.sessions[t]; }); audit('device.reset_by_admin', r.u.id, u.contact); save(); return okr(); },
+    async addStaff(f) {
+      const r = auth('*'); if (r.e) return r.e; const contact = normContact(f.contact);
+      if (!contact || !contact.includes('@')) return err('Staff accounts need an email address.'); if (!ROLE_PERMS[f.role] || f.role === 'student') return err('Choose a role.'); if (!pwOk(f.password)) return err('Password needs 8+ characters with letters and numbers.');
+      if (!(f.name || '').trim()) return err('Enter a name.'); const salt = uid('s'), pw = await hash(f.password, salt); load();
+      if (db.users.find(u => u.contact === contact)) return err('That email already has an account.');
+      db.users.push({ id: uid('u'), role: f.role, name: f.name.trim(), contact, classId: null, subjects: [], salt, pw, verified: true, status: 'active', createdAt: now(), deviceId: null, deviceSince: null, dailyGoal: 2, failed: 0, lockUntil: 0 });
+      audit('staff.added', r.u.id, contact + ' as ' + f.role); save(); return okr();
+    },
+    saveConfig(c) {
+      const r = auth('*'); if (r.e) return r.e; const n = x => parseInt(x, 10);
+      if (!(n(c.price) >= 1000) || !(n(c.days) >= 1) || !(n(c.trialMinutes) >= 1) || !(n(c.aiDailyLimit) >= 1)) return err('Check the values: price ≥ 1000, days ≥ 1, trial ≥ 1 minute, AI limit ≥ 1.');
+      const pn = normContact(c.payNumber), wn = normContact(c.whatsappNumber);
+      if (!pn || pn.includes('@')) return err('Enter a valid Ugandan phone number to receive payments.'); if (!wn || wn.includes('@')) return err('Enter a valid WhatsApp phone number.');
+      Object.assign(db.cfg, { price: n(c.price), days: n(c.days), trialMinutes: n(c.trialMinutes), aiDailyLimit: n(c.aiDailyLimit), aiCostPerCall: n(c.aiCostPerCall) || 0, sandbox: !!c.sandbox, payNumber: String(c.payNumber).trim(), whatsappNumber: String(c.whatsappNumber).trim(), whatsappNotify: !!c.whatsappNotify });
+      audit('config.saved', r.u.id, JSON.stringify(db.cfg)); save(); return okr();
+    },
+    upsertClass(c) { const r = auth('*'); if (r.e) return r.e; const id = (c.id || '').trim().toUpperCase(); if (!/^[A-Z0-9]{1,6}$/.test(id) || !(c.name || '').trim()) return err('Give a short class code (e.g. S1) and a name.'); const x = db.classes.find(k => k.id === id); const o = { id, name: c.name.trim(), level: (c.level || '').trim(), focus: (c.focus || '').trim() }; if (x) Object.assign(x, o); else db.classes.push(o); audit('class.saved', r.u.id, id); save(); return okr(); },
+    upsertSubject(s) {
+      const r = auth('*'); if (r.e) return r.e; const name = (s.name || '').trim(); if (!name || !(s.classes || []).length) return err('Give a subject name and pick at least one class.');
+      const id = s.id || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 20); let x = db.subjects.find(k => k.id === id);
+      if (x) { x.name = name; x.classes = s.classes; } else { x = { id, name, classes: s.classes }; db.subjects.push(x); }
+      x.classes.forEach(c => { if (!db.syllabus.find(y => y.classId === c && y.subjectId === id)) db.syllabus.push({ classId: c, subjectId: id, ref: '', version: '', note: '' }); });
+      audit('subject.saved', r.u.id, name); save(); return okr();
+    },
+    deleteSubject(id) { const r = auth('*'); if (r.e) return r.e; if (db.lessons.some(l => l.subject === id) || db.papers.some(p => p.subject === id)) return err('This subject has lessons or papers. Withdraw them first.'); db.subjects = db.subjects.filter(s => s.id !== id); db.syllabus = db.syllabus.filter(s => s.subjectId !== id); audit('subject.deleted', r.u.id, id); save(); return okr(); },
+    outbox() { const r = auth('*'); if (r.e) return r.e; return okr({ items: db.outbox }); },
+    markOutboxSent(id) { const r = auth('*'); if (r.e) return r.e; const m = db.outbox.find(x => x.id === id); if (!m) return err('Not found.'); m.status = 'sent'; m.sentAt = now(); audit('outbox.sent', r.u.id, m.kind); save(); return okr(); },
+    addOrg(name) { const r = auth('*'); if (r.e) return r.e; name = (name || '').trim(); if (name.length < 2) return err('Enter the organisation name.'); if (db.orgs.find(o => o.name.toLowerCase() === name.toLowerCase())) return err('That organisation already exists.'); db.orgs.push({ id: uid('o'), name }); audit('org.added', r.u.id, name); save(); return okr(); },
+    setRole(id, role) { const r = auth('*'); if (r.e) return r.e; const u = db.users.find(x => x.id === id); if (!u || u.id === r.u.id || u.role === 'student' || !ROLE_PERMS[role] || role === 'student') return err('Cannot change that role.'); u.role = role; Object.keys(db.sessions).forEach(t => { if (db.sessions[t].userId === id) delete db.sessions[t]; }); audit('role.changed', r.u.id, u.contact + ' → ' + role); save(); return okr(); },
+    setSyllabus(classId, subjectId, ref, version, note) { const r = auth('*'); if (r.e) return r.e; const s = db.syllabus.find(x => x.classId === classId && x.subjectId === subjectId); if (!s) return err('Not found.'); Object.assign(s, { ref: (ref || '').trim(), version: (version || '').trim(), note: (note || '').trim() }); audit('syllabus.saved', r.u.id, classId + '/' + subjectId); save(); return okr(); },
+    submitPaper(f) {
+      const r = auth('submit'); if (r.e) return r.e;
+      if (!(f.title || '').trim()) return err('Give the paper a title.');
+      if (!db.classes.find(c => c.id === f.cls)) return err('Choose a class.'); if (!db.subjects.find(s => s.id === f.subject)) return err('Choose a subject.');
+      const year = parseInt(f.year, 10); if (!(year >= 1990 && year <= 2100)) return err('Enter a valid year.');
+      const pn = parseInt(f.paperNo, 10); if (!(pn >= 1 && pn <= 9)) return err('Paper number must be 1–9.'); const dur = parseInt(f.duration, 10); if (!(dur >= 1 && dur <= 300)) return err('Duration must be 1–300 minutes.');
+      if (!CATEGORIES.includes(f.category)) return err('Choose a paper category.'); if (!PERMS.includes(f.permission)) return err('Choose the permission status.'); if (!db.orgs.find(o => o.id === f.org)) return err('Choose the source organisation.');
+      const pq = parseQuestions(f.questionsText, !!f.hasGuide); if (pq.errors.length) return err(pq.errors[0]); if (!pq.questions.length) return err('Add at least one question.');
+      const cl = db.classes.find(c => c.id === f.cls);
+      const p = { id: uid('p'), title: f.title.trim(), cls: f.cls, level: cl.level, subject: f.subject, year, paperNo: pn, org: db.orgs.find(o => o.id === f.org).name, category: f.category, hasGuide: !!f.hasGuide, verified: false, permission: f.permission, reviewer: 'Pending review', status: 'pending', submittedBy: r.u.id, createdAt: now(), duration: dur, instructions: (f.instructions || '').trim() || 'Answer all questions.', questions: pq.questions };
+      db.papers.push(p); audit('paper.submitted', r.u.id, p.title); save(); return okr({ id: p.id });
+    },
+    submitLesson(f) {
+      const r = auth('submit'); if (r.e) return r.e;
+      if (!db.classes.find(c => c.id === f.cls) || !db.subjects.find(s => s.id === f.subject)) return err('Choose a class and subject.');
+      if (!(f.title || '').trim() || !(f.topic || '').trim() || !(f.notes || '').trim()) return err('Title, topic and notes are required.');
+      if (!PERMS.includes(f.permission)) return err('Choose the permission status.');
+      const q = parseQuiz(f.quizText); if (q.errors.length) return err(q.errors[0]);
+      const l = { id: uid('l'), cls: f.cls, subject: f.subject, topic: f.topic.trim(), subtopic: (f.subtopic || '').trim(), title: f.title.trim(), objectives: String(f.objectives || '').split('\n').map(s => s.trim()).filter(Boolean), notes: textToHtml(f.notes), example: (f.example || '').trim(), quiz: q.quiz, status: 'pending', review: 'pending', source: (f.source || '').trim() || 'Contributor', permission: f.permission, submittedBy: r.u.id, createdAt: now() };
+      db.lessons.push(l); audit('lesson.submitted', r.u.id, l.title); save(); return okr({ id: l.id });
+    },
+    reviewItem(kind, id, decision, note) {
+      const r = auth('review'); if (r.e) return r.e; const list = kind === 'lesson' ? db.lessons : db.papers; const it = list.find(x => x.id === id); if (!it || it.status !== 'pending') return err('Item is not waiting for review.');
+      if (it.submittedBy === r.u.id) return err('You cannot review your own submission. Ask another reviewer.');
+      if (decision === 'approve') {
+        if (it.permission === 'Permission pending') return err('Cannot publish: permission to distribute this material is still pending.');
+        if (kind === 'paper' && !it.questions.length) return err('The paper has no questions.');
+        it.status = 'published'; if (kind === 'paper') { it.verified = false; it.reviewer = 'Reviewed by ' + r.u.name + ' (' + new Date().toISOString().slice(0, 10) + ')'; it.verified = it.category !== 'AI-generated practice'; } else it.review = 'reviewed';
+      } else { it.status = 'rejected'; if (kind === 'paper') it.reviewer = 'Rejected by ' + r.u.name; }
+      db.reviews.unshift({ id: uid('rv'), kind, itemId: id, title: it.title, decision, note: (note || '').trim(), by: r.u.name, at: now() }); audit('review.' + decision, r.u.id, kind + ' ' + it.title); save(); return okr();
+    },
+    withdraw(kind, id) { const r = auth('*'); if (r.e) return r.e; const it = (kind === 'lesson' ? db.lessons : db.papers).find(x => x.id === id); if (!it) return err('Not found.'); it.status = 'withdrawn'; audit('content.withdrawn', r.u.id, kind + ' ' + it.title); save(); return okr(); },
+    mySubmissions() { const r = auth('submit'); if (r.e) return []; return { papers: db.papers.filter(p => p.submittedBy === r.u.id), lessons: db.lessons.filter(l => l.submittedBy === r.u.id) }; },
+    async resetDemo() { LS.removeItem(KEY); LS.removeItem(TOK); db = null; await seed(); save(); return okr(); }
+  };
+
+  /* Stand-in for the Mobile Money provider. In production the provider calls YOUR server's webhook;
+     the browser never signs or sends these. Used only while Admin → Settings → Sandbox is on. */
+  const Gateway = {
+    async simulate(ref, status) {
+      load(); const p = db.payments.find(x => x.ref === ref); if (!p) return err('Unknown reference');
+      const payload = { ref, status, amount: p.amount, txId: 'MM' + rnd(4).toUpperCase() };
+      const sig = await sha(db.secret + '|' + payload.ref + '|' + payload.status + '|' + payload.amount + '|' + payload.txId);
+      return Server.handleCallback(payload, sig);
+    },
+    async forged(ref) { return Server.handleCallback({ ref, status: 'success', amount: 20000, txId: 'FAKE' }, 'screenshot-pretending-to-be-proof'); }
+  };
+
+  /* ---------- grounded tutor (local retrieval). Swap `AI.provider` for an LLM behind your server. ---------- */
+  const STOP = new Set('the a an of to in is are was what how why does do did can could would i me my you your please explain about tell give with and or for on it this that be as at by from show teach'.split(' '));
+  const stem = w => w.length > 4 ? w.replace(/(ing|es|s)$/, '') : w;
+  const tok = s => String(s).toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(w => w && w.length > 1 && !STOP.has(w)).map(stem);
+  const plain = h => String(h || '').replace(/<br\s*\/?>/g, '. ').replace(/<\/(p|li|h3|div)>/g, '. ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').replace(/\.\s*\./g, '.').trim();
+  const AI = {
+    provider: 'local-retrieval',
+    search(q, classId, subjectId) {
+      load(); const qt = [...new Set(tok(q))]; if (!qt.length) return null;
+      let best = null;
+      db.lessons.filter(l => l.status === 'published' && l.cls === classId && (!subjectId || l.subject === subjectId)).forEach(l => {
+        const head = tok(l.title + ' ' + l.topic + ' ' + l.subtopic), body = tok(plain(l.notes) + ' ' + (l.objectives || []).join(' ') + ' ' + l.example);
+        let s = 0, m = 0; qt.forEach(w => { if (head.includes(w)) { s += 3; m++; } else if (body.includes(w)) { s += 1; m++; } });
+        if (m >= Math.ceil(qt.length / 2) && (!best || s > best.s)) best = { l, s, qt };
+      });
+      return best;
+    },
+    answer(q, o) {
+      const hit = AI.search(q, o.classId, o.subjectId);
+      if (!hit) return { found: false, text: 'I could not find that in the approved notes for this class and subject, so I will not guess. Try different words, pick another subject, or ask your teacher. You can also browse the Library.' };
+      const l = hit.l, notes = plain(l.notes), sents = notes.match(/[^.!?]+[.!?]+/g) || [notes];
+      let text;
+      if (o.mode === 'example') text = 'Worked example: ' + plain(l.example);
+      else if (o.mode === 'simple') text = 'In simple terms: ' + sents.slice(0, 2).join(' ').trim() + (l.objectives && l.objectives.length ? ' The key things to remember: ' + l.objectives.join('; ') + '.' : '');
+      else { const m = sents.filter(s => tok(s).some(w => hit.qt.includes(w))).slice(0, 3); text = (m.length ? m : sents.slice(0, 2)).join(' ').trim(); }
+      return { found: true, text, lesson: l };
+    },
+    quizQuestion(classId, subjectId, weak) {
+      load(); const pool = [];
+      db.lessons.filter(l => l.status === 'published' && l.cls === classId && (!subjectId || l.subject === subjectId)).forEach(l => (l.quiz || []).forEach((q, i) => pool.push({ l, q, i, weak: weak.some(w => w.topic === l.topic && w.subject === l.subject) })));
+      if (!pool.length) return null; const w = pool.filter(p => p.weak); const src = w.length ? w : pool; return src[Math.floor(Math.random() * src.length)];
+    }
+  };
+
+  /* ---------- speech ---------- */
+  const Speech = {
+    rate: parseFloat(LS && LS.getItem('usl_rate')) || 1, last: '',
+    supported() { return isBrowser && 'speechSynthesis' in root; },
+    speak(text) {
+      if (!Speech.supported()) return false; Speech.stop(); Speech.last = text;
+      const sents = String(text).replace(/\s+/g, ' ').match(/[^.!?;:]+[.!?;:]*/g) || [text], parts = []; let cur = '';
+      sents.forEach(s => { if ((cur + s).length > 170) { if (cur) parts.push(cur); cur = s; } else cur += s; }); if (cur) parts.push(cur);
+      parts.forEach(p => { const u = new SpeechSynthesisUtterance(p.trim()); u.rate = Speech.rate; u.lang = 'en-GB'; root.speechSynthesis.speak(u); }); return true;
+    },
+    pause() { Speech.supported() && root.speechSynthesis.pause(); }, resume() { Speech.supported() && root.speechSynthesis.resume(); },
+    stop() { Speech.supported() && root.speechSynthesis.cancel(); }, replay() { if (Speech.last) Speech.speak(Speech.last); },
+    setRate(r) { Speech.rate = r; LS.setItem('usl_rate', r); },
+    listen(onResult, onEnd, onErr) {
+      const SR = root.SpeechRecognition || root.webkitSpeechRecognition; if (!SR) return null;
+      const r = new SR(); r.lang = 'en-GB'; r.interimResults = false; r.maxAlternatives = 1;
+      r.onresult = e => onResult(e.results[0][0].transcript); r.onend = onEnd; r.onerror = e => onErr && onErr(e.error); r.start(); return r;
+    },
+    bar(el, getText) {
+      if (!Speech.supported()) { el.innerHTML = '<p class="hint">Read-aloud is not supported by this browser. Try Chrome on Android or a recent desktop browser.</p>'; return; }
+      el.innerHTML = '<div class="speechbar" role="group" aria-label="Read aloud controls"><button class="btn sm orange" data-a="play">🔊 Listen</button><button class="btn sm ghost" data-a="pause">⏸ Pause</button><button class="btn sm ghost" data-a="resume">▶ Resume</button><button class="btn sm ghost" data-a="replay">⟲ Replay</button><button class="btn sm ghost" data-a="stop">⏹ Stop</button><label class="small" style="margin:0">Speed <select data-a="rate" aria-label="Speaking speed">' + [0.75, 1, 1.25, 1.5].map(v => '<option value="' + v + '"' + (v === Speech.rate ? ' selected' : '') + '>' + v + '×</option>').join('') + '</select></label></div>';
+      el.onclick = e => { const a = e.target.closest('button') && e.target.closest('button').dataset.a; if (a === 'play') Speech.speak(getText()); if (a === 'pause') Speech.pause(); if (a === 'resume') Speech.resume(); if (a === 'replay') Speech.replay(); if (a === 'stop') Speech.stop(); };
+      el.querySelector('select').onchange = e => { Speech.setRate(parseFloat(e.target.value)); if (Speech.last && root.speechSynthesis.speaking) Speech.replay(); };
+    }
+  };
+
+  /* ---------- UI helpers (browser only) ---------- */
+  function toast(msg, type) {
+    let box = $('#toasts'); if (!box) { box = document.createElement('div'); box.id = 'toasts'; box.setAttribute('aria-live', 'polite'); document.body.appendChild(box); }
+    const t = document.createElement('div'); t.className = 'toast ' + (type || ''); t.textContent = msg; box.appendChild(t); setTimeout(() => t.remove(), type === 'bad' ? 7000 : 5000);
+  }
+  function modal(html, o) {
+    o = o || {}; const ov = document.createElement('div'); ov.className = 'overlay';
+    ov.innerHTML = '<div class="modal' + (o.wide ? ' wide' : '') + '" role="dialog" aria-modal="true">' + html + '</div>'; document.body.appendChild(ov);
+    const close = () => { ov.remove(); document.removeEventListener('keydown', onk); };
+    const onk = e => { if (e.key === 'Escape' && !o.locked) close(); }; document.addEventListener('keydown', onk);
+    const f = ov.querySelector('button,input,select,textarea,a'); f && f.focus(); return { el: ov.firstChild, close };
+  }
+  function confirmBox(msg, o) {
+    o = o || {}; return new Promise(res => {
+      const m = modal('<h3>' + esc(o.title || 'Please confirm') + '</h3><p>' + msg + '</p><div class="row" style="justify-content:flex-end"><button class="btn ghost" data-v="0">' + esc(o.cancel || 'Cancel') + '</button><button class="btn ' + (o.danger ? 'danger' : 'orange') + '" data-v="1">' + esc(o.ok || 'Confirm') + '</button></div>');
+      m.el.onclick = e => { const b = e.target.closest('button'); if (b) { m.close(); res(b.dataset.v === '1'); } };
+    });
+  }
+  function csv(rows) { return rows.map(r => r.map(c => '"' + String(c == null ? '' : c).replace(/"/g, '""') + '"').join(',')).join('\n'); }
+  function download(name, text) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'text/csv' })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+  function pill(a) {
+    const cfg = Server.cfg();
+    if (a.state === 'paid') return ['paid', '✓ Subscribed · ' + fmtMs(a.msLeft) + ' left'];
+    if (a.state === 'trial') return ['trial', '⏱ Free trial ' + fmtMs(a.msLeft)];
+    if (a.state === 'trial_ready') return ['ready', 'Start free trial'];
+    if (a.state === 'staff') return ['paid', 'Staff'];
+    return ['expired', 'Subscribe · ' + fmtUGX(cfg.price)];
+  }
+  function shell(user, page, a) {
+    const staff = user.role !== 'student';
+    const items = [['dashboard', 'dashboard.html', 'Home', '🏠'], ['library', 'library.html', 'Library', '📚'], ['papers', 'papers.html', 'Exam centre', '📝'], ['tutor', 'tutor.html', 'AI tutor', '🎙️'], ['profile', 'profile.html', 'Account', '👤']];
+    if (staff) items.push(['admin', 'admin.html', 'Admin', '🛠️']);
+    const cur = k => k === page ? ' aria-current="page"' : ''; const [pc, pt] = pill(a);
+    const head = document.createElement('div');
+    head.innerHTML = '<a class="skip" href="#main">Skip to content</a><header class="topbar"><div class="container"><a class="brand" href="dashboard.html"><span class="logo" aria-hidden="true">🎓</span><span>Uganda Smart Learning</span></a><nav class="nav" aria-label="Main">' + items.map(i => '<a href="' + i[1] + '"' + cur(i[0]) + '>' + i[2] + '</a>').join('') + '</nav><div class="top-right"><a id="pill" class="pill ' + pc + '" href="subscription.html">' + esc(pt) + '</a></div></div></header>';
+    document.body.prepend(head);
+    const bn = document.createElement('nav'); bn.className = 'bottomnav'; bn.setAttribute('aria-label', 'Main'); bn.style.gridTemplateColumns = 'repeat(' + items.length + ',1fr)';
+    bn.innerHTML = items.map(i => '<a href="' + i[1] + '"' + cur(i[0]) + '><span aria-hidden="true">' + i[3] + '</span>' + i[2].replace('Exam centre', 'Exams') + '</a>').join(''); document.body.appendChild(bn);
+  }
+  function lockedOverlay(reason) {
+    if ($('#locked')) return; root.dispatchEvent(new Event('usl:locked'));
+    const m = modal('<h3>' + esc(reason === 'trial' ? 'Your free trial has ended' : 'Your access has ended') + '</h3><p>Your progress is saved. Subscribe for ' + fmtUGX(Server.cfg().price) + ' per month to keep learning.</p><a class="btn orange block" href="subscription.html">See plans &amp; pay</a>', { locked: true }); m.el.id = 'locked';
+  }
+  async function boot(o) {
+    o = o || {}; await ready; load();
+    const cu = Server.currentUser();
+    if (o.auth !== false && !cu.user) { location.replace('index.html' + (cu.reason ? '?msg=' + encodeURIComponent(cu.reason) : '')); return new Promise(() => { }); }
+    if (!cu.user) return { user: null };
+    const user = cu.user; let a = Server.access(user);
+    if (o.staff && !can(user, o.staff)) { location.replace('dashboard.html'); return new Promise(() => { }); }
+    if (o.paid && !allowed(a)) { location.replace('subscription.html?need=1&from=' + encodeURIComponent(o.page || '')); return new Promise(() => { }); }
+    shell(user, o.page, a);
+    setInterval(() => {
+      const cur = Server.currentUser(); if (!cur.user) { location.replace('index.html?msg=' + encodeURIComponent(cur.reason || 'Please log in again.')); return; }
+      a = Server.access(cur.user); const p = $('#pill'); if (p) { const [c, t] = pill(a); p.className = 'pill ' + c; p.textContent = t; }
+      root.dispatchEvent(new CustomEvent('usl:tick', { detail: a }));
+      if (o.paid && !allowed(a)) lockedOverlay(a.hadSub ? 'sub' : 'trial');
+    }, 1000);
+    return { user, access: a };
+  }
+
+  const waLink = (to, text) => 'https://wa.me/' + String(to || '').replace(/\D/g, '') + '?text=' + encodeURIComponent(text || '');
+  const USL = { LS, waLink, ready, Server, Gateway, AI, Speech, boot, toast, modal, confirmBox, esc, $, $$, fmtUGX, fmtDate, fmtMs, csv, download, textToHtml, parseQuestions, parseQuiz, plain, allowed, can, normContact, deviceId, newDevice: () => { LS.setItem(DEV, uid('dev')); }, CATEGORIES, PERMS, today };
+  root.USL = USL; if (typeof module !== 'undefined' && module.exports) module.exports = USL;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+(async function () {
+  const { Server, esc, fmtDate, fmtUGX, toast, modal, confirmBox } = USL;
+  const ctx = await USL.boot({ page: 'admin', staff: 'submit' }); const me = ctx.user, main = document.getElementById('main');
+  const isAdmin = me.role === 'admin', canReview = USL.can(me, 'review');
+  const D = () => Server.data(); const subName = id => (D().subjects.find(s => s.id === id) || {}).name || id;
+  const userName = id => id === 'system' ? 'System' : ((D().users.find(u => u.id === id) || {}).name || id || '—');
+  const tabs = [];
+  if (isAdmin) tabs.push(['overview', 'Overview'], ['students', 'Students']);
+  if (canReview) tabs.push(['review', 'Review queue']);
+  tabs.push(['papers', 'Papers'], ['lessons', 'Lessons'], ['mine', 'My submissions']);
+  if (isAdmin) tabs.push(['catalogue', 'Catalogue'], ['payments', 'Payments'], ['outbox', 'WhatsApp outbox'], ['people', 'Staff'], ['settings', 'Settings'], ['audit', 'Audit log']);
+  let tab = (location.hash || '').slice(1); if (!tabs.find(t => t[0] === tab)) tab = tabs[0][0];
+  const roleNote = { admin: 'Administrator', reviewer: 'Reviewer', contributor: 'Contributor' }[me.role];
+  const sel = (id, opts, v) => '<select id="' + id + '">' + opts.map(o => '<option value="' + esc(o[0]) + '"' + (String(o[0]) === String(v) ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join('') + '</select>';
+  const val = id => document.getElementById(id).value, chk = id => document.getElementById(id).checked;
+  const stat = (k, v) => '<div class="stat"><b>' + v + '</b><span>' + k + '</span></div>';
+  const statusBadge = s => ({ published: 'ok', pending: 'warn', rejected: 'bad', withdrawn: 'bad' }[s] ? '<span class="badge ' + { published: 'ok', pending: 'warn', rejected: 'bad', withdrawn: 'bad' }[s] + '">' + esc(s) + '</span>' : esc(s));
+  const out = (r, okMsg) => { toast(r.ok ? okMsg : r.error, r.ok ? 'ok' : 'bad'); return r.ok; };
+
+  function shellHtml() {
+    main.innerHTML = '<div class="row between"><h1 class="mb0">Admin &amp; content</h1><span class="badge info">' + esc(roleNote) + ' · ' + esc(me.name) + '</span></div><div class="tabs mt" role="tablist">' + tabs.map(t => '<button class="tab" role="tab" data-t="' + t[0] + '" aria-selected="' + (t[0] === tab) + '">' + esc(t[1]) + '</button>').join('') + '</div><div id="panel"></div>';
+    main.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { tab = b.dataset.t; history.replaceState(null, '', '#' + tab); shellHtml(); });
+    ({ overview, students, review, papers, lessons, mine, catalogue, payments, outbox, people, settings, audit }[tab])(document.getElementById('panel'));
+  }
+
+  function overview(p) {
+    const s = Server.adminStats(), db = D(); const byDay = {};
+    Object.entries(db.aiUsage).forEach(([k, v]) => { const d = k.split('|')[1]; byDay[d] = byDay[d] || { calls: 0, chars: 0 }; byDay[d].calls += v.calls; byDay[d].chars += v.chars; });
+    p.innerHTML = '<div class="grid g4 g-keep2">' + stat('Students', s.students) + stat('Active subscribers', s.active) + stat('On free trial now', s.trial) + stat('Revenue (verified)', fmtUGX(s.revenue)) + stat('Published lessons', s.lessons) + stat('Published papers', s.published) + stat('Waiting for review', s.pending) + stat('Exam attempts', s.attempts) + '</div>' +
+      '<h2 class="mt2">AI &amp; voice usage</h2><div class="card"><p class="small muted">Estimated cost uses ' + fmtUGX(db.cfg.aiCostPerCall) + ' per tutor call (change under Settings). Daily limit per student: ' + db.cfg.aiDailyLimit + '.</p><div class="tablewrap"><table><thead><tr><th>Date</th><th>Tutor calls</th><th>Characters</th><th>Est. cost</th></tr></thead><tbody>' + (Object.entries(byDay).sort().reverse().slice(0, 14).map(([d, v]) => '<tr><td>' + d + '</td><td>' + v.calls + '</td><td>' + v.chars + '</td><td>' + fmtUGX(v.calls * db.cfg.aiCostPerCall) + '</td></tr>').join('') || '<tr><td colspan="4" class="muted">No usage yet.</td></tr>') + '</tbody></table></div><p class="mb0 mt small"><b>Total:</b> ' + s.aiCalls + ' calls · ' + fmtUGX(s.aiCost) + '</p></div>';
+  }
+
+  function students(p) {
+    const rs = Server.listStudents(); if (!rs.ok) return; const rows = rs.students;
+    p.innerHTML = '<div class="row between"><p class="muted mb0">' + rows.length + ' accounts</p><button class="btn sm ghost" id="exp">Export report (CSV, no contact details)</button></div><div class="tablewrap mt"><table><thead><tr><th>Name</th><th>Contact</th><th>Role</th><th>Class</th><th>Access</th><th>Device</th><th>Status</th><th></th></tr></thead><tbody>' + rows.map(u => '<tr><td>' + esc(u.name) + '</td><td class="small">' + esc(u.contact) + '</td><td>' + esc(u.role) + '</td><td>' + esc(u.classId || '—') + '</td><td><span class="badge">' + esc(u.access) + '</span></td><td>' + (u.device ? '<span class="badge ok">registered</span>' : '<span class="badge">none</span>') + '</td><td>' + (u.status === 'active' ? '<span class="badge ok">active</span>' : '<span class="badge bad">suspended</span>') + '</td><td class="right">' + (u.id === me.id ? '' : '<button class="btn sm ghost" data-st="' + u.id + '|' + (u.status === 'active' ? 'suspended' : 'active') + '">' + (u.status === 'active' ? 'Suspend' : 'Reactivate') + '</button> <button class="btn sm ghost" data-dv="' + u.id + '">Reset device</button>') + '</td></tr>').join('') + '</tbody></table></div>';
+    p.querySelectorAll('[data-st]').forEach(b => b.onclick = () => { const [id, st] = b.dataset.st.split('|'); if (out(Server.setUserStatus(id, st), 'Updated.')) shellHtml(); });
+    p.querySelectorAll('[data-dv]').forEach(b => b.onclick = async () => { if (await confirmBox('The student will be signed out and can register their next login device. Use this only after checking who is asking.', { title: 'Reset registered device?', ok: 'Reset device' }) && out(Server.resetDevice(b.dataset.dv), 'Device reset.')) shellHtml(); });
+    document.getElementById('exp').onclick = () => USL.download('students-report.csv', USL.csv([['Name', 'Role', 'Class', 'Access', 'Status', 'Created']].concat(rows.map(u => [u.name, u.role, u.classId || '', u.access, u.status, new Date(u.createdAt).toISOString().slice(0, 10)]))));
+  }
+
+  const QHELP = '<details class="small"><summary>Question format</summary><p>One question per line:</p><pre style="white-space:pre-wrap;background:#f5f7fb;padding:10px;border-radius:10px">MCQ | Topic | marks | Question | Option A ;; Option B ;; Option C | correct option number\nSTRUCT | Topic | marks | Question | Model answer (use \\n for a new line)</pre><p class="mb0">The correct option / model answer is required when you tick “has marking guide”. Leave them out if you do not have an authorised guide.</p></details>';
+  function paperForm() {
+    const db = D(), subs = db.subjects.map(s => [s.id, s.name]);
+    return '<form id="pf" class="card stack"><h3>Submit a paper</h3><p class="small muted mb0">Submissions go to a reviewer first. Only add material the platform is allowed to distribute.</p><div class="grid g3"><div class="field"><label for="pt">Title</label><input id="pt" placeholder="e.g. Mock Examination – Paper 1"></div><div class="field"><label for="pc">Class</label>' + sel('pc', db.classes.map(c => [c.id, c.id + ' – ' + c.name]), 'S4') + '</div><div class="field"><label for="ps">Subject</label>' + sel('ps', subs) + '</div><div class="field"><label for="py">Year</label><input id="py" type="number" value="' + new Date().getFullYear() + '"></div><div class="field"><label for="pn">Paper number</label><input id="pn" type="number" min="1" max="9" value="1"></div><div class="field"><label for="pd">Duration (minutes)</label><input id="pd" type="number" value="60"></div><div class="field"><label for="pcat">Category</label>' + sel('pcat', USL.CATEGORIES.map(c => [c, c])) + '</div><div class="field"><label for="po">Source organisation</label>' + sel('po', db.orgs.map(o => [o.id, o.name])) + '</div><div class="field"><label for="pp">Permission status</label>' + sel('pp', USL.PERMS.map(c => [c, c]), USL.PERMS[0]) + '</div></div><div class="field"><label for="pi">Instructions to candidates</label><input id="pi" placeholder="Answer all questions."></div><label class="check"><input type="checkbox" id="pg" checked><span>This paper has an authorised marking guide / answer key</span></label><div class="field"><label for="pq">Questions</label><textarea id="pq" rows="8" placeholder="MCQ | Algebra | 2 | Simplify 2x + 3x | 5x ;; 6x ;; x² | 1"></textarea></div>' + QHELP + '<button class="btn orange" type="submit">Send for review</button></form>';
+  }
+  function papers(p) {
+    p.innerHTML = paperForm() + (isAdmin ? '<h2 class="mt2">All papers</h2><div class="tablewrap"><table><thead><tr><th>Title</th><th>Class</th><th>Paper</th><th>Year</th><th>Source</th><th>Status</th><th></th></tr></thead><tbody>' + D().papers.map(x => '<tr><td>' + esc(x.title) + '<br><span class="small muted">' + esc(x.category) + ' · ' + esc(x.permission) + '</span></td><td>' + esc(x.cls) + '</td><td>' + x.paperNo + '</td><td>' + x.year + '</td><td class="small">' + esc(x.org) + '</td><td>' + statusBadge(x.status) + '</td><td class="right">' + (x.status === 'published' ? '<button class="btn sm ghost" data-w="' + x.id + '">Withdraw</button>' : '') + '</td></tr>').join('') + '</tbody></table></div>' : '');
+    document.getElementById('pf').onsubmit = e => { e.preventDefault(); const r = Server.submitPaper({ title: val('pt'), cls: val('pc'), subject: val('ps'), year: val('py'), paperNo: val('pn'), duration: val('pd'), category: val('pcat'), org: val('po'), permission: val('pp'), instructions: val('pi'), hasGuide: chk('pg'), questionsText: val('pq') }); if (out(r, 'Submitted for review.')) { tab = 'mine'; shellHtml(); } };
+    p.querySelectorAll('[data-w]').forEach(b => b.onclick = async () => { if (await confirmBox('Students will no longer see this paper. Past attempts stay in their history.', { danger: true, title: 'Withdraw paper?', ok: 'Withdraw' }) && out(Server.withdraw('paper', b.dataset.w), 'Withdrawn.')) shellHtml(); });
+  }
+
+  function lessons(p) {
+    const db = D();
+    p.innerHTML = '<form id="lf" class="card stack"><h3>Submit a lesson</h3><p class="small muted mb0">Write original notes or use material you have permission to use. A reviewer approves it before students see it. Do not paste text from the official syllabus unless you are authorised to.</p><div class="grid g3"><div class="field"><label for="lc">Class</label>' + sel('lc', db.classes.map(c => [c.id, c.id + ' – ' + c.name])) + '</div><div class="field"><label for="ls">Subject</label>' + sel('ls', db.subjects.map(s => [s.id, s.name])) + '</div><div class="field"><label for="lt">Topic</label><input id="lt"></div><div class="field"><label for="lst">Subtopic</label><input id="lst"></div><div class="field"><label for="ltl">Lesson title</label><input id="ltl"></div><div class="field"><label for="lp">Permission status</label>' + sel('lp', USL.PERMS.map(c => [c, c]), USL.PERMS[0]) + '</div></div><div class="field"><label for="lo">Learning outcomes (one per line)</label><textarea id="lo" rows="3"></textarea></div><div class="field"><label for="ln">Notes</label><textarea id="ln" rows="8" placeholder="Write paragraphs separated by blank lines. Start a line with - for bullet points."></textarea></div><div class="field"><label for="le">Worked example</label><textarea id="le" rows="3"></textarea></div><div class="field"><label for="lq">Quiz (one per line)</label><textarea id="lq" rows="4" placeholder="What is 2 + 2? | 3 ;; 4 ;; 5 | 2"></textarea><div class="hint">Format: question | option A ;; option B ;; option C | correct option number</div></div><div class="field"><label for="lsrc">Source / author</label><input id="lsrc" placeholder="e.g. Written by Ms Nabirye"></div><button class="btn orange" type="submit">Send for review</button></form>' +
+      (isAdmin ? '<h2 class="mt2">All lessons</h2><div class="tablewrap"><table><thead><tr><th>Title</th><th>Class</th><th>Subject</th><th>Status</th><th></th></tr></thead><tbody>' + db.lessons.map(l => '<tr><td>' + esc(l.title) + '<br><span class="small muted">' + esc(l.topic) + ' · ' + esc(l.source) + '</span></td><td>' + esc(l.cls) + '</td><td>' + esc(subName(l.subject)) + '</td><td>' + statusBadge(l.status) + '</td><td class="right">' + (l.status === 'published' ? '<button class="btn sm ghost" data-w="' + l.id + '">Withdraw</button>' : '') + '</td></tr>').join('') + '</tbody></table></div>' : '');
+    document.getElementById('lf').onsubmit = e => { e.preventDefault(); const r = Server.submitLesson({ cls: val('lc'), subject: val('ls'), topic: val('lt'), subtopic: val('lst'), title: val('ltl'), permission: val('lp'), objectives: val('lo'), notes: val('ln'), example: val('le'), quizText: val('lq'), source: val('lsrc') }); if (out(r, 'Submitted for review.')) { tab = 'mine'; shellHtml(); } };
+    p.querySelectorAll('[data-w]').forEach(b => b.onclick = async () => { if (await confirmBox('Students will no longer see this lesson.', { danger: true, title: 'Withdraw lesson?', ok: 'Withdraw' }) && out(Server.withdraw('lesson', b.dataset.w), 'Withdrawn.')) shellHtml(); });
+  }
+
+  function mine(p) {
+    const m = Server.mySubmissions(); const rows = [].concat(m.papers.map(x => ['Paper', x.title, x.status, x.reviewer]), m.lessons.map(x => ['Lesson', x.title, x.status, x.review]));
+    p.innerHTML = '<div class="tablewrap"><table><thead><tr><th>Type</th><th>Title</th><th>Status</th><th>Review</th></tr></thead><tbody>' + (rows.map(r => '<tr><td>' + r[0] + '</td><td>' + esc(r[1]) + '</td><td>' + statusBadge(r[2]) + '</td><td class="small">' + esc(r[3]) + '</td></tr>').join('') || '<tr><td colspan="4" class="muted">You have not submitted anything yet.</td></tr>') + '</tbody></table></div><p class="hint">Submitted content stays hidden from students until a reviewer approves it.</p>';
+  }
+
+  function review(p) {
+    const db = D(), items = [].concat(db.papers.filter(x => x.status === 'pending').map(x => ['paper', x]), db.lessons.filter(x => x.status === 'pending').map(x => ['lesson', x]));
+    p.innerHTML = '<h2>Waiting for review (' + items.length + ')</h2><div class="stack">' + (items.map(([k, x]) => '<div class="card"><div class="row between"><div><span class="badge">' + k + '</span> <b>' + esc(x.title) + '</b><br><span class="small muted">' + esc(x.cls) + ' · ' + esc(subName(x.subject)) + ' · by ' + esc(userName(x.submittedBy)) + (k === 'paper' ? ' · ' + esc(x.category) + ' · ' + x.questions.length + ' questions' : '') + '</span><br><span class="badge ' + (x.permission === 'Permission pending' ? 'bad' : 'ok') + '">' + esc(x.permission) + '</span> <span class="small muted">' + esc(x.source || x.org || '') + '</span></div><div class="row"><button class="btn sm ghost" data-v="' + k + '|' + x.id + '">Preview</button><button class="btn sm orange" data-a="' + k + '|' + x.id + '">Approve</button><button class="btn sm danger" data-r="' + k + '|' + x.id + '">Reject</button></div></div></div>').join('') || '<div class="card"><p class="muted mb0">Nothing is waiting. 🎉</p></div>') + '</div>' +
+      '<h2 class="mt2">Recent decisions</h2><div class="tablewrap"><table><thead><tr><th>When</th><th>Item</th><th>Decision</th><th>By</th><th>Note</th></tr></thead><tbody>' + (db.reviews.slice(0, 15).map(r => '<tr><td class="small">' + fmtDate(r.at) + '</td><td>' + esc(r.title) + '</td><td>' + statusBadge(r.decision === 'approve' ? 'published' : 'rejected') + '</td><td>' + esc(r.by) + '</td><td class="small">' + esc(r.note) + '</td></tr>').join('') || '<tr><td colspan="5" class="muted">None yet.</td></tr>') + '</tbody></table></div>';
+    const decide = (key, decision) => { const [k, id] = key.split('|'); const m = modal('<h3>' + (decision === 'approve' ? 'Approve' : 'Reject') + ' this ' + k + '?</h3>' + (decision === 'approve' ? '<p class="small">By approving you confirm the content is accurate enough for students and the platform may distribute it.</p>' : '') + '<div class="field"><label for="rn">Note (optional)</label><textarea id="rn" rows="3"></textarea></div><div class="row" style="justify-content:flex-end"><button class="btn ghost" data-x>Cancel</button><button class="btn ' + (decision === 'approve' ? 'orange' : 'danger') + '" data-ok>' + (decision === 'approve' ? 'Approve' : 'Reject') + '</button></div>'); m.el.onclick = e => { if (e.target.closest('[data-x]')) m.close(); if (e.target.closest('[data-ok]')) { const r = Server.reviewItem(k, id, decision, m.el.querySelector('#rn').value); m.close(); if (out(r, decision === 'approve' ? 'Published.' : 'Rejected.') || true) shellHtml(); } }; };
+    p.querySelectorAll('[data-a]').forEach(b => b.onclick = () => decide(b.dataset.a, 'approve')); p.querySelectorAll('[data-r]').forEach(b => b.onclick = () => decide(b.dataset.r, 'reject'));
+    p.querySelectorAll('[data-v]').forEach(b => b.onclick = () => { const [k, id] = b.dataset.v.split('|'); const x = (k === 'paper' ? db.papers : db.lessons).find(y => y.id === id); modal('<h3>' + esc(x.title) + '</h3>' + (k === 'paper' ? x.questions.map((q, i) => '<div class="card flat" style="margin-bottom:8px"><b>' + (i + 1) + '. ' + esc(q.text) + '</b> <span class="small muted">[' + q.marks + ' · ' + esc(q.topic) + ']</span>' + (q.type === 'mcq' ? '<ul class="small">' + q.o.map((o, n) => '<li' + (q.a === n ? ' style="font-weight:700"' : '') + '>' + esc(o) + '</li>').join('') + '</ul>' : '<div class="model small">' + esc(q.model || 'No model answer') + '</div>') + '</div>').join('') : '<div class="notes">' + x.notes + '</div><p class="small"><b>Example:</b> ' + esc(x.example) + '</p>') + '<button class="btn" onclick="this.closest(\'.overlay\').remove()">Close</button>', { wide: true }); });
+  }
+
+  function catalogue(p) {
+    const db = D(); let fc = db.classes[0].id;
+    const draw = () => {
+      p.innerHTML = '<h2>Classes</h2><div class="tablewrap"><table><thead><tr><th>Code</th><th>Name</th><th>Level</th><th>Main focus</th><th></th></tr></thead><tbody>' + D().classes.map(c => '<tr><td><b>' + esc(c.id) + '</b></td><td>' + esc(c.name) + '</td><td>' + esc(c.level) + '</td><td class="small">' + esc(c.focus) + '</td><td class="right"><button class="btn sm ghost" data-ec="' + c.id + '">Edit</button></td></tr>').join('') + '</tbody></table></div>' +
+        '<form id="cf" class="card mt"><h3 id="cft">Add or edit a class</h3><div class="grid g4"><div class="field"><label for="ci">Code</label><input id="ci" maxlength="6" placeholder="S1"></div><div class="field"><label for="cn">Name</label><input id="cn"></div><div class="field"><label for="cl">Level</label><input id="cl" placeholder="UCE, UACE…"></div><div class="field"><label for="cf2">Main focus</label><input id="cf2"></div></div><button class="btn orange" type="submit">Save class</button></form>' +
+        '<h2 class="mt2">Subjects</h2><div class="tablewrap"><table><thead><tr><th>Subject</th><th>Offered in</th><th></th></tr></thead><tbody>' + D().subjects.map(s => '<tr><td><b>' + esc(s.name) + '</b></td><td class="small">' + esc(s.classes.join(', ')) + '</td><td class="right"><button class="btn sm ghost" data-es="' + s.id + '">Edit</button> <button class="btn sm ghost" data-ds="' + s.id + '">Delete</button></td></tr>').join('') + '</tbody></table></div>' +
+        '<form id="sf" class="card mt"><h3 id="sft">Add or edit a subject</h3><div class="field"><label for="sn">Subject name</label><input id="sn"></div><div class="row" id="scl">' + D().classes.map(c => '<label class="check" style="margin:0"><input type="checkbox" value="' + c.id + '"><span>' + esc(c.id) + '</span></label>').join('') + '</div><input type="hidden" id="sid"><button class="btn orange mt" type="submit">Save subject</button><p class="hint">Subject availability differs by class and school programme, so choose carefully and match the NCDC curriculum for each class.</p></form>' +
+        '<h2 class="mt2">Syllabus versions</h2><p class="muted small">Enter the official NCDC syllabus reference and version for each class and subject. Nothing is pre-filled — do not invent references.</p><div class="field" style="max-width:240px"><label for="fc">Class</label>' + sel('fc', D().classes.map(c => [c.id, c.id]), fc) + '</div><div class="stack" id="syl"></div>' +
+        '<h2 class="mt2">Paper-source organisations</h2><div class="card"><ul class="list">' + D().orgs.map(o => '<li>' + esc(o.name) + '</li>').join('') + '</ul><form id="of" class="row mt"><input id="on" placeholder="Organisation name" style="flex:1;min-width:200px"><button class="btn orange" type="submit">Add</button></form></div>';
+      const syl = () => { document.getElementById('syl').innerHTML = D().syllabus.filter(s => s.classId === fc).map(s => '<div class="card flat" data-sy="' + s.subjectId + '"><b>' + esc(subName(s.subjectId)) + '</b><div class="grid g3 mt"><div><label>Official reference</label><input class="r" value="' + esc(s.ref) + '"></div><div><label>Version</label><input class="v" value="' + esc(s.version) + '"></div><div><label>Note</label><input class="n" value="' + esc(s.note) + '"></div></div><button class="btn sm ghost mt">Save</button></div>').join('') || '<p class="muted">No subjects for this class.</p>'; document.querySelectorAll('[data-sy]').forEach(c => c.querySelector('button').onclick = () => out(Server.setSyllabus(fc, c.dataset.sy, c.querySelector('.r').value, c.querySelector('.v').value, c.querySelector('.n').value), 'Saved.')); };
+      syl(); document.getElementById('fc').onchange = e => { fc = e.target.value; syl(); };
+      p.querySelectorAll('[data-ec]').forEach(b => b.onclick = () => { const c = D().classes.find(x => x.id === b.dataset.ec); document.getElementById('ci').value = c.id; document.getElementById('cn').value = c.name; document.getElementById('cl').value = c.level; document.getElementById('cf2').value = c.focus; document.getElementById('cf').scrollIntoView({ behavior: 'smooth' }); });
+      document.getElementById('cf').onsubmit = e => { e.preventDefault(); if (out(Server.upsertClass({ id: val('ci'), name: val('cn'), level: val('cl'), focus: val('cf2') }), 'Class saved.')) draw(); };
+      p.querySelectorAll('[data-es]').forEach(b => b.onclick = () => { const s = D().subjects.find(x => x.id === b.dataset.es); document.getElementById('sn').value = s.name; document.getElementById('sid').value = s.id; document.querySelectorAll('#scl input').forEach(i => { i.checked = s.classes.includes(i.value); }); document.getElementById('sf').scrollIntoView({ behavior: 'smooth' }); });
+      p.querySelectorAll('[data-ds]').forEach(b => b.onclick = async () => { if (await confirmBox('Remove this subject from the catalogue?', { danger: true, ok: 'Delete' }) && out(Server.deleteSubject(b.dataset.ds), 'Subject removed.')) draw(); });
+      document.getElementById('sf').onsubmit = e => { e.preventDefault(); if (out(Server.upsertSubject({ id: val('sid') || undefined, name: val('sn'), classes: [...document.querySelectorAll('#scl input:checked')].map(i => i.value) }), 'Subject saved.')) draw(); };
+      document.getElementById('of').onsubmit = e => { e.preventDefault(); if (out(Server.addOrg(val('on')), 'Organisation added.')) draw(); };
+    };
+    draw();
+  }
+
+  function payments(p) {
+    const db = D(), rows = db.payments, tot = rows.filter(x => x.status === 'success').reduce((s, x) => s + x.amount, 0);
+    p.innerHTML = '<div class="grid g4 g-keep2">' + stat('Verified revenue', fmtUGX(tot)) + stat('Successful', rows.filter(x => x.status === 'success').length) + stat('Pending', rows.filter(x => x.status === 'pending').length) + stat('Failed / reversed', rows.filter(x => x.status === 'failed' || x.status === 'reversed').length) + '</div><div class="row between mt"><p class="muted small mb0">Subscriptions are activated only by verified provider callbacks.</p><button class="btn sm ghost" id="exp">Export CSV</button></div><div class="tablewrap mt"><table><thead><tr><th>Date</th><th>Reference</th><th>Student</th><th>Provider</th><th>Amount</th><th>Status</th><th>Provider tx</th></tr></thead><tbody>' + (rows.map(x => '<tr><td class="small">' + fmtDate(x.createdAt) + '</td><td><code>' + esc(x.ref) + '</code></td><td>' + esc(userName(x.userId)) + '</td><td>' + esc(x.provider) + '</td><td>' + fmtUGX(x.amount) + '</td><td>' + esc(x.status) + '</td><td class="small">' + esc(x.txId || '—') + '</td></tr>').join('') || '<tr><td colspan="7" class="muted">No payments yet.</td></tr>') + '</tbody></table></div>';
+    document.getElementById('exp').onclick = () => USL.download('payments.csv', USL.csv([['Date', 'Reference', 'Student', 'Provider', 'Amount', 'Status', 'Provider tx']].concat(rows.map(x => [new Date(x.createdAt).toISOString(), x.ref, userName(x.userId), x.provider, x.amount, x.status, x.txId || '']))));
+  }
+
+  function outbox(p) {
+    const r = Server.outbox(); if (!r.ok) return; const c = D().cfg, items = r.items;
+    p.innerHTML = '<div class="alert info" style="margin-bottom:14px"><b>How this works.</b> Each verified subscription queues a message for ' + esc(c.whatsappNumber) + (c.whatsappNotify ? '' : ' (notifications are switched off in Settings)') + '. A web page cannot send WhatsApp messages by itself, so here you tap <b>Send on WhatsApp</b> to open the message ready to send. Fully automatic sending needs the server-side WhatsApp Business setup described in the README.</div><div class="stack">' +
+      (items.map(m => '<div class="card"><div class="row between"><span class="small muted">' + fmtDate(m.at) + ' · to ' + esc(m.to) + '</span>' + (m.status === 'sent' ? '<span class="badge ok">marked sent</span>' : '<span class="badge warn">queued</span>') + '</div><pre style="white-space:pre-wrap;font:inherit;margin:10px 0">' + esc(m.text) + '</pre><div class="row"><a class="btn sm orange" target="_blank" rel="noopener" href="' + esc(USL.waLink(m.to, m.text)) + '" data-wa="' + m.id + '">Send on WhatsApp</a>' + (m.status === 'sent' ? '' : '<button class="btn sm ghost" data-ms="' + m.id + '">Mark as sent</button>') + '</div></div>').join('') || '<div class="card"><p class="muted mb0">No messages yet. One is queued whenever a payment is verified.</p></div>') + '</div>';
+    p.querySelectorAll('[data-ms]').forEach(b => b.onclick = () => { if (out(Server.markOutboxSent(b.dataset.ms), 'Marked as sent.')) shellHtml(); });
+    p.querySelectorAll('[data-wa]').forEach(a => a.addEventListener('click', () => { setTimeout(() => { Server.markOutboxSent(a.dataset.wa); shellHtml(); }, 600); }));
+  }
+
+  function people(p) {
+    const staff = D().users.filter(u => u.role !== 'student');
+    p.innerHTML = '<div class="tablewrap"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody>' + staff.map(u => '<tr><td>' + esc(u.name) + '</td><td class="small">' + esc(u.contact) + '</td><td>' + (u.id === me.id ? esc(u.role) : sel('r-' + u.id, [['admin', 'Administrator'], ['reviewer', 'Reviewer'], ['contributor', 'Contributor']], u.role)) + '</td><td>' + esc(u.status) + '</td><td class="right">' + (u.id === me.id ? '<span class="muted small">you</span>' : '<button class="btn sm ghost" data-rs="' + u.id + '">Save role</button> <button class="btn sm ghost" data-st="' + u.id + '|' + (u.status === 'active' ? 'suspended' : 'active') + '">' + (u.status === 'active' ? 'Suspend' : 'Reactivate') + '</button>') + '</td></tr>').join('') + '</tbody></table></div>' +
+      '<form id="af" class="card mt"><h3>Add a staff member</h3><p class="small muted">Contributors can submit content but cannot publish it. Reviewers approve content. Administrators manage everything.</p><div class="grid g4"><div class="field"><label for="an">Name</label><input id="an"></div><div class="field"><label for="ae">Email</label><input id="ae" type="email"></div><div class="field"><label for="ar">Role</label>' + sel('ar', [['contributor', 'Contributor / teacher'], ['reviewer', 'Reviewer'], ['admin', 'Administrator']]) + '</div><div class="field"><label for="apw">Temporary password</label><input id="apw" type="password" autocomplete="new-password"></div></div><button class="btn orange" type="submit">Add staff member</button></form>';
+    p.querySelectorAll('[data-rs]').forEach(b => b.onclick = () => { if (out(Server.setRole(b.dataset.rs, val('r-' + b.dataset.rs)), 'Role updated.')) shellHtml(); });
+    p.querySelectorAll('[data-st]').forEach(b => b.onclick = () => { const [id, st] = b.dataset.st.split('|'); if (out(Server.setUserStatus(id, st), 'Updated.')) shellHtml(); });
+    document.getElementById('af').onsubmit = async e => { e.preventDefault(); if (out(await Server.addStaff({ name: val('an'), contact: val('ae'), role: val('ar'), password: val('apw') }), 'Staff member added.')) shellHtml(); };
+  }
+
+  function settings(p) {
+    const c = D().cfg;
+    p.innerHTML = '<form id="sf" class="card stack" style="max-width:640px"><h3>Plan &amp; limits</h3><div class="grid g2"><div class="field"><label for="c1">Monthly price (UGX)</label><input id="c1" type="number" value="' + c.price + '"></div><div class="field"><label for="c2">Days of access per payment</label><input id="c2" type="number" value="' + c.days + '"></div><div class="field"><label for="c3">Free trial (minutes)</label><input id="c3" type="number" value="' + c.trialMinutes + '"><div class="hint">Applies to trials that start after you save.</div></div><div class="field"><label for="c4">Tutor questions per student per day</label><input id="c4" type="number" value="' + c.aiDailyLimit + '"></div><div class="field"><label for="c5">Estimated cost per tutor call (UGX)</label><input id="c5" type="number" value="' + c.aiCostPerCall + '"></div></div><h3 class="mt">Payments &amp; WhatsApp</h3><div class="grid g2"><div class="field"><label for="c7">Number that receives payments</label><input id="c7" inputmode="tel" value="' + esc(c.payNumber) + '"><div class="hint">Shown to students on the payment page. In production this must be the settlement number on your Mobile Money merchant account.</div></div><div class="field"><label for="c8">WhatsApp number for notifications</label><input id="c8" inputmode="tel" value="' + esc(c.whatsappNumber) + '"></div></div><label class="check"><input type="checkbox" id="c9"' + (c.whatsappNotify ? ' checked' : '') + '><span>Queue a WhatsApp message for every verified subscription</span></label><label class="check"><input type="checkbox" id="c6"' + (c.sandbox ? ' checked' : '') + '><span>Payment sandbox on (shows the fake provider buttons — turn OFF in production)</span></label><button class="btn orange" type="submit">Save settings</button></form>';
+    document.getElementById('sf').onsubmit = e => { e.preventDefault(); out(Server.saveConfig({ price: val('c1'), days: val('c2'), trialMinutes: val('c3'), aiDailyLimit: val('c4'), aiCostPerCall: val('c5'), sandbox: chk('c6'), payNumber: val('c7'), whatsappNumber: val('c8'), whatsappNotify: chk('c9') }), 'Settings saved.'); };
+  }
+
+  function audit(p) {
+    p.innerHTML = '<div class="tablewrap"><table><thead><tr><th>When</th><th>Action</th><th>User</th><th>Detail</th></tr></thead><tbody>' + D().audit.slice(0, 200).map(a => '<tr><td class="small">' + fmtDate(a.at) + '</td><td><code>' + esc(a.action) + '</code></td><td class="small">' + esc(userName(a.userId)) + '</td><td class="small">' + esc(a.detail) + '</td></tr>').join('') + '</tbody></table></div><p class="hint">Showing the latest 200 events.</p>';
+  }
+  shellHtml();
+})();
+
+</script>
+</body>
+</html>
