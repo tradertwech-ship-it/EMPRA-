@@ -1,0 +1,1762 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f1f3d">
+<title>Class discussion – Uganda Smart Learning</title>
+<meta name="description" content="Learning notes, past-paper practice, timed exams and a voice tutor for Ugandan secondary students, S1 to S6.">
+<style>
+/* Uganda Smart Learning — shared styles. System fonts only (low bandwidth). */
+:root{
+  --navy:#0b1f4d; --navy-2:#243a6b; --orange:#2563eb; --orange-d:#1d4ed8; --orange-soft:#eaf1ff; /* 'orange' names kept for code compatibility; the accent is now blue */
+  --bg:#ffffff; --soft:#f5f7fb; --line:#e3e8f0; --muted:#5a6784; --ok:#16794a; --ok-soft:#e6f6ee;
+  --bad:#b42318; --bad-soft:#fdecea; --warn:#8a5a00; --warn-soft:#fff6dd; --info:#1f4fa3; --info-soft:#e8f0fd;
+  --r:20px; --shadow:0 1px 2px rgba(15,31,61,.06),0 6px 18px rgba(15,31,61,.06);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--navy);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+h1,h2,h3,h4{line-height:1.2;margin:0 0 .5em;color:var(--navy)}
+h1{font-size:clamp(1.6rem,4.5vw,2.4rem)} h2{font-size:clamp(1.25rem,3vw,1.6rem)} h3{font-size:1.1rem}
+p{margin:0 0 .9em} a{color:var(--orange-d)} img{max-width:100%}
+.muted{color:var(--muted)} .small{font-size:.875rem} .center{text-align:center} .right{text-align:right}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px;border-radius:6px}
+.skip{position:absolute;left:-999px;top:0;background:var(--navy);color:#fff;padding:.6rem 1rem;z-index:100}
+.skip:focus{left:8px;top:8px}
+.container{width:100%;max-width:1100px;margin:0 auto;padding:0 16px}
+main.container{padding-top:20px;padding-bottom:96px;min-height:70vh}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:40;background:#fff;border-bottom:1px solid var(--line)}
+.topbar .container{display:flex;align-items:center;gap:14px;min-height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--navy);text-decoration:none;white-space:nowrap}
+.logo{width:34px;height:34px;border-radius:10px;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:1rem;position:relative}
+.logo::after{content:"";position:absolute;right:-3px;bottom:-3px;width:12px;height:12px;border-radius:50%;background:var(--orange);border:2px solid #fff}
+.nav{display:flex;gap:4px;margin-left:12px;flex:1}
+.nav a{padding:8px 12px;border-radius:10px;color:var(--navy-2);text-decoration:none;font-weight:600;font-size:.95rem}
+.nav a:hover{background:var(--soft)} .nav a[aria-current=page]{background:var(--orange-soft);color:var(--orange-d)}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font-weight:700;font-size:.85rem;text-decoration:none;border:1px solid var(--line);background:var(--soft);color:var(--navy)}
+.pill.trial{background:var(--warn-soft);border-color:#f3dfa0;color:var(--warn)}
+.pill.paid{background:var(--ok-soft);border-color:#b8e3cc;color:var(--ok)}
+.pill.expired,.pill.ready{background:var(--orange-soft);border-color:#bcd2ff;color:var(--orange-d)}
+.bottomnav{display:none}
+@media (max-width:820px){
+  .nav{display:none}
+  .bottomnav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);z-index:40;padding-bottom:env(safe-area-inset-bottom)}
+  .bottomnav a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;min-height:56px;font-size:.72rem;font-weight:700;color:var(--muted);text-decoration:none}
+  .bottomnav a span{font-size:1.25rem;line-height:1}
+  .bottomnav a[aria-current=page]{color:var(--orange-d)}
+  .brand small{display:none}
+}
+
+/* cards, grid */
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+.card.flat{box-shadow:none} .card.soft{background:var(--soft);box-shadow:none}
+.card.accent{border-color:#bcd2ff;background:linear-gradient(135deg,#eaf1ff,#f6f9ff);box-shadow:none}
+.grid{display:grid;gap:14px} .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+.auto{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+@media (max-width:820px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.g2,.g3,.g4{grid-template-columns:1fr}.g-keep2{grid-template-columns:repeat(2,1fr)!important}}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap} .between{justify-content:space-between}
+.stack>*+*{margin-top:14px} .mt{margin-top:16px} .mt2{margin-top:28px} .mb0{margin-bottom:0}
+.stat{padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.stat b{display:block;font-size:1.6rem;line-height:1.1} .stat span{color:var(--muted);font-size:.85rem}
+
+/* buttons & forms */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 18px;border-radius:12px;border:1px solid var(--navy);background:var(--navy);color:#fff;font:inherit;font-weight:700;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--navy-2)} .btn.orange{background:linear-gradient(135deg,#1d4ed8,#3b82f6);border-color:#1d4ed8} .btn.orange:hover{background:linear-gradient(135deg,#1e40af,#2563eb)}
+.btn.ghost{background:#fff;color:var(--navy);border-color:var(--line)} .btn.ghost:hover{background:var(--soft)}
+.btn.danger{background:var(--bad);border-color:var(--bad)} .btn.sm{min-height:36px;padding:6px 12px;font-size:.875rem;border-radius:10px}
+.btn[disabled]{opacity:.5;cursor:not-allowed} .btn.block{width:100%}
+label{display:block;font-weight:700;font-size:.9rem;margin:0 0 6px}
+input,select,textarea{width:100%;min-height:44px;padding:10px 12px;border:1px solid #c9d2e0;border-radius:12px;background:#fff;color:var(--navy);font:inherit}
+textarea{min-height:110px;resize:vertical} input[type=checkbox],input[type=radio]{width:auto;min-height:0;accent-color:var(--orange)}
+.field{margin-bottom:14px} .check{display:flex;gap:10px;align-items:flex-start;font-weight:500} .check input{margin-top:5px}
+.hint{font-size:.82rem;color:var(--muted);margin-top:4px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;-webkit-overflow-scrolling:touch}
+.tab{white-space:nowrap;min-height:40px;padding:8px 14px;border:1px solid var(--line);background:#fff;border-radius:999px;font:inherit;font-weight:700;color:var(--navy-2);cursor:pointer}
+.tab[aria-selected=true]{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* badges, alerts */
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.75rem;font-weight:800;letter-spacing:.01em;background:var(--soft);color:var(--navy-2);border:1px solid var(--line);vertical-align:middle}
+.badge.ok{background:var(--ok-soft);color:var(--ok);border-color:#b8e3cc} .badge.warn{background:var(--warn-soft);color:var(--warn);border-color:#f3dfa0}
+.badge.bad{background:var(--bad-soft);color:var(--bad);border-color:#f5c2bd} .badge.info{background:var(--info-soft);color:var(--info);border-color:#c6d8f7}
+.badge.orange{background:var(--orange-soft);color:var(--orange-d);border-color:#bcd2ff}
+.alert{padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--soft);font-size:.92rem}
+.alert.warn{background:var(--warn-soft);border-color:#f3dfa0;color:#5f3d00} .alert.bad{background:var(--bad-soft);border-color:#f5c2bd;color:#7a1a12}
+.alert.ok{background:var(--ok-soft);border-color:#b8e3cc;color:#0e5232} .alert.info{background:var(--info-soft);border-color:#c6d8f7;color:#173a78}
+.progress{height:10px;background:var(--soft);border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.progress>i{display:block;height:100%;background:linear-gradient(90deg,#1d4ed8,#38bdf8);border-radius:999px;transition:width .3s}
+.progress.ok>i{background:var(--ok)} .progress.bad>i{background:var(--bad)}
+
+/* hero (welcome) */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:start;padding:24px 0}
+.hero h1 span{color:var(--orange)} .hero .lead{font-size:1.1rem;color:var(--muted);max-width:34em}
+.feature{display:flex;gap:12px} .feature .ico{flex:none;width:44px;height:44px;border-radius:12px;background:var(--orange-soft);display:grid;place-items:center;font-size:1.3rem}
+.feature h3{margin:0 0 2px;font-size:1rem} .feature p{margin:0;color:var(--muted);font-size:.9rem}
+@media (max-width:820px){.hero{grid-template-columns:1fr}}
+
+/* lists & tables */
+.list{list-style:none;margin:0;padding:0} .list li{padding:12px 0;border-bottom:1px solid var(--line)} .list li:last-child{border:0}
+.item{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;font-size:.9rem} th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--soft);font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)} tr:last-child td{border:0}
+.subject-card{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff;cursor:pointer;text-align:left;font:inherit;width:100%}
+.subject-card:hover,.subject-card[aria-pressed=true]{border-color:var(--orange);background:var(--orange-soft)}
+.crumbs{font-size:.85rem;color:var(--muted);margin-bottom:8px}
+.notes h3{margin-top:1.2em} .notes ul{padding-left:1.2em} .notes .box{background:var(--soft);border-left:4px solid var(--orange);padding:10px 14px;border-radius:8px;margin:12px 0}
+
+/* modal & toast */
+.overlay{position:fixed;inset:0;background:rgba(15,31,61,.55);display:grid;place-items:center;z-index:80;padding:16px}
+.modal{background:#fff;border-radius:18px;max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal.wide{max-width:820px}
+#toasts{position:fixed;left:0;right:0;bottom:76px;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:90;pointer-events:none;padding:0 12px}
+.toast{pointer-events:auto;background:var(--navy);color:#fff;padding:12px 16px;border-radius:12px;max-width:520px;font-size:.92rem;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.toast.bad{background:var(--bad)} .toast.ok{background:var(--ok)}
+
+/* tutor chat */
+.chat{display:flex;flex-direction:column;gap:10px;min-height:320px;max-height:56vh;overflow-y:auto;padding:12px;background:var(--soft);border-radius:14px;border:1px solid var(--line)}
+.bubble{max-width:88%;padding:10px 14px;border-radius:16px;font-size:.96rem;white-space:pre-wrap}
+.bubble.me{align-self:flex-end;background:var(--navy);color:#fff;border-bottom-right-radius:4px}
+.bubble.bot{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-left-radius:4px}
+.bubble .src{display:block;margin-top:8px;font-size:.8rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:6px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-height:38px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;font:inherit;font-weight:700;font-size:.88rem;color:var(--navy-2);cursor:pointer}
+.chip:hover{border-color:var(--orange);background:var(--orange-soft)}
+.mic{width:48px;height:48px;border-radius:50%;border:0;background:var(--orange);color:#fff;font-size:1.3rem;cursor:pointer;flex:none}
+.mic.on{background:var(--bad);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 10px rgba(180,35,24,.15)}}
+.speechbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.speechbar select{width:auto;min-height:36px;padding:4px 8px}
+
+/* quiz / exam */
+.opt{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer;background:#fff;font-weight:500}
+.opt:hover{border-color:var(--orange)} .opt.sel{border-color:var(--orange);background:var(--orange-soft)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)} .opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt input{margin-top:5px}
+.examtop{position:sticky;top:60px;z-index:30;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 14px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.2rem} .timer.low{color:var(--bad)}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:6px}
+.qn{min-height:42px;border-radius:10px;border:1px solid var(--line);background:#fff;font:inherit;font-weight:700;cursor:pointer}
+.qn.done{background:var(--orange-soft);border-color:#bcd2ff} .qn.cur{background:var(--navy);color:#fff;border-color:var(--navy)} .qn.flag{outline:2px solid var(--warn)}
+.exam-layout{display:grid;grid-template-columns:1fr 260px;gap:14px;align-items:start}
+@media (max-width:820px){.exam-layout{grid-template-columns:1fr}.examtop{top:60px}}
+.model{background:var(--info-soft);border:1px solid #c6d8f7;border-radius:12px;padding:12px;margin-top:8px}
+.bar{display:grid;grid-template-columns:150px 1fr 60px;gap:10px;align-items:center;margin:8px 0;font-size:.9rem}
+@media (max-width:560px){.bar{grid-template-columns:100px 1fr 48px}}
+.demo-box{border:2px dashed #b9a06a;background:#fffbe9;border-radius:14px;padding:14px}
+.hidden{display:none!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{.topbar,.bottomnav,.btn{display:none!important}}
+
+/* ===== landing page (blue take on the reference design) ===== */
+body.land{background:#e6eeff}
+.land main{padding:14px 14px 40px}
+.sheet{max-width:1180px;margin:0 auto;background:#f8faff;border-radius:30px;box-shadow:0 10px 40px rgba(29,78,216,.15);overflow:hidden;border:1px solid #d5e2ff}
+.l-nav{display:flex;align-items:center;gap:16px;padding:16px 28px}
+.l-nav .links{display:flex;gap:22px;margin-left:24px;flex:1}
+.l-nav .links a{color:var(--navy-2);text-decoration:none;font-weight:600;font-size:.95rem}
+.l-nav .links a:hover{color:var(--orange-d)}
+.l-nav .btns{display:flex;gap:10px;margin-left:auto}
+.btn.pillbtn{border-radius:999px}
+.l-hero{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;padding:34px 28px 44px;align-items:center}
+.l-hero h1{font-size:clamp(2rem,5vw,3.3rem);letter-spacing:-.02em;margin-bottom:14px}
+.l-hero h1 span{background:linear-gradient(90deg,#1d4ed8,#38bdf8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.l-hero .lead{color:var(--muted);font-size:1.08rem;max-width:32em}
+.l-art{position:relative;min-height:340px;display:grid;place-items:center}
+.l-art .blob{width:min(320px,80%);aspect-ratio:1;border-radius:46% 54% 48% 52%/52% 46% 54% 48%;background:linear-gradient(145deg,#1d4ed8,#60a5fa 70%,#a5d8ff);display:grid;place-items:center;font-size:7rem;box-shadow:0 20px 50px rgba(29,78,216,.35)}
+.l-art .fl{position:absolute;background:#fff;border-radius:16px;padding:10px 14px;box-shadow:0 8px 24px rgba(29,78,216,.2);font-weight:700;font-size:.85rem;display:flex;gap:8px;align-items:center}
+.fl.a{left:2%;top:14%}.fl.b{right:0;top:34%}.fl.c{left:8%;bottom:8%}
+.band{background:linear-gradient(135deg,#1d4ed8,#2f6df0 60%,#4f8cf7);color:#fff;padding:18px 28px;display:flex;gap:10px 30px;flex-wrap:wrap;justify-content:center;align-items:center;font-weight:800;font-size:1.05rem}
+.band span{opacity:.95}
+.l-sec{padding:44px 28px}
+.l-sec h2{font-size:clamp(1.5rem,3.5vw,2.1rem);text-align:center}
+.l-sec .sub{text-align:center;color:var(--muted);max-width:40em;margin:0 auto 24px}
+.searchbar{display:flex;gap:10px;max-width:560px;margin:0 auto 22px;background:#fff;border:1px solid #cfdcff;border-radius:999px;padding:6px 6px 6px 18px;box-shadow:var(--shadow)}
+.searchbar input{border:0;min-height:40px;padding:0;background:transparent;box-shadow:none}
+.searchbar input:focus{outline:none}
+.benefit{display:grid;grid-template-columns:.9fr 1.1fr;gap:30px;align-items:center;background:#fff;border:1px solid #d5e2ff;border-radius:28px;padding:28px}
+.artgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;border:2px dashed #93b4ff;border-radius:30px}
+.artgrid div{aspect-ratio:1;border-radius:24px;display:grid;place-items:center;font-size:3rem;background:linear-gradient(145deg,#dbe7ff,#bcd2ff)}
+.artgrid div:nth-child(2),.artgrid div:nth-child(3){background:linear-gradient(145deg,#1d4ed8,#60a5fa);color:#fff}
+.benefit .feature+.feature{margin-top:14px}
+.ccard{background:#fff;border:1px solid #d5e2ff;border-radius:22px;padding:16px;box-shadow:var(--shadow)}
+.ccard .thumb{height:110px;border-radius:16px;background:linear-gradient(135deg,#1d4ed8,#60a5fa);color:#fff;display:grid;place-items:center;font-size:2.2rem;font-weight:800;margin-bottom:12px}
+.steps{counter-reset:s}
+.step{background:#fff;border:1px solid #d5e2ff;border-radius:22px;padding:18px 18px 18px 64px;position:relative}
+.step::before{counter-increment:s;content:counter(s);position:absolute;left:16px;top:16px;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#fff;display:grid;place-items:center;font-weight:800}
+.step h3{margin:0 0 4px;font-size:1rem}.step p{margin:0;color:var(--muted);font-size:.9rem}
+.cta{margin:0 28px 44px;border-radius:28px;background:linear-gradient(135deg,#1d4ed8,#2f6df0 60%,#4f8cf7);color:#fff;padding:32px;display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center}
+.cta h2,.cta h3{color:#fff;text-align:left}.cta p{opacity:.95}
+.cta .btn.ghost{background:#fff;color:var(--orange-d);border-color:#fff}
+.cta ul{margin:0;padding-left:1.1em}
+.price{background:#fff;border:1px solid #bcd2ff;border-radius:26px;padding:26px;text-align:center;box-shadow:0 10px 30px rgba(29,78,216,.15)}
+.price b.big{font-size:2.6rem;display:block;color:var(--orange-d);line-height:1.1}
+.price ul{text-align:left;display:inline-block;margin:12px 0}
+#join{scroll-margin-top:16px;background:#eaf1ff}
+.l-foot{padding:22px 28px;text-align:center;color:var(--muted);font-size:.85rem;border-top:1px solid #d5e2ff}
+@media (max-width:860px){.l-nav .links{display:none}.l-nav{padding:14px 16px}.l-hero,.benefit,.cta{grid-template-columns:1fr}.l-hero{padding:20px 16px 30px}.l-sec{padding:34px 16px}.cta{margin:0 14px 30px;padding:24px}.l-art{min-height:280px}.l-art .blob{font-size:5rem}}
+
+/* ===== class colours: each class has its own colour (--cls is set from the student's class) ===== */
+.has-cls .topbar{border-bottom:3px solid var(--cls)}
+.has-cls .bottomnav{border-top:3px solid var(--cls)}
+.clsbadge{display:inline-block;padding:3px 12px;border-radius:999px;background:var(--c,#2563eb);color:#fff;font-weight:800;font-size:.8rem;letter-spacing:.01em}
+.clsdot{display:inline-block;width:.8em;height:.8em;border-radius:50%;background:var(--c,#2563eb);vertical-align:-1px;margin-right:6px}
+.clscard{border-top:5px solid var(--c,#2563eb)}
+.tab.cls[aria-selected=true]{background:var(--c);border-color:var(--c);color:#fff}
+.tab.cls{border-color:var(--c);color:var(--c)}
+.tab.cls[aria-selected=true]{color:#fff}
+.clsbanner{border-radius:20px;padding:16px 18px;color:#fff;background:linear-gradient(135deg,var(--c),color-mix(in srgb,var(--c) 70%,#000))}
+.clsbanner h1,.clsbanner h2,.clsbanner p{color:#fff;margin:0}
+
+/* ===== class discussion room (messenger style) ===== */
+.wa-main{max-width:1280px!important;padding:8px 12px 0!important}
+.wa{--c:#2563eb;display:grid;grid-template-columns:minmax(290px,370px) 1fr;height:calc(100dvh - 84px);min-height:460px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;position:relative}
+.wa *{box-sizing:border-box}
+.wa button{font:inherit}
+.ic{border:0;background:none;cursor:pointer;width:40px;height:40px;border-radius:50%;display:inline-grid;place-items:center;color:inherit;font-size:1.15rem;flex:none}
+.ic:hover{background:rgba(0,0,0,.07)} .wa-head .ic:hover{background:rgba(255,255,255,.18)}
+.wa-side{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--line);background:#fff}
+.wa-side .top{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;font-weight:800;font-size:1.2rem}
+.wa-side .find{padding:0 12px 8px}.wa-side .find input{width:100%;border:0;background:#f0f2f5;border-radius:10px;min-height:38px;padding:0 12px}
+.wa-list{overflow-y:auto;flex:1}
+.ci{display:flex;gap:12px;align-items:center;padding:10px 14px;cursor:pointer;border-bottom:1px solid #f0f2f5;width:100%;text-align:left;background:#fff;border-left:0;border-right:0;border-top:0}
+.ci:hover,.ci.on{background:#f0f2f5}
+.av{width:48px;height:48px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-weight:800;flex:none;font-size:.95rem}
+.av.sm{width:34px;height:34px;font-size:.78rem}.av.lg{width:96px;height:96px;font-size:1.7rem}
+.ci .mid{flex:1;min-width:0}.ci .t1{display:flex;justify-content:space-between;gap:8px}.ci .t1 b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ci .t1 span{font-size:.72rem;color:#667781;white-space:nowrap}
+.ci .t2{display:flex;justify-content:space-between;gap:8px;font-size:.85rem;color:#667781;margin-top:2px}.ci .t2 .pv{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.badge-n{background:var(--c);color:#fff;border-radius:999px;min-width:20px;height:20px;padding:0 6px;display:grid;place-items:center;font-size:.72rem;font-weight:800}
+.wa-chat{display:flex;flex-direction:column;min-width:0;min-height:0;position:relative;background-color:color-mix(in srgb,var(--c) 7%,#efeae2);background-image:radial-gradient(circle at 20% 30%,rgba(0,0,0,.035) 1.5px,transparent 2px),radial-gradient(circle at 70% 70%,rgba(0,0,0,.03) 1.5px,transparent 2px);background-size:46px 46px}
+.wa-head{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--c);color:#fff;min-height:58px;flex:none}
+.wa-head .tt{flex:1;min-width:0;cursor:pointer;border:0;background:none;color:inherit;text-align:left;padding:0}
+.wa-head .tt b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:1rem}.wa-head .tt span{display:block;font-size:.78rem;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wa-head .av{background:rgba(255,255,255,.25)}
+.wa-head .back{display:none}
+.wa-search{display:none;align-items:center;gap:6px;padding:6px 10px;background:#fff;border-bottom:1px solid var(--line)}.wa-search.on{display:flex}.wa-search input{flex:1;border:0;background:#f0f2f5;border-radius:10px;min-height:36px;padding:0 12px}
+.callpill{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#e7f7ec;color:#0b6b2d;font-size:.9rem;border-bottom:1px solid #cfe9d8;flex:none}.callpill button{margin-left:auto;border:0;background:#0b8a3e;color:#fff;border-radius:999px;padding:6px 14px;font-weight:700;cursor:pointer}
+.callpill.live{background:#0b8a3e;color:#fff}.callpill.live button{background:#fff;color:#0b8a3e}
+.wa-msgs{flex:1;overflow-y:auto;padding:10px 5% 16px;display:flex;flex-direction:column;position:relative}
+.dchip,.sys,.unread{align-self:center;background:#fff;color:#54656f;font-size:.75rem;padding:4px 12px;border-radius:8px;box-shadow:0 1px .5px rgba(11,20,26,.13);margin:10px 0 6px;text-align:center;max-width:90%}
+.sys{background:#fff3c4;color:#54541c;margin:6px 0}.unread{background:#dff2fb;color:#1f5f7a;font-weight:700;align-self:stretch;border-radius:0;box-shadow:none}
+.b{position:relative;max-width:min(80%,540px);padding:5px 8px 5px 9px;border-radius:9px;background:#fff;box-shadow:0 1px .5px rgba(11,20,26,.13);align-self:flex-start;margin-top:2px;font-size:.95rem;overflow-wrap:anywhere;transition:background .3s;-webkit-user-select:none;user-select:none}
+.b.me{align-self:flex-end;background:color-mix(in srgb,var(--c) 17%,#fff)}
+.b.first{margin-top:8px}
+.b.first::before{content:"";position:absolute;top:0;width:10px;height:12px;background:inherit}
+.b:not(.me).first::before{left:-6px;clip-path:polygon(100% 0,0 0,100% 100%)}
+.b.me.first::before{right:-6px;clip-path:polygon(0 0,100% 0,0 100%)}
+.b.flash{background:#fff2a8!important}
+.b.hasrx{margin-bottom:14px}
+.b .who{font-weight:700;font-size:.82rem;margin-bottom:1px;display:flex;gap:6px;align-items:center}
+.b .who .tag{font-size:.65rem;font-weight:800;background:#e3ecff;color:#1d4ed8;border-radius:5px;padding:0 5px}
+.b .tx{white-space:pre-wrap;-webkit-user-select:text;user-select:text}.b .tx mark{background:#ffe066;border-radius:3px}
+.b .tx a{color:#0b6bcb}
+.b .meta{float:right;margin:7px 0 -3px 12px;font-size:.68rem;color:#667781;display:inline-flex;gap:3px;align-items:center;line-height:1}
+.b .meta svg{width:16px;height:11px}.b .meta .rd{color:#34b7f1}
+.b .chev{position:absolute;top:1px;right:3px;width:24px;height:22px;border:0;border-radius:50%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.95) 40%);color:#667781;cursor:pointer;opacity:0;font-size:.9rem;padding:0}
+.b.me .chev{background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--c) 17%,#fff) 40%)}
+.b:hover .chev{opacity:1}
+.b.del .tx{font-style:italic;color:#667781}
+.quote{display:block;width:100%;text-align:left;border:0;border-left:4px solid var(--q,#2563eb);background:rgba(0,0,0,.06);border-radius:6px;padding:4px 8px;margin-bottom:4px;cursor:pointer;color:#111}
+.quote b{display:block;font-size:.78rem;color:var(--q,#2563eb)}.quote span{display:block;font-size:.84rem;color:#54656f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:380px}
+.rxs{position:absolute;bottom:-13px;left:8px;display:flex;gap:2px}.b.me .rxs{left:auto;right:8px}
+.rxs button{border:0;background:#fff;border-radius:999px;padding:1px 6px;box-shadow:0 1px 2px rgba(0,0,0,.25);font-size:.78rem;cursor:pointer}
+.vn{display:flex;align-items:center;gap:8px;min-width:230px;padding:2px 0}
+.vn .pl{width:38px;height:38px;border-radius:50%;border:0;background:var(--c);color:#fff;cursor:pointer;flex:none;font-size:.95rem}
+.vn .wv{display:flex;align-items:center;gap:2px;height:30px;flex:1}.vn .wv i{display:block;width:3px;border-radius:2px;background:#b6bec4}.vn .wv i.on{background:var(--c)}
+.vn .dur{font-size:.72rem;color:#667781;min-width:30px}.vn .sp{border:0;background:rgba(0,0,0,.08);border-radius:999px;font-size:.7rem;font-weight:800;padding:2px 7px;cursor:pointer}
+.b img.ph{display:block;max-width:min(300px,100%);max-height:320px;border-radius:7px;cursor:zoom-in;margin-bottom:2px}
+.fab{position:absolute;right:14px;bottom:86px;width:42px;height:42px;border-radius:50%;border:0;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.3);cursor:pointer;display:none;place-items:center;z-index:5;font-size:1.1rem}.fab.on{display:grid}.fab i{position:absolute;top:-6px;right:-2px;font-style:normal;background:var(--c);color:#fff;border-radius:999px;font-size:.7rem;min-width:18px;height:18px;display:grid;place-items:center;padding:0 4px}
+.wa-comp{display:flex;align-items:flex-end;gap:8px;padding:8px 10px;background:#f0f2f5;flex:none;position:relative}
+.wa-comp .pill{flex:1;display:flex;align-items:flex-end;background:#fff;border-radius:22px;padding:2px 4px;min-width:0}
+.wa-comp textarea{flex:1;border:0;outline:0;resize:none;background:none;min-height:40px;max-height:120px;padding:10px 4px;font:inherit;line-height:1.3;min-width:0}
+.wa-comp .go{width:46px;height:46px;border-radius:50%;border:0;background:var(--c);color:#fff;cursor:pointer;font-size:1.2rem;flex:none}
+.rpbar{display:flex;gap:8px;align-items:center;padding:6px 10px 0;background:#f0f2f5}.rpbar .quote{flex:1;background:#fff;cursor:default}.rpbar .quote span{max-width:none}
+.recrow{display:flex;align-items:center;gap:12px;flex:1;background:#fff;border-radius:22px;padding:4px 12px;min-height:46px;color:#d92d20;font-weight:700}
+.recrow .dot{width:10px;height:10px;border-radius:50%;background:#d92d20;animation:blink 1s infinite}@keyframes blink{50%{opacity:.2}}
+.recrow .lv{flex:1;display:flex;align-items:center;gap:2px;height:28px;overflow:hidden}.recrow .lv i{display:block;width:3px;border-radius:2px;background:#d92d20;opacity:.7}
+.emo{position:absolute;left:0;right:0;bottom:100%;background:#fff;border-top:1px solid var(--line);box-shadow:0 -4px 12px rgba(0,0,0,.08);z-index:6;display:none}.emo.on{display:block}
+.emo .cats{display:flex;border-bottom:1px solid #eee}.emo .cats button{flex:1;border:0;background:none;padding:8px;cursor:pointer;font-size:1.15rem;border-bottom:3px solid transparent}.emo .cats button.on{border-color:var(--c)}
+.emo .grid8{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));max-height:230px;overflow-y:auto;padding:6px}.emo .grid8 button{border:0;background:none;font-size:1.5rem;padding:4px;cursor:pointer;border-radius:8px}.emo .grid8 button:hover{background:#f0f2f5}
+.mmenu{position:fixed;z-index:80;background:#fff;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.28);min-width:210px;overflow:hidden}
+.mmenu .rxbar{display:flex;gap:2px;padding:8px 8px 4px;border-bottom:1px solid #eee;flex-wrap:wrap}.mmenu .rxbar button{border:0;background:none;font-size:1.45rem;cursor:pointer;border-radius:50%;width:38px;height:38px}.mmenu .rxbar button:hover{background:#f0f2f5}.mmenu .rxbar button.mine{background:#dbe8ff}
+.mmenu .it{display:flex;gap:12px;align-items:center;width:100%;border:0;background:none;padding:11px 16px;cursor:pointer;text-align:left}.mmenu .it:hover{background:#f5f6f6}.mmenu .it.bad{color:#d92d20}
+.info{position:absolute;top:0;right:0;bottom:0;width:min(400px,100%);background:#f0f2f5;z-index:30;overflow-y:auto;transform:translateX(105%);transition:transform .22s;box-shadow:-4px 0 14px rgba(0,0,0,.15)}.info.on{transform:none}
+.info .hd{display:flex;align-items:center;gap:10px;background:#fff;padding:12px;font-weight:700;border-bottom:1px solid var(--line)}
+.info .sec{background:#fff;margin-bottom:8px;padding:14px 16px}.info .ctr{text-align:center}.info .ctr h3{margin:10px 0 2px}
+.info .mem{display:flex;align-items:center;gap:12px;padding:8px 0}.info .mem .dot{width:9px;height:9px;border-radius:50%;background:#25d366;margin-left:auto}
+.info .row2{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;width:100%;border:0;background:none;text-align:left;cursor:pointer}
+.callov{position:fixed;inset:0;background:#0b1220;z-index:70;display:none;flex-direction:column;color:#fff}.callov.on{display:flex}
+.callov .ct{padding:14px 16px;display:flex;align-items:center;gap:10px}.callov .ct b{font-size:1.05rem}.callov .ct span{opacity:.75;font-size:.85rem;display:block}
+.callov .callgrid{flex:1;display:grid;gap:8px;padding:8px;margin:0;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));grid-auto-rows:minmax(150px,1fr);align-content:center}
+.callov .tile{aspect-ratio:auto;min-height:150px;background:#1b2740;border-radius:14px}
+.callov .ctrl{display:flex;justify-content:center;gap:16px;padding:16px 16px calc(18px + env(safe-area-inset-bottom))}.callov .ctrl button{width:56px;height:56px;border-radius:50%;border:0;background:#2a3753;color:#fff;font-size:1.3rem;cursor:pointer}.callov .ctrl button.off{background:#fff;color:#111}.callov .ctrl button.end{background:#e5322d}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:90;display:grid;place-items:center;cursor:zoom-out}.lightbox img{max-width:96vw;max-height:92vh;border-radius:6px}
+.tile{position:relative;border-radius:16px;overflow:hidden;background:#0b1f4d;aspect-ratio:4/3;display:grid;place-items:center;color:#fff}
+.tile video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tile.audio video{opacity:0;pointer-events:none}
+.tile .av{width:72px;height:72px;font-size:1.5rem}
+.tile .nm{position:absolute;left:8px;bottom:6px;font-size:.78rem;font-weight:700;background:rgba(0,0,0,.45);padding:2px 8px;border-radius:999px}
+.tile .st{position:absolute;right:8px;top:6px;font-size:.7rem;background:rgba(0,0,0,.45);padding:2px 8px;border-radius:999px}
+.netbar{padding:6px 12px;font-size:.82rem;background:#fff4d6;color:#7a5600;border-bottom:1px solid #f3dd9b;flex:none}.netbar.ok{display:none}
+@media (max-width:820px){
+  .wa-main{padding:0!important}
+  .wa{grid-template-columns:1fr;height:calc(100dvh - 60px - 58px - env(safe-area-inset-bottom));border-radius:0;border-left:0;border-right:0}
+  .wa .wa-side{display:flex}.wa .wa-chat{display:none}
+  .wa.show-chat .wa-side{display:none}.wa.show-chat .wa-chat{display:flex}
+  .wa-head .back{display:inline-grid}.wa.solo .wa-head .back{display:none}
+  .wa.solo .wa-side{display:none}.wa.solo .wa-chat{display:flex}
+  .wa-msgs{padding:8px 8px 14px}.b{max-width:86%}
+}
+
+
+/* ===== teacher portal ===== */
+.tlogin{max-width:460px;margin:7vh auto 0;padding:0 14px}.tlogin .card{padding:24px}
+.crumb{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#f0f5ff;border:1px dashed #bcd2ff;border-radius:10px;padding:8px 12px;font-size:.92rem}
+
+.callov .stagebox{display:none;position:relative;flex:1;min-height:0;margin:0 8px;background:#000;border-radius:12px;overflow:hidden}
+.callov .stagebox video{width:100%;height:100%;object-fit:contain;background:#000}
+.callov .stagebox .nm{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;padding:3px 10px;border-radius:99px;font-size:.8rem}
+.callov.has-stage .stagebox{display:block}
+.callov.has-stage .callgrid{flex:none;display:flex;gap:6px;overflow-x:auto;padding:8px;grid-auto-rows:unset}
+.callov.has-stage .callgrid .tile{flex:0 0 120px;height:90px;min-height:0}
+.callov .ctrl button.on{background:#f59e0b;color:#000}
+.callpill+.callpill{border-top:1px solid #cfe9d8}
+
+</style>
+</head>
+<body>
+<main id="main" class="container" tabindex="-1"><p class="muted">Loading…</p></main>
+<noscript><p class="container">Please enable JavaScript to use Uganda Smart Learning.</p></noscript>
+<script>
+/* Uganda Smart Learning — shared engine.
+   The SAME file runs in two places:
+   - on the server (api/rpc.js loads it with root.USL_SERVER = true): the only authority for accounts, one-time
+     codes, sessions, the device lock, subscriptions, payments, content, review and WhatsApp notices;
+   - in the browser: a read-only replica of what the signed-in user is allowed to see. Every change goes to
+     the server first (see REMOTE below); the browser never decides who has paid. */
+(function (root) {
+  'use strict';
+  const KEY = 'usl_db_v1', TOK = 'usl_token', DEV = 'usl_device', PASS = 'usl_pass', DAY = 864e5;
+  const SERVER = !!root.USL_SERVER, DEV_EMAIL = String(root.USL_DEV_EMAIL || 'tradertwech@gmail.com').trim().toLowerCase(), HOOKS = () => root.USL_HOOKS || {};
+  /* Storage that never throws: some browsers/previews block localStorage. Fall back to memory (works for this page only). */
+  const LS = (function () {
+    try { const t = '__usl_t'; root.localStorage.setItem(t, '1'); root.localStorage.removeItem(t); return root.localStorage; } catch (e) { /* blocked */ }
+    const m = {}; root.USL_STORAGE_BLOCKED = true;
+    return { getItem: k => (k in m ? m[k] : null), setItem: (k, v) => { m[k] = String(v); }, removeItem: k => { delete m[k]; } };
+  })();
+  const isBrowser = typeof document !== 'undefined';
+  const DEFAULT_CFG = { price: 20000, currency: 'UGX', days: 30, trialMinutes: 15, aiDailyLimit: 30, aiCostPerCall: 30, payNumber: '0773014995', whatsappNumber: '0773014995', whatsappNotify: true };
+  const CLASS_COLORS = { S1: '#dc2626', S2: '#15803d', S3: '#c2410c', S4: '#7c3aed', S5: '#0e7490', S6: '#be185d' };
+  const CATEGORIES = ['Official UNEB past paper', 'NCDC sample assessment', 'School mock', 'Teacher-created assessment', 'Licensed publisher material', 'AI-generated practice'];
+  const PERMS = ['Own content (author holds the rights)', 'Licensed / written permission held', 'Authorised by UNEB / NCDC', 'Permission pending'];
+  const ROLE_PERMS = { admin: ['*'], reviewer: ['review', 'submit', 'moderate'], teacher: ['submit', 'moderate', 'teach'], contributor: ['submit', 'moderate'], student: [] };
+
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => [...(r || document).querySelectorAll(s)];
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const now = () => Date.now();
+  const clone = o => JSON.parse(JSON.stringify(o));
+  const hex = b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+  const rnd = n => { const a = new Uint8Array(n); (root.crypto || {}).getRandomValues ? root.crypto.getRandomValues(a) : a.forEach((_, i) => a[i] = Math.floor(Math.random() * 256)); return hex(a); };
+  const uid = p => p + '_' + rnd(5);
+  const err = m => ({ ok: false, error: m });
+  const okr = (o) => Object.assign({ ok: true }, o || {});
+  const fmtUGX = n => 'UGX ' + Number(n).toLocaleString('en-US');
+  const fmtDate = t => t ? new Date(t).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+  const fmtMs = ms => { ms = Math.max(0, ms); const s = Math.floor(ms / 1000), d = Math.floor(s / 86400); if (d >= 1) return d + 'd ' + Math.floor((s % 86400) / 3600) + 'h'; const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60; return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(x).padStart(2, '0'); };
+  const today = () => new Date().toISOString().slice(0, 10);
+
+  /* ---------- crypto ---------- */
+  async function hash(pw, salt) {
+    try {
+      if (root.crypto && root.crypto.subtle) {
+        const k = await root.crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveBits']);
+        const b = await root.crypto.subtle.deriveBits({ name: 'PBKDF2', salt: new TextEncoder().encode(salt), iterations: 100000, hash: 'SHA-256' }, k, 256);
+        return 'p1:' + hex(b);
+      }
+    } catch (e) { /* fall through */ }
+    let h = 5381; const s = salt + pw; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+    return 'w0:' + (h >>> 0).toString(16); // weak fallback for insecure contexts; production uses Argon2/bcrypt server-side
+  }
+  async function sha(s) {
+    if (root.crypto && root.crypto.subtle) return hex(await root.crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));
+    let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return 'w0:' + (h >>> 0).toString(16);
+  }
+
+  /* ---------- storage ---------- */
+  let db = null;
+  const load = () => { try { db = JSON.parse(LS.getItem(KEY)); } catch (e) { db = null; } if (db) { db.cfg = Object.assign({}, DEFAULT_CFG, db.cfg); db.outbox = db.outbox || []; db.messages = db.messages || []; db.mutes = db.mutes || {}; (db.classes || []).forEach(c => { if (!c.color) c.color = CLASS_COLORS[c.id] || '#2563eb'; }); } return db; };
+  const save = () => LS.setItem(KEY, JSON.stringify(db));
+  const audit = (action, userId, detail) => { db.audit.unshift({ id: uid('a'), at: now(), action, userId: userId || null, detail: detail || '' }); if (db.audit.length > 500) db.audit.length = 500; };
+  /* WhatsApp: a browser cannot send WhatsApp messages by itself. The server queues each message here;
+     in production a backend job sends it through the WhatsApp Business Cloud API (or a provider such as Twilio).
+     In this prototype the Admin → Outbox tab shows the queue with a one-tap "Send on WhatsApp" button. */
+  function queueWhatsApp(kind, text, paymentId) {
+    if (!db.cfg.whatsappNotify) return; const to = normContact(db.cfg.whatsappNumber); if (!to || to.includes('@')) return;
+    db.outbox.unshift({ id: uid('wa'), channel: 'whatsapp', to, kind, text, paymentId: paymentId || null, at: now(), status: 'queued' });
+    if (db.outbox.length > 300) db.outbox.length = 300;
+  }
+  function payMessage(p, kind) {
+    const u = db.users.find(x => x.id === p.userId) || {}, c = (db.classes.find(x => x.id === u.classId) || {}).id || '—', s = db.subs.find(x => x.paymentId === p.id);
+    if (kind === 'reversed') return '⚠️ Payment reversed\nStudent: ' + u.name + ' (' + c + ')\nAmount: ' + fmtUGX(p.amount) + '\nRef: ' + p.ref + '\nAccess for this payment was removed.';
+    return '✅ New subscription\nStudent: ' + u.name + ' (' + c + ')\nContact: ' + u.contact + '\nAmount: ' + fmtUGX(p.amount) + ' via ' + p.provider + '\nRef: ' + p.ref + (p.txId ? '\nProvider tx: ' + p.txId : '') + '\nActive until: ' + (s ? new Date(s.expires).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—');
+  }
+  const notify = (userId, msg) => db.notifications.unshift({ id: uid('n'), userId, msg, at: now(), read: false });
+
+  /* A fresh database holds the catalogue and sample lessons only. There are NO built-in accounts: the developer
+     creates the administrator account by registering with the developer email and confirming the code sent to it. */
+  async function seed() {
+    const D = root.USL_DATA;
+    const papers = clone(D.papers).filter(p => p.status !== 'pending').map(p => { p.createdAt = now(); p.level = (D.classes.find(c => c.id === p.cls) || {}).level || ''; p.submittedBy = 'system'; return p; });
+    const lessons = clone(D.lessons).map(l => { l.submittedBy = 'system'; return l; });
+    const syllabus = [];
+    D.subjects.forEach(s => s.classes.forEach(c => syllabus.push({ classId: c, subjectId: s.id, ref: '', version: '', note: '' })));
+    db = { v: 1, cfg: Object.assign({}, DEFAULT_CFG), classes: clone(D.classes), subjects: clone(D.subjects), orgs: clone(D.orgs), lessons, papers, syllabus, users: [], sessions: {}, otps: {}, subs: [], payments: [], progress: {}, attempts: [], aiUsage: {}, notifications: [], reviews: [], audit: [], secret: rnd(16), topics: [], tv2: true, outbox: [], messages: [], mutes: {} };
+    audit('system.seeded', null, 'Catalogue loaded');
+  }
+  const EMPTY = () => ({ v: 1, cfg: Object.assign({}, DEFAULT_CFG), classes: [], subjects: [], orgs: [], lessons: [], papers: [], syllabus: [], users: [], sessions: {}, otps: {}, subs: [], payments: [], progress: {}, attempts: [], aiUsage: {}, notifications: [], reviews: [], audit: [], topics: [], outbox: [], messages: [], mutes: {} });
+
+  /* ---------- helpers ---------- */
+  function normContact(c) {
+    c = (c || '').trim().toLowerCase();
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(c)) return c;
+    const d = c.replace(/[\s\-()]/g, ''); const m = d.match(/^(?:\+?256|0)(7\d{8})$/);
+    return m ? '+256' + m[1] : null;
+  }
+  const pwOk = p => typeof p === 'string' && p.length >= 8 && /[A-Za-z]/.test(p) && /\d/.test(p);
+  const can = (u, perm) => { const p = ROLE_PERMS[u.role] || []; return p.includes('*') || p.includes(perm); };
+  /* teachers are scoped to the class + subject pairs an administrator assigned to them */
+  const teachingOf = u => (u && Array.isArray(u.teaching) ? u.teaching : []);
+  const inScope = (u, cls, subject) => u.role !== 'teacher' || teachingOf(u).some(t => t.cls === cls && (!subject || t.subject === subject));
+  const teachClasses = u => [...new Set(teachingOf(u).map(t => t.cls))];
+  const deviceId = () => { let d = LS.getItem(DEV); if (!d) { d = uid('dev'); LS.setItem(DEV, d); } return d; };
+  /* One-time codes: generated here, delivered by the server's SMS (Africa's Talking) or email (Resend) hook, stored only as a
+     hash, valid 10 minutes, 5 tries, one new code per 45 seconds and 5 per hour. The code is NEVER returned to the browser. */
+  async function issueOtp(contact, purpose) {
+    load(); const k = contact + '|' + purpose, prev = db.otps[k], t = now();
+    if (prev && prev.sentAt && t - prev.sentAt < 45000) return { error: 'Please wait ' + Math.ceil((45000 - (t - prev.sentAt)) / 1000) + ' seconds before asking for another code.' };
+    const hist = ((prev && prev.hist) || []).filter(x => t - x < 3600000); if (hist.length >= 5) return { error: 'Too many codes were requested. Try again in an hour.' };
+    const a = new Uint32Array(1); root.crypto.getRandomValues(a); const code = String(100000 + (a[0] % 900000));
+    const h = HOOKS(); const d = h.deliverOtp ? await h.deliverOtp(contact, purpose, code) : { ok: false, error: 'Code sending is not set up on this site yet.' };
+    if (!d.ok) return { error: d.error || 'We could not send the code. Please try again.' };
+    load(); db.otps[k] = { h: await sha(db.secret + '|' + k + '|' + code), exp: t + 10 * 60000, tries: 0, sentAt: t, hist: hist.concat([t]) }; save();
+    return { sent: true, via: d.via };
+  }
+  async function checkOtp(contact, purpose, code) {
+    const k = contact + '|' + purpose; load(); const o = db.otps[k];
+    if (!o || o.exp < now()) return 'The code has expired. Request a new one.';
+    if (o.tries >= 5) return 'Too many wrong codes. Request a new one.';
+    if ((await sha(db.secret + '|' + k + '|' + String(code).trim())) !== o.h) { o.tries++; save(); return 'That code is not correct.'; }
+    delete db.otps[k]; save(); return null;
+  }
+  function startSession(u) {
+    if (u.role === 'student') Object.keys(db.sessions).forEach(t => { if (db.sessions[t].userId === u.id) delete db.sessions[t]; }); // students: one active session / one device. Staff may use several devices.
+    const t = rnd(24); db.sessions[t] = { userId: u.id, deviceId: u.role === 'student' ? u.deviceId : deviceId(), at: now() };
+    LS.setItem(TOK, t); audit('login.ok', u.id, 'device ' + String(u.deviceId || deviceId()).slice(-6)); save();
+    return okr({ role: u.role });
+  }
+  function sessionUser() {
+    load(); if (!db) return { reason: '' };
+    const t = LS.getItem(TOK), s = t && db.sessions[t];
+    if (!s) return { reason: t ? 'Your session ended. Please log in again.' : '' };
+    const u = db.users.find(x => x.id === s.userId);
+    if (!u || u.status !== 'active') return { reason: 'This account is not active.' };
+    if ((u.role === 'student' && s.deviceId !== u.deviceId) || s.deviceId !== deviceId()) return { reason: 'This account is now active on another device. Log in again to switch back.' };
+    return { user: u, session: s };
+  }
+  function auth(perm) {
+    const r = sessionUser(); if (!r.user) return { e: err('Please log in.') };
+    if (perm && !can(r.user, perm)) { audit('permission.denied', r.user.id, perm); save(); return { e: err('You do not have permission to do that.') }; }
+    return { u: r.user };
+  }
+  function accessOf(u) {
+    if (!u) return { state: 'none' };
+    if (u.role !== 'student') return { state: 'staff', role: u.role };
+    const t = now();
+    const sub = db.subs.filter(s => s.userId === u.id && s.status === 'active' && s.expires > t).sort((a, b) => b.expires - a.expires)[0];
+    if (sub) return { state: 'paid', expires: sub.expires, msLeft: sub.expires - t };
+    const hadSub = db.subs.some(s => s.userId === u.id);
+    if (u.trialStartedAt) { const left = u.trialEndsAt - t; if (left > 0) return { state: 'trial', msLeft: left }; return { state: 'expired', hadSub }; }
+    return hadSub ? { state: 'expired', hadSub } : { state: 'trial_ready' };
+  }
+  const allowed = a => ['paid', 'trial', 'staff'].includes(a.state);
+  const requireAccess = u => { const a = accessOf(u); return allowed(a) ? null : err('A subscription or active trial is required.'); };
+
+  function textToHtml(t) {
+    const out = []; let list = false;
+    String(t || '').split(/\n/).forEach(line => {
+      const l = line.trim();
+      if (/^[-*•]\s+/.test(l)) { if (!list) { out.push('<ul>'); list = true; } out.push('<li>' + esc(l.replace(/^[-*•]\s+/, '')) + '</li>'); }
+      else { if (list) { out.push('</ul>'); list = false; } if (l) out.push('<p>' + esc(l) + '</p>'); }
+    });
+    if (list) out.push('</ul>'); return out.join('');
+  }
+  function parseQuestions(text, needKeys) {
+    const qs = [], errors = [];
+    String(text || '').split(/\n/).map(s => s.trim()).filter(Boolean).forEach((line, i) => {
+      const p = line.split('|').map(s => s.trim()); const n = 'Line ' + (i + 1) + ': ';
+      const type = (p[0] || '').toUpperCase();
+      if (type !== 'MCQ' && type !== 'STRUCT') return errors.push(n + 'start with MCQ or STRUCT.');
+      const marks = parseInt(p[2], 10); if (!(marks > 0 && marks <= 50)) return errors.push(n + 'marks must be 1–50.');
+      if (!p[1] || !p[3]) return errors.push(n + 'topic and question text are required.');
+      const q = { id: 'q' + (qs.length + 1), type: type === 'MCQ' ? 'mcq' : 'struct', topic: p[1], marks, text: p[3] };
+      if (type === 'MCQ') {
+        q.o = (p[4] || '').split(';;').map(s => s.trim()).filter(Boolean);
+        if (q.o.length < 2) return errors.push(n + 'give at least two options separated by ;;');
+        if (p[5]) { const a = parseInt(p[5], 10) - 1; if (!(a >= 0 && a < q.o.length)) return errors.push(n + 'answer number is outside the options.'); q.a = a; }
+        else if (needKeys) return errors.push(n + 'a marking guide was promised, so give the correct option number.');
+      } else {
+        if (p[4]) q.model = p.slice(4).join(' | ').replace(/\\n/g, '\n'); else if (needKeys) return errors.push(n + 'a marking guide was promised, so give a model answer.');
+      }
+      qs.push(q);
+    });
+    return { questions: qs, errors };
+  }
+  function parseQuiz(text) {
+    const qs = [], errors = [];
+    String(text || '').split(/\n/).map(s => s.trim()).filter(Boolean).forEach((line, i) => {
+      const p = line.split('|').map(s => s.trim()), o = (p[1] || '').split(';;').map(s => s.trim()).filter(Boolean), a = parseInt(p[2], 10) - 1;
+      if (!p[0] || o.length < 2 || !(a >= 0 && a < o.length)) return errors.push('Quiz line ' + (i + 1) + ': use  question | A ;; B ;; C | correct option number');
+      qs.push({ q: p[0], o, a });
+    });
+    return { quiz: qs, errors };
+  }
+
+  /* Voice-note audio is kept in IndexedDB on the device (blobs are too big for localStorage). In production, upload to object storage. */
+  const Media = (function () {
+    const mem = new Map(); let dbp = null;
+    const open = () => dbp || (dbp = new Promise(res => { try { const rq = root.indexedDB.open('usl_media', 1); rq.onupgradeneeded = () => rq.result.createObjectStore('b'); rq.onsuccess = () => res(rq.result); rq.onerror = () => res(null); } catch (e) { res(null); } }));
+    const tx = async (mode, fn) => { const d = await open(); if (!d) return null; return new Promise(r => { try { const t = d.transaction('b', mode), q = fn(t.objectStore('b')); t.oncomplete = () => r(q && q.result !== undefined ? q.result : true); t.onerror = t.onabort = () => r(null); } catch (e) { r(null); } }); };
+    return { put: async (id, blob) => { mem.set(id, blob); await tx('readwrite', s => s.put(blob, id)); }, get: async id => { if (mem.has(id)) return mem.get(id); const v = await tx('readonly', s => s.get(id)); return v && v !== true ? v : null; }, del: async id => { mem.delete(id); await tx('readwrite', s => s.delete(id)); } };
+  })();
+
+  /* Shared class-room service (Supabase REST via /api/config). Without it, rooms work only inside one browser. */
+  const Remote = (function () {
+    let cfg = null, p = null, okNow = true, feat = {};
+    const init = () => p || (p = (async () => { try { const r = await fetch('api/config', { cache: 'no-store' }); if (r.ok) { const j = await r.json(); if (j) feat = j.features || {}; if (j && j.ok && j.url && j.key) cfg = j; } } catch (e) { /* not configured */ } return !!cfg; })());
+    const rest = async (method, path, body, extra) => {
+      if (!cfg) return null;
+      try { const r = await fetch(cfg.url.replace(/\/$/, '') + '/rest/v1/' + path, { method, headers: Object.assign({ apikey: cfg.key, Authorization: 'Bearer ' + cfg.key, 'Content-Type': 'application/json' }, extra || {}), body: body === undefined ? undefined : JSON.stringify(body) }); okNow = r.ok; if (!r.ok) return null; const t = await r.text(); return t ? JSON.parse(t) : []; }
+      catch (e) { okNow = false; return null; }
+    };
+    return { init, rest, get on() { return !!cfg; }, get features() { return feat; }, get healthy() { return okNow; }, get ice() { return cfg && cfg.ice ? cfg.ice : [{ urls: 'stun:stun.l.google.com:19302' }]; } };
+  })();
+
+  /* ---------- the simulated server ---------- */
+  const Server = {
+    async register(f) {
+      const name = (f.name || '').trim(), contact = normContact(f.contact);
+      if (name.length < 2) return err('Enter your full name.');
+      if (!contact) return err('Enter a valid email address or Ugandan phone number (e.g. 0772 123456).');
+      if (!pwOk(f.password)) return err('Password needs at least 8 characters with letters and numbers.');
+      if (!f.consent) return err('Please confirm you are 18+, or that a parent/guardian consents to your use of this app.');
+      const salt = uid('s'), pw = await hash(f.password, salt);
+      load(); const isDev = contact === DEV_EMAIL;
+      if (!isDev && !db.classes.find(c => c.id === f.classId)) return err('Choose your class.');
+      const old = db.users.find(u => u.contact === contact);
+      if (old && old.verified) return err('An account with this contact already exists. Please log in.');
+      if (old) db.users = db.users.filter(u => u !== old); // an unfinished sign-up can be started again
+      const u = { id: uid('u'), role: isDev ? 'admin' : 'student', name, contact, classId: isDev ? null : f.classId, subjects: [], schoolCode: (f.schoolCode || '').trim(), salt, pw, verified: false, status: 'active', createdAt: now(), consentAt: now(), deviceId: null, deviceSince: null, trialStartedAt: null, trialEndsAt: null, dailyGoal: 2, failed: 0, lockUntil: 0 };
+      db.users.push(u); audit('user.registered', u.id, contact); save();
+      const o = await issueOtp(contact, 'verify'); if (o.error) { load(); db.users = db.users.filter(x => x.id !== u.id); save(); return err(o.error); }
+      return okr(Object.assign({ contact }, o));
+    },
+    async resendCode(contact, purpose) { contact = normContact(contact); load(); const u = db.users.find(x => x.contact === contact); if (!u) return err('Unknown account.'); const o = await issueOtp(contact, purpose === 'transfer' ? 'transfer' : 'verify'); return o.error ? err(o.error) : okr(o); },
+    async verifyRegistration(contact, code) {
+      contact = normContact(contact); load(); const u = db.users.find(x => x.contact === contact); if (!u) return err('Unknown account.');
+      const e = await checkOtp(contact, 'verify', code); if (e) return err(e);
+      load(); const u2 = db.users.find(x => x.id === u.id); if (!u2) return err('Unknown account.');
+      return Server._finishVerify(u2);
+    },
+    _finishVerify(u) {
+      u.verified = true; u.deviceId = deviceId(); u.deviceSince = now(); audit('user.verified', u.id); notify(u.id, u.role === 'admin' ? 'Welcome, developer. This administrator account has full access.' : 'Welcome! Your account is verified. You can start your free ' + db.cfg.trialMinutes + '-minute trial from the dashboard.');
+      return startSession(u);
+    },
+    async login(contact, password, portal) {
+      const c = normContact(contact); if (!c) return err('Enter the email or phone number you registered with.');
+      load(); let u = db.users.find(x => x.contact === c);
+      if (u && u.lockUntil > now()) return err('Too many attempts. Try again in ' + Math.ceil((u.lockUntil - now()) / 1000) + ' seconds.');
+      const good = u ? (await hash(password || '', u.salt)) === u.pw : false;
+      load(); u = u && db.users.find(x => x.id === u.id);
+      if (!u || !good) {
+        if (u) { u.failed++; audit('login.failed', u.id); if (u.failed >= 5) { u.lockUntil = now() + 60000; u.failed = 0; audit('login.locked', u.id, '5 failed attempts'); notify(u.id, 'Several wrong password attempts were made on your account.'); } save(); }
+        return err('Incorrect contact or password.');
+      }
+      if (u.status !== 'active') return err('This account is suspended. Please contact support.');
+      if (portal === 'teacher' && u.role !== 'teacher') return err('This sign-in is for teachers only. Students and other staff use the main log in.');
+      if (portal !== 'teacher' && u.role === 'teacher') return err('Teachers sign in on the Teacher portal (teacher.html).');
+      if (u.role === 'admin' && u.contact !== DEV_EMAIL) return err('Incorrect contact or password.');
+      if (!u.verified) { const o = await issueOtp(c, 'verify'); return o.error ? err(o.error) : okr(Object.assign({ needsVerify: true, contact: c }, o)); }
+      u.failed = 0; const dev = deviceId();
+      if (!u.deviceId) { u.deviceId = dev; u.deviceSince = now(); audit('device.registered', u.id); }
+      else if (u.role !== 'student') { /* staff may use several devices */ }
+      else if (u.deviceId !== dev) {
+        audit('login.new_device', u.id, 'blocked pending verification'); notify(u.id, 'Someone tried to log in from a new device. If this was not you, change your password.'); save();
+        const o = await issueOtp(c, 'transfer'); return o.error ? err(o.error) : okr(Object.assign({ needsTransfer: true, contact: c }, o));
+      }
+      return startSession(u);
+    },
+    async completeTransfer(contact, code) {
+      contact = normContact(contact); load(); const u = db.users.find(x => x.contact === contact); if (!u) return err('Unknown account.');
+      const e = await checkOtp(contact, 'transfer', code); if (e) return err(e);
+      load(); const u2 = db.users.find(x => x.id === u.id); if (!u2) return err('Unknown account.');
+      return Server._finishTransfer(u2);
+    },
+    _finishTransfer(u) {
+      u.deviceId = deviceId(); u.deviceSince = now(); audit('device.transferred', u.id); notify(u.id, 'Your account was moved to a new device. The old device has been signed out.');
+      return startSession(u);
+    },
+    async requestReset(contact) {
+      const c = normContact(contact); if (!c) return err('Enter the email or phone number you registered with.'); load(); const u = db.users.find(x => x.contact === c);
+      if (u && u.verified && u.status === 'active' && !(u.role === 'admin' && u.contact !== DEV_EMAIL)) { const o = await issueOtp(c, 'reset'); if (o.error) return err(o.error); }
+      return okr({ contact: c }); // same answer whether or not the account exists
+    },
+    async resetPassword(contact, code, password) {
+      const c = normContact(contact); if (!c) return err('Unknown account.'); if (!pwOk(password)) return err('Password needs at least 8 characters with letters and numbers.');
+      const e = await checkOtp(c, 'reset', code); if (e) return err(e); const salt = uid('s'), pw = await hash(password, salt); load(); const u = db.users.find(x => x.contact === c); if (!u) return err('Unknown account.');
+      u.salt = salt; u.pw = pw; u.failed = 0; u.lockUntil = 0; Object.keys(db.sessions).forEach(t => { if (db.sessions[t].userId === u.id) delete db.sessions[t]; });
+      audit('password.reset', u.id); notify(u.id, 'Your password was changed. If this was not you, contact support.'); save(); return okr();
+    },
+    logout() { load(); const t = LS.getItem(TOK); if (t && db.sessions[t]) { audit('logout', db.sessions[t].userId); delete db.sessions[t]; save(); } LS.removeItem(TOK); return okr(); },
+    currentUser() { const r = sessionUser(); return r.user ? { user: r.user } : { reason: r.reason }; },
+    access(u) { load(); return accessOf(u); },
+    cfg() { load(); return db.cfg; },
+    data() { load(); return db; },
+    startTrial() {
+      const r = auth(); if (r.e) return r.e; const u = r.u;
+      if (u.role !== 'student') return err('Staff accounts do not need a trial.');
+      if (u.trialStartedAt) { return err('Your one free trial has already been used on this account.'); }
+      if (db.subs.some(s => s.userId === u.id && s.status === 'active' && s.expires > now())) return err('You already have an active subscription.');
+      u.trialStartedAt = now(); u.trialEndsAt = now() + db.cfg.trialMinutes * 60000; audit('trial.started', u.id); save(); return okr({ ends: u.trialEndsAt });
+    },
+    updateProfile(p) {
+      const r = auth(); if (r.e) return r.e; const u = r.u;
+      if (p.classId && db.classes.find(c => c.id === p.classId) && u.role === 'student') { if (u.classId !== p.classId) u.subjects = []; u.classId = p.classId; }
+      if (Array.isArray(p.subjects)) u.subjects = p.subjects.filter(s => db.subjects.find(x => x.id === s));
+      if (p.dailyGoal) u.dailyGoal = Math.min(10, Math.max(1, parseInt(p.dailyGoal, 10) || 2));
+      if (p.name && p.name.trim().length > 1) u.name = p.name.trim();
+      save(); return okr();
+    },
+    notifications() { const r = auth(); if (r.e) return []; return db.notifications.filter(n => n.userId === r.u.id).slice(0, 10); },
+    markNotificationsRead() { const r = auth(); if (r.e) return; db.notifications.forEach(n => { if (n.userId === r.u.id) n.read = true; }); save(); },
+
+    /* content (paid features are gated on the server side of the boundary) */
+    getLesson(id) {
+      const r = auth(); if (r.e) return r.e; const g = requireAccess(r.u); if (g) return g;
+      const l = db.lessons.find(x => x.id === id && (x.status === 'published' || (r.u.role === 'teacher' && x.submittedBy === r.u.id))); if (!l) return err('Lesson not found.');
+      if (!inScope(r.u, l.cls, l.subject)) { audit('permission.denied', r.u.id, 'lesson outside teaching scope'); save(); return err('This lesson is outside the classes and subjects assigned to you.'); }
+      return okr({ lesson: l });
+    },
+    getPaper(id, forReview) {
+      const r = auth(); if (r.e) return r.e; const g = requireAccess(r.u); if (g) return g;
+      const p = db.papers.find(x => x.id === id); if (!p) return err('Paper not found.');
+      if (p.status !== 'published' && !(forReview && can(r.u, 'review')) && !(r.u.role === 'teacher' && p.submittedBy === r.u.id)) return err('This paper is not published.');
+      if (!inScope(r.u, p.cls, p.subject)) { audit('permission.denied', r.u.id, 'paper outside teaching scope'); save(); return err('This paper is outside the classes and subjects assigned to you.'); }
+      return okr({ paper: p });
+    },
+    saveQuiz(lessonId, score, total) {
+      const r = auth(); if (r.e) return r.e; const g = requireAccess(r.u); if (g) return g;
+      const m = db.progress[r.u.id] = db.progress[r.u.id] || {}; const p = m[lessonId] = m[lessonId] || {};
+      p.quiz = { score, total, at: now() }; p.completed = true; p.updatedAt = now(); save(); return okr();
+    },
+    markComplete(lessonId, done) {
+      const r = auth(); if (r.e) return r.e; const g = requireAccess(r.u); if (g) return g;
+      const m = db.progress[r.u.id] = db.progress[r.u.id] || {}; const p = m[lessonId] = m[lessonId] || {}; p.completed = !!done; p.updatedAt = now(); p.opened = p.opened || now(); save(); return okr();
+    },
+    touchLesson(lessonId) { const r = auth(); if (r.e) return; const m = db.progress[r.u.id] = db.progress[r.u.id] || {}; const p = m[lessonId] = m[lessonId] || {}; p.opened = now(); p.updatedAt = p.updatedAt || 0; p.lastOpen = now(); save(); },
+    progress() { const r = auth(); if (r.e) return {}; return db.progress[r.u.id] || {}; },
+
+    /* exam attempts */
+    startAttempt(paperId) {
+      const r = auth(); if (r.e) return r.e; const g = requireAccess(r.u); if (g) return g;
+      const p = db.papers.find(x => x.id === paperId && x.status === 'published'); if (!p) return err('Paper not available.');
+      let a = db.attempts.find(x => x.userId === r.u.id && x.paperId === paperId && x.status === 'in_progress');
+      if (a && a.startedAt + a.durationMs <= now()) { Server._finish(a, p); a = null; }
+      if (!a) { a = { id: uid('at'), userId: r.u.id, paperId, startedAt: now(), durationMs: p.duration * 60000, answers: {}, flags: {}, status: 'in_progress' }; db.attempts.push(a); audit('exam.started', r.u.id, paperId); save(); }
+      return okr({ attempt: a, paper: p, resumed: false });
+    },
+    saveAnswers(attemptId, answers, flags) {
+      const r = auth(); if (r.e) return r.e; const a = db.attempts.find(x => x.id === attemptId && x.userId === r.u.id); if (!a) return err('Attempt not found.');
+      if (a.status !== 'in_progress') return err('This attempt is already submitted.');
+      if (now() > a.startedAt + a.durationMs + 5000) return err('Time is up.');
+      a.answers = answers || {}; a.flags = flags || {}; a.savedAt = now(); save(); return okr({ savedAt: a.savedAt });
+    },
+    _finish(a, p) {
+      let got = 0, max = 0, scored = false; const ts = {};
+      p.questions.forEach(q => {
+        if (q.type === 'mcq' && typeof q.a === 'number') {
+          scored = true; max += q.marks; const ok = a.answers[q.id] === q.a; if (ok) got += q.marks;
+          const k = p.subject + '|' + q.topic; ts[k] = ts[k] || { got: 0, max: 0 }; ts[k].max += q.marks; ts[k].got += ok ? q.marks : 0;
+        }
+      });
+      a.status = 'submitted'; a.submittedAt = now(); a.objective = { got, max, scored }; a.topicStats = ts; a.selfMarks = a.selfMarks || {};
+    },
+    submitAttempt(attemptId, answers, flags) {
+      const r = auth(); if (r.e) return r.e; const a = db.attempts.find(x => x.id === attemptId && x.userId === r.u.id); if (!a) return err('Attempt not found.');
+      if (a.status === 'in_progress') { if (answers) a.answers = answers; if (flags) a.flags = flags; Server._finish(a, db.papers.find(x => x.id === a.paperId)); audit('exam.submitted', r.u.id, a.paperId); save(); }
+      return okr({ attempt: a });
+    },
+    getAttempt(id) { const r = auth(); if (r.e) return r.e; const a = db.attempts.find(x => x.id === id && x.userId === r.u.id); return a ? okr({ attempt: a }) : err('Attempt not found.'); },
+    selfMark(attemptId, marks) {
+      const r = auth(); if (r.e) return r.e; const g = requireAccess(r.u); if (g) return g;
+      const a = db.attempts.find(x => x.id === attemptId && x.userId === r.u.id && x.status === 'submitted'); if (!a) return err('Attempt not found.');
+      const p = db.papers.find(x => x.id === a.paperId); a.selfMarks = {};
+      p.questions.forEach(q => { if (q.type === 'struct' && marks[q.id] != null && marks[q.id] !== '') { const v = Math.max(0, Math.min(q.marks, parseFloat(marks[q.id]) || 0)); a.selfMarks[q.id] = v; } });
+      // rebuild topic stats: objective part + self-marked structured part
+      const ts = {}; p.questions.forEach(q => {
+        const k = p.subject + '|' + q.topic;
+        if (q.type === 'mcq' && typeof q.a === 'number') { ts[k] = ts[k] || { got: 0, max: 0 }; ts[k].max += q.marks; ts[k].got += a.answers[q.id] === q.a ? q.marks : 0; }
+        if (q.type === 'struct' && a.selfMarks[q.id] != null) { ts[k] = ts[k] || { got: 0, max: 0 }; ts[k].max += q.marks; ts[k].got += a.selfMarks[q.id]; }
+      }); a.topicStats = ts; save(); return okr({ attempt: a });
+    },
+    myAttempts() { const r = auth(); if (r.e) return []; return db.attempts.filter(a => a.userId === r.u.id).sort((a, b) => b.startedAt - a.startedAt); },
+    weakTopics() {
+      const r = auth(); if (r.e) return []; const m = {};
+      db.attempts.filter(a => a.userId === r.u.id && a.topicStats).forEach(a => Object.entries(a.topicStats).forEach(([k, v]) => { m[k] = m[k] || { got: 0, max: 0 }; m[k].got += v.got; m[k].max += v.max; }));
+      const pr = db.progress[r.u.id] || {};
+      Object.entries(pr).forEach(([lid, p]) => { const l = db.lessons.find(x => x.id === lid); if (l && p.quiz) { const k = l.subject + '|' + l.topic; m[k] = m[k] || { got: 0, max: 0 }; m[k].got += p.quiz.score; m[k].max += p.quiz.total; } });
+      return Object.entries(m).filter(([, v]) => v.max > 0).map(([k, v]) => { const [subject, topic] = k.split('|'); return { subject, topic, got: v.got, max: v.max, pct: Math.round(v.got / v.max * 100) }; }).filter(x => x.pct < 60).sort((a, b) => a.pct - b.pct);
+    },
+
+    /* AI usage limits & monitoring */
+    aiUse(chars) {
+      const r = auth(); if (r.e) return r.e; const g = requireAccess(r.u); if (g) return g;
+      const k = r.u.id + '|' + today(); const x = db.aiUsage[k] = db.aiUsage[k] || { calls: 0, chars: 0 };
+      if (x.calls >= db.cfg.aiDailyLimit) return err('You have reached today\'s tutor limit (' + db.cfg.aiDailyLimit + ' questions). It resets tomorrow.');
+      x.calls++; x.chars += chars || 0; save(); return okr({ left: db.cfg.aiDailyLimit - x.calls });
+    },
+    aiLeft() { const r = auth(); if (r.e) return 0; const x = db.aiUsage[r.u.id + '|' + today()]; return db.cfg.aiDailyLimit - (x ? x.calls : 0); },
+
+    /* payments: automatic (Flutterwave mobile money) when the server has keys, otherwise manual (send money, give the transaction ID,
+       administrator confirms). Either way ONLY the server can activate a subscription. */
+    async initiatePayment(provider, phone) {
+      const r = auth(); if (r.e) return r.e; const u = r.u; if (u.role !== 'student') return err('Only students subscribe.');
+      const ph = normContact(phone); if (!ph || ph.includes('@')) return err('Enter a valid Ugandan mobile money number, e.g. 0772 123456.');
+      if (!['MTN Mobile Money', 'Airtel Money'].includes(provider)) return err('Choose a payment provider.');
+      const h = HOOKS(), auto = !!(h.chargeReady && h.chargeReady());
+      let p = db.payments.find(x => x.userId === u.id && x.status === 'pending' && now() - x.createdAt < (auto ? 120000 : 3 * 3600000));
+      if (p && p.mode === (auto ? 'auto' : 'manual') && (!auto || (p.phone === ph && p.provider === provider))) return okr({ payment: p, reused: true });
+      if (p) { p.status = 'failed'; p.updatedAt = now(); }
+      p = { id: uid('pay'), ref: 'USL-' + rnd(4).toUpperCase(), userId: u.id, provider, phone: ph, amount: db.cfg.price, currency: db.cfg.currency, days: db.cfg.days, payTo: normContact(db.cfg.payNumber), mode: auto ? 'auto' : 'manual', status: 'pending', createdAt: now(), updatedAt: now(), txId: null };
+      db.payments.unshift(p); audit('payment.initiated', u.id, p.ref + ' ' + fmtUGX(p.amount) + ' ' + p.mode); save();
+      if (auto) {
+        const c = await h.charge({ ref: p.ref, amount: p.amount, currency: p.currency, phone: ph, provider, name: u.name, userId: u.id, email: u.contact.includes('@') ? u.contact : null });
+        load(); const q = db.payments.find(x => x.id === p.id);
+        if (!c.ok) { q.status = 'failed'; q.updatedAt = now(); q.note = c.error || ''; save(); return err(c.error || 'We could not start the mobile money payment. Please try again.'); }
+        q.note = c.message || ''; save(); return okr({ payment: q });
+      }
+      return okr({ payment: p });
+    },
+    myPayments() { const r = auth(); if (r.e) return []; return db.payments.filter(p => p.userId === r.u.id); },
+    async checkPayment(ref) {
+      const r = auth(); if (r.e) return r.e; let p = db.payments.find(x => x.ref === ref && x.userId === r.u.id); if (!p) return err('Unknown payment.');
+      if (p.status !== 'pending' || p.mode !== 'auto') return okr({ status: p.status });
+      const h = HOOKS(); const v = h.verify ? await h.verify(p.ref) : { status: 'pending' }; load(); p = db.payments.find(x => x.ref === ref); return Server._apply(p, v);
+    },
+    async _gatewayEvent(ref) { // called by the payment webhook on the server, never by a browser
+      load(); if (!db.payments.find(x => x.ref === ref)) return err('Unknown reference'); const h = HOOKS(); const v = h.verify ? await h.verify(ref) : { status: 'pending' }; load(); return Server._apply(db.payments.find(x => x.ref === ref), v);
+    },
+    _apply(p, v) {
+      if (!p) return err('Unknown payment.');
+      if (v.status === 'success') {
+        if (!(Number(v.amount) >= p.amount) || (v.currency && v.currency !== p.currency)) { p.status = 'review'; p.note = 'Amount paid (' + v.amount + ' ' + (v.currency || '') + ') does not match the price.'; p.updatedAt = now(); audit('payment.amount_mismatch', p.userId, p.ref); queueWhatsApp('review', '⚠️ Payment needs checking\nRef: ' + p.ref + '\n' + p.note, p.id); save(); return okr({ status: 'review' }); }
+        return Server._activate(p, v.txId);
+      }
+      if (v.status === 'failed' && p.status === 'pending') { p.status = 'failed'; p.updatedAt = now(); audit('payment.failed', p.userId, p.ref); notify(p.userId, 'Your payment did not go through. No money was taken for the subscription.'); save(); }
+      return okr({ status: p.status });
+    },
+    _activate(p, txId) {
+      if (p.status === 'success') { audit('payment.duplicate_ignored', p.userId, p.ref); save(); return okr({ status: 'success', duplicate: true }); }
+      if (p.status === 'reversed') { audit('payment.late_success_ignored', p.userId, p.ref); save(); return err('This transaction was already reversed.'); }
+      const latest = db.subs.filter(s => s.userId === p.userId && s.status === 'active').reduce((m, s) => Math.max(m, s.expires), 0), start = Math.max(now(), latest);
+      db.subs.push({ id: uid('sub'), userId: p.userId, paymentId: p.id, start, expires: start + p.days * DAY, status: 'active' });
+      p.status = 'success'; p.txId = txId || p.txId || null; p.updatedAt = now(); audit('payment.success', p.userId, p.ref); queueWhatsApp('subscription', payMessage(p, 'success'), p.id); notify(p.userId, 'Payment received. Your subscription is active for ' + p.days + ' days.'); save();
+      return okr({ status: 'success' });
+    },
+    submitManualPayment(ref, txId) {
+      const r = auth(); if (r.e) return r.e; const p = db.payments.find(x => x.ref === ref && x.userId === r.u.id); if (!p) return err('Unknown payment.');
+      if (p.mode !== 'manual' || p.status !== 'pending') return err('This payment cannot be updated.');
+      const id = String(txId || '').trim().toUpperCase().replace(/\s+/g, ''); if (!/^[A-Z0-9]{6,24}$/.test(id)) return err('Enter the transaction ID from the mobile money confirmation message (6–24 letters/numbers).');
+      if (db.payments.some(x => x.txId === id && x.id !== p.id)) return err('That transaction ID has already been used.');
+      p.txId = id; p.status = 'review'; p.updatedAt = now(); audit('payment.submitted', r.u.id, p.ref + ' ' + id);
+      queueWhatsApp('manual', '🧾 Payment to confirm\nStudent: ' + r.u.name + ' (' + (r.u.classId || '—') + ')\nContact: ' + r.u.contact + '\nAmount: ' + fmtUGX(p.amount) + ' via ' + p.provider + '\nFrom: ' + p.phone + '\nRef: ' + p.ref + '\nTransaction ID: ' + id + '\nOpen Admin → Payments to confirm.', p.id);
+      notify(r.u.id, 'We received your transaction ID. Your subscription starts as soon as the payment is confirmed.'); save(); return okr({ status: 'review' });
+    },
+    approvePayment(id) { const r = auth('*'); if (r.e) return r.e; const p = db.payments.find(x => x.id === id); if (!p || !['review', 'pending'].includes(p.status)) return err('This payment cannot be approved.'); audit('payment.approved', r.u.id, p.ref); return Server._activate(p, p.txId); },
+    rejectPayment(id, note) { const r = auth('*'); if (r.e) return r.e; const p = db.payments.find(x => x.id === id); if (!p || !['review', 'pending'].includes(p.status)) return err('This payment cannot be rejected.'); p.status = 'failed'; p.updatedAt = now(); p.note = String(note || '').slice(0, 200); audit('payment.rejected', r.u.id, p.ref); notify(p.userId, 'Your payment could not be confirmed' + (p.note ? ': ' + p.note : '.') + ' Please check the details or contact support.'); save(); return okr(); },
+    reversePayment(id) {
+      const r = auth('*'); if (r.e) return r.e; const p = db.payments.find(x => x.id === id); if (!p || p.status !== 'success') return err('Only a confirmed payment can be reversed.');
+      p.status = 'reversed'; p.updatedAt = now(); const s = db.subs.find(x => x.paymentId === p.id); if (s) s.status = 'revoked';
+      audit('payment.reversed', r.u.id, p.ref); queueWhatsApp('reversal', payMessage(p, 'reversed'), p.id); notify(p.userId, 'A payment was reversed, so the matching subscription days were removed.'); save(); return okr();
+    },
+
+    /* admin / reviewer / contributor */
+    adminStats() {
+      const r = auth('*'); if (r.e) return r.e; const t = now(); const st = db.users.filter(u => u.role === 'student');
+      const active = st.filter(u => accessOf(u).state === 'paid').length, trial = st.filter(u => accessOf(u).state === 'trial').length;
+      const rev = db.payments.filter(p => p.status === 'success').reduce((s, p) => s + p.amount, 0);
+      const ai = Object.entries(db.aiUsage).reduce((s, [, v]) => s + v.calls, 0);
+      return okr({ students: st.length, active, trial, revenue: rev, published: db.papers.filter(p => p.status === 'published').length, pending: db.papers.filter(p => p.status === 'pending').length + db.lessons.filter(l => l.status === 'pending').length, aiCalls: ai, aiCost: ai * db.cfg.aiCostPerCall, attempts: db.attempts.length, lessons: db.lessons.filter(l => l.status === 'published').length });
+    },
+    listStudents() { const r = auth('*'); if (r.e) return r.e; return okr({ students: db.users.map(u => ({ id: u.id, name: u.name, contact: u.contact, role: u.role, classId: u.classId, status: u.status, verified: u.verified, device: u.deviceId, access: accessOf(u).state, createdAt: u.createdAt })) }); },
+    setUserStatus(id, status) { const r = auth('*'); if (r.e) return r.e; const u = db.users.find(x => x.id === id); if (!u || u.id === r.u.id) return err('Cannot change that account.'); u.status = status === 'suspended' ? 'suspended' : 'active'; if (u.status !== 'active') Object.keys(db.sessions).forEach(t => { if (db.sessions[t].userId === id) delete db.sessions[t]; }); audit('user.' + u.status, r.u.id, u.contact); save(); return okr(); },
+    resetDevice(id) { const r = auth('*'); if (r.e) return r.e; const u = db.users.find(x => x.id === id); if (!u) return err('Not found.'); u.deviceId = null; Object.keys(db.sessions).forEach(t => { if (db.sessions[t].userId === id) delete db.sessions[t]; }); audit('device.reset_by_admin', r.u.id, u.contact); save(); return okr(); },
+    async addStaff(f) {
+      const r = auth('*'); if (r.e) return r.e; const contact = normContact(f.contact);
+      if (!contact || !contact.includes('@')) return err('Staff accounts need an email address.'); if (f.role === 'admin') return err('There is only one administrator account: the developer\'s.'); if (!ROLE_PERMS[f.role] || f.role === 'student') return err('Choose a role.'); if (!pwOk(f.password)) return err('Password needs 8+ characters with letters and numbers.');
+      if (!(f.name || '').trim()) return err('Enter a name.'); const salt = uid('s'), pw = await hash(f.password, salt); load();
+      if (db.users.find(u => u.contact === contact)) return err('That email already has an account.');
+      let teaching = []; if (f.role === 'teacher' && f.teaching) { const c = Server._cleanTeaching(f.teaching); if (c.error) return err(c.error); teaching = c.out; }
+      db.users.push({ id: uid('u'), role: f.role, name: f.name.trim(), contact, classId: null, subjects: [], teaching, salt, pw, verified: true, status: 'active', createdAt: now(), deviceId: null, deviceSince: null, dailyGoal: 2, failed: 0, lockUntil: 0 });
+      audit('staff.added', r.u.id, contact + ' as ' + f.role); save(); return okr();
+    },
+    saveConfig(c) {
+      const r = auth('*'); if (r.e) return r.e; const n = x => parseInt(x, 10);
+      if (!(n(c.price) >= 1000) || !(n(c.days) >= 1) || !(n(c.trialMinutes) >= 1) || !(n(c.aiDailyLimit) >= 1)) return err('Check the values: price ≥ 1000, days ≥ 1, trial ≥ 1 minute, AI limit ≥ 1.');
+      const pn = normContact(c.payNumber), wn = normContact(c.whatsappNumber);
+      if (!pn || pn.includes('@')) return err('Enter a valid Ugandan phone number to receive payments.'); if (!wn || wn.includes('@')) return err('Enter a valid WhatsApp phone number.');
+      Object.assign(db.cfg, { price: n(c.price), days: n(c.days), trialMinutes: n(c.trialMinutes), aiDailyLimit: n(c.aiDailyLimit), aiCostPerCall: n(c.aiCostPerCall) || 0, payNumber: String(c.payNumber).trim(), whatsappNumber: String(c.whatsappNumber).trim(), whatsappNotify: !!c.whatsappNotify });
+      audit('config.saved', r.u.id, JSON.stringify(db.cfg)); save(); return okr();
+    },
+    upsertClass(c) { const r = auth('*'); if (r.e) return r.e; const id = (c.id || '').trim().toUpperCase(); if (!/^[A-Z0-9]{1,6}$/.test(id) || !(c.name || '').trim()) return err('Give a short class code (e.g. S1) and a name.'); const x = db.classes.find(k => k.id === id); if (c.color && !/^#[0-9a-fA-F]{6}$/.test(c.color)) return err('Pick a valid colour.'); const o = { id, name: c.name.trim(), level: (c.level || '').trim(), focus: (c.focus || '').trim(), color: (c.color || (x && x.color) || CLASS_COLORS[id] || '#2563eb').toLowerCase() }; if (x) Object.assign(x, o); else db.classes.push(o); audit('class.saved', r.u.id, id); save(); return okr(); },
+    upsertSubject(s) {
+      const r = auth('*'); if (r.e) return r.e; const name = (s.name || '').trim(); if (!name || !(s.classes || []).length) return err('Give a subject name and pick at least one class.');
+      const id = s.id || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 20); let x = db.subjects.find(k => k.id === id);
+      if (x) { x.name = name; x.classes = s.classes; } else { x = { id, name, classes: s.classes }; db.subjects.push(x); }
+      x.classes.forEach(c => { if (!db.syllabus.find(y => y.classId === c && y.subjectId === id)) db.syllabus.push({ classId: c, subjectId: id, ref: '', version: '', note: '' }); });
+      audit('subject.saved', r.u.id, name); save(); return okr();
+    },
+    deleteSubject(id) { const r = auth('*'); if (r.e) return r.e; if (db.lessons.some(l => l.subject === id) || db.papers.some(p => p.subject === id)) return err('This subject has lessons or papers. Withdraw them first.'); db.subjects = db.subjects.filter(s => s.id !== id); db.syllabus = db.syllabus.filter(s => s.subjectId !== id); audit('subject.deleted', r.u.id, id); save(); return okr(); },
+    outbox() { const r = auth('*'); if (r.e) return r.e; return okr({ items: db.outbox }); },
+    markOutboxSent(id) { const r = auth('*'); if (r.e) return r.e; const m = db.outbox.find(x => x.id === id); if (!m) return err('Not found.'); m.status = 'sent'; m.sentAt = now(); audit('outbox.sent', r.u.id, m.kind); save(); return okr(); },
+    /* ----- class discussion rooms: one room per class, class members only; no private messages ----- */
+    _room(u, classId) {
+      if (!db.classes.find(c => c.id === classId)) return err('Unknown class.');
+      if (u.role === 'teacher' && !teachClasses(u).includes(classId)) { audit('room.denied', u.id, classId); save(); return err('You can only open the rooms of the classes you teach.'); }
+      if (u.role === 'student') { if (u.classId !== classId) { audit('room.denied', u.id, classId); save(); return err('You can only join your own class room.'); } const g = requireAccess(u); if (g) return g; }
+      return null;
+    },
+    roomInfo(classId) {
+      const r = auth(); if (r.e) return r.e; const e = Server._room(r.u, classId); if (e) return e; const m = db.mutes[r.u.id] || 0;
+      return okr({ cls: db.classes.find(c => c.id === classId), members: db.users.filter(x => x.role === 'student' && x.classId === classId && x.status === 'active').length, mutedUntil: m > now() ? m : 0, me: { id: r.u.id, name: r.u.name, role: r.u.role } });
+    },
+    listMessages(classId) {
+      const r = auth(); if (r.e) return r.e; const e = Server._room(r.u, classId); if (e) return e; const st = r.u.role !== 'student';
+      return okr({ messages: db.messages.filter(m => m.cls === classId).slice(-300).map(m => ({ id: m.id, userId: m.userId, name: m.name, role: m.role, text: m.text, media: m.media, at: m.at, deleted: !!m.deleted, reply: m.reply || null, reactions: m.reactions || {}, editedAt: m.editedAt || 0, reportedByMe: m.reports.includes(r.u.id), reports: st ? m.reports.length : undefined })) });
+    },
+    mergeRemote(classId, rows, mutes) {
+      const r = auth(); if (r.e) return r.e; const e = Server._room(r.u, classId); if (e) return e; let ch = false;
+      (rows || []).forEach(w => {
+        let m = db.messages.find(x => x.id === w.id);
+        if (!m) { m = { id: String(w.id), cls: w.cls, userId: w.user_id, name: w.name, role: w.role, text: w.text || '', media: w.media_id ? { id: w.media_id, dur: w.dur || (w.media_kind === 'image' ? 0 : 1), mime: w.mime || 'audio/webm', kind: w.media_kind || 'voice', wave: Array.isArray(w.wave) ? w.wave : [] } : null, at: Number(w.at), reports: Array.isArray(w.reports) ? w.reports : [], deleted: !!w.deleted, reply: w.reply || null, reactions: w.reactions && typeof w.reactions === 'object' ? w.reactions : {}, editedAt: Number(w.edited_at) || 0 }; if (m.deleted) { m.text = ''; m.media = null; } db.messages.push(m); ch = true; }
+        else { if (w.deleted && !m.deleted) { m.deleted = true; m.text = ''; m.media = null; ch = true; } const rp = Array.isArray(w.reports) ? w.reports : []; if (rp.length !== m.reports.length) { m.reports = rp; ch = true; }
+          if (!m.deleted) { const rx = w.reactions && typeof w.reactions === 'object' ? w.reactions : {}; if (JSON.stringify(rx) !== JSON.stringify(m.reactions || {})) { m.reactions = rx; ch = true; } const ea = Number(w.edited_at) || 0; if (ea > (m.editedAt || 0) && w.text != null) { m.text = w.text; m.editedAt = ea; ch = true; } } }
+      });
+      (mutes || []).forEach(x => { if (Number(x.until) > now() && db.mutes[x.user_id] !== Number(x.until)) { db.mutes[x.user_id] = Number(x.until); ch = true; } });
+      if (ch) { db.messages.sort((a, b) => a.at - b.at); save(); } return okr({ changed: ch });
+    },
+    messageRow(id) { const m = db.messages.find(x => x.id === id); return m ? { id: m.id, cls: m.cls, user_id: m.userId, name: m.name, role: m.role, text: m.text || '', media_id: m.media ? m.media.id : null, dur: m.media ? m.media.dur : null, mime: m.media ? m.media.mime : null, at: m.at, deleted: false, reports: m.reports, reply: m.reply || null, reactions: m.reactions || {}, edited_at: m.editedAt || 0, wave: m.media && m.media.wave ? m.media.wave : null, media_kind: m.media ? m.media.kind : null } : null; },
+    postMessage(classId, f) {
+      const r = auth(); if (r.e) return r.e; const e = Server._room(r.u, classId); if (e) return e; const u = r.u; f = f || {};
+      if ((db.mutes[u.id] || 0) > now()) return err('You are muted in this room until ' + new Date(db.mutes[u.id]).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + '.');
+      if (db.messages.filter(m => m.userId === u.id && now() - m.at < 30000).length >= 8) return err('You are sending messages too fast. Wait a few seconds.');
+      const text = String(f.text || '').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '').trim();
+      if (text.length > 1000) return err('Messages can be up to 1000 characters.');
+      let media = null;
+      if (f.media) {
+        const id = String(f.media.id || ''), mime = String(f.media.mime || ''), kind = f.media.kind === 'image' ? 'image' : 'voice';
+        if (kind === 'image') { if (u.role === 'student') return err('Photos can only be shared by teachers in class rooms.'); if (!/^m_[a-z0-9]{6,30}$/.test(id) || !/^image\/(jpeg|png|webp)$/.test(mime)) return err('That picture is not valid.'); media = { id, kind, mime, dur: 0 }; }
+        else { const d = Number(f.media.dur); if (!/^m_[a-z0-9]{6,30}$/.test(id) || !(d >= 1 && d <= 120) || !/^audio\//.test(mime)) return err('That voice note is not valid (1–120 seconds).'); media = { id, dur: Math.round(d), mime: mime.slice(0, 40), kind: 'voice', wave: Array.isArray(f.media.wave) ? f.media.wave.slice(0, 48).map(x => Math.max(0, Math.min(100, Math.round(Number(x) || 0)))) : [] }; }
+      }
+      if (!text && !media) return err('Type a message or record a voice note.');
+      let reply = null; if (f.reply) { const o = db.messages.find(x => x.id === f.reply && x.cls === classId && !x.deleted); if (o) reply = { id: o.id, name: o.name, userId: o.userId, text: String(o.text || '').slice(0, 90), kind: o.media ? o.media.kind : '' }; }
+      const m = { id: uid('c'), cls: classId, userId: u.id, name: u.name, role: u.role, text, media, at: now(), reports: [], deleted: false, reply, reactions: {}, editedAt: 0 };
+      db.messages.push(m); const mine = db.messages.filter(x => x.cls === classId), dropped = [];
+      if (mine.length > 300) mine.slice(0, mine.length - 300).forEach(x => { if (x.media) dropped.push(x.media.id); db.messages.splice(db.messages.indexOf(x), 1); });
+      save(); return okr({ id: m.id, dropped });
+    },
+    deleteMessage(id) {
+      const r = auth(); if (r.e) return r.e; const m = db.messages.find(x => x.id === id); if (!m) return err('Message not found.');
+      const staff = can(r.u, 'moderate'); if (m.userId !== r.u.id && !staff) { audit('permission.denied', r.u.id, 'delete message'); save(); return err('You can only delete your own messages.'); }
+      const mediaId = m.media && m.media.id; m.deleted = true; m.text = ''; m.media = null; if (staff && m.userId !== r.u.id) audit('chat.deleted_by_staff', r.u.id, m.cls + ' ' + m.name); save(); return okr({ mediaId });
+    },
+    editMessage(id, text) {
+      const r = auth(); if (r.e) return r.e; const m = db.messages.find(x => x.id === id && !x.deleted); if (!m || m.userId !== r.u.id) return err('You can only edit your own messages.');
+      if (m.media) return err('Voice notes and pictures cannot be edited.'); if (now() - m.at > 15 * 60000) return err('Messages can only be edited for 15 minutes.');
+      text = String(text || '').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '').trim(); if (!text) return err('A message cannot be empty.'); if (text.length > 1000) return err('Messages can be up to 1000 characters.');
+      m.text = text; m.editedAt = now(); save(); return okr();
+    },
+    reactMessage(id, emoji) {
+      const r = auth(); if (r.e) return r.e; const m = db.messages.find(x => x.id === id && !x.deleted); if (!m) return err('Message not found.'); const e = Server._room(r.u, m.cls); if (e) return e;
+      const ok = ['👍','❤️','😂','😮','😢','🙏','🎉','👏','🔥','💯']; m.reactions = m.reactions || {}; if (!emoji || m.reactions[r.u.id] === emoji) delete m.reactions[r.u.id]; else if (ok.includes(emoji)) m.reactions[r.u.id] = emoji; else return err('That reaction is not available.');
+      save(); return okr({ reactions: m.reactions });
+    },
+    reportMessage(id) {
+      const r = auth(); if (r.e) return r.e; const m = db.messages.find(x => x.id === id && !x.deleted); if (!m) return err('Message not found.'); const e = Server._room(r.u, m.cls); if (e) return e;
+      if (m.userId === r.u.id) return err('You cannot report your own message.'); if (!m.reports.includes(r.u.id)) { m.reports.push(r.u.id); m.dismissed = false; audit('chat.reported', r.u.id, m.cls + ' ' + m.name); save(); } return okr();
+    },
+    muteUser(userId, minutes) {
+      const r = auth('moderate'); if (r.e) return r.e; const u = db.users.find(x => x.id === userId); if (!u || u.id === r.u.id || u.role !== 'student') return err('You can only mute students.');
+      const mins = Math.max(1, Math.min(10080, parseInt(minutes, 10) || 60)); db.mutes[u.id] = now() + mins * 60000; audit('chat.muted', r.u.id, u.contact + ' ' + mins + ' min'); notify(u.id, 'A teacher muted you in the class room for ' + mins + ' minutes. Please follow the room rules.'); save(); return okr();
+    },
+    unmuteUser(userId) { const r = auth('moderate'); if (r.e) return r.e; delete db.mutes[userId]; audit('chat.unmuted', r.u.id, userId); save(); return okr(); },
+    chatReports() {
+      const r = auth('moderate'); if (r.e) return r.e;
+      return okr({ reports: db.messages.filter(m => m.reports.length && !m.deleted && !m.dismissed).map(m => ({ id: m.id, cls: m.cls, userId: m.userId, name: m.name, text: m.text, media: !!m.media, at: m.at, count: m.reports.length, mutedUntil: db.mutes[m.userId] > now() ? db.mutes[m.userId] : 0 })),
+        muted: Object.entries(db.mutes).filter(([, t]) => t > now()).map(([id, t]) => ({ id, name: (db.users.find(u => u.id === id) || {}).name || id, until: t })) });
+    },
+    dismissReports(id) { const r = auth('moderate'); if (r.e) return r.e; const m = db.messages.find(x => x.id === id); if (!m) return err('Not found.'); m.dismissed = true; audit('chat.report_dismissed', r.u.id, m.cls); save(); return okr(); },
+    addOrg(name) { const r = auth('*'); if (r.e) return r.e; name = (name || '').trim(); if (name.length < 2) return err('Enter the organisation name.'); if (db.orgs.find(o => o.name.toLowerCase() === name.toLowerCase())) return err('That organisation already exists.'); db.orgs.push({ id: uid('o'), name }); audit('org.added', r.u.id, name); save(); return okr(); },
+    setRole(id, role) { const r = auth('*'); if (r.e) return r.e; const u = db.users.find(x => x.id === id); if (!u || u.id === r.u.id || u.role === 'student' || !ROLE_PERMS[role] || role === 'student' || role === 'admin' || u.role === 'admin') return err('Cannot change that role.'); u.role = role; Object.keys(db.sessions).forEach(t => { if (db.sessions[t].userId === id) delete db.sessions[t]; }); audit('role.changed', r.u.id, u.contact + ' → ' + role); save(); return okr(); },
+    setSyllabus(classId, subjectId, ref, version, note) { const r = auth('*'); if (r.e) return r.e; const s = db.syllabus.find(x => x.classId === classId && x.subjectId === subjectId); if (!s) return err('Not found.'); Object.assign(s, { ref: (ref || '').trim(), version: (version || '').trim(), note: (note || '').trim() }); audit('syllabus.saved', r.u.id, classId + '/' + subjectId); save(); return okr(); },
+    submitPaper(f) {
+      const r = auth('submit'); if (r.e) return r.e;
+      if (!(f.title || '').trim()) return err('Give the paper a title.');
+      if (!db.classes.find(c => c.id === f.cls)) return err('Choose a class.'); if (!db.subjects.find(s => s.id === f.subject)) return err('Choose a subject.');
+      if (!inScope(r.u, f.cls, f.subject)) { audit('permission.denied', r.u.id, 'paper outside teaching scope'); save(); return err('You can only add or open material for the classes and subjects assigned to you.'); }
+      const year = parseInt(f.year, 10); if (!(year >= 1990 && year <= 2100)) return err('Enter a valid year.');
+      const pn = parseInt(f.paperNo, 10); if (!(pn >= 1 && pn <= 9)) return err('Paper number must be 1–9.'); const dur = parseInt(f.duration, 10); if (!(dur >= 1 && dur <= 300)) return err('Duration must be 1–300 minutes.');
+      if (!CATEGORIES.includes(f.category)) return err('Choose a paper category.'); if (!PERMS.includes(f.permission)) return err('Choose the permission status.'); if (!db.orgs.find(o => o.id === f.org)) return err('Choose the source organisation.');
+      const pq = parseQuestions(f.questionsText, !!f.hasGuide); if (pq.errors.length) return err(pq.errors[0]); if (!pq.questions.length) return err('Add at least one question.');
+      if (r.u.role === 'teacher') { const known = Server.topicsFor(f.cls, f.subject).map(x => x.toLowerCase()); const bad = pq.questions.findIndex(q => !known.includes(String(q.topic || '').trim().toLowerCase())); if (bad >= 0) return err('Question ' + (bad + 1) + ' has the topic "' + pq.questions[bad].topic + '", which is not in the topic list for ' + f.cls + ' ' + db.subjects.find(s => s.id === f.subject).name + '. Pick a listed topic or add the topic first.'); }
+      const cl = db.classes.find(c => c.id === f.cls);
+      const p = { id: uid('p'), title: f.title.trim(), cls: f.cls, level: cl.level, subject: f.subject, year, paperNo: pn, org: db.orgs.find(o => o.id === f.org).name, category: f.category, hasGuide: !!f.hasGuide, verified: false, permission: f.permission, reviewer: 'Pending review', status: 'pending', submittedBy: r.u.id, createdAt: now(), duration: dur, instructions: (f.instructions || '').trim() || 'Answer all questions.', questions: pq.questions };
+      db.papers.push(p); audit('paper.submitted', r.u.id, p.title); save(); return okr({ id: p.id });
+    },
+    /* ----- teacher scope, categorisation (class -> subject -> topic) ----- */
+    scope() {
+      const r = auth(); if (r.e) return { role: '', unrestricted: true, pairs: [], classes: [] }; const u = r.u;
+      if (u.role !== 'teacher') return { role: u.role, unrestricted: true, pairs: [], classes: db.classes.map(c => c.id) };
+      return { role: 'teacher', unrestricted: false, pairs: teachingOf(u).map(t => ({ cls: t.cls, subject: t.subject })), classes: teachClasses(u) };
+    },
+    topicsFor(cls, subject) {
+      load(); const set = new Map(); const add = t => { const k = String(t || '').trim(); if (k && !set.has(k.toLowerCase())) set.set(k.toLowerCase(), k); };
+      (db.topics || []).filter(t => t.cls === cls && t.subject === subject).forEach(t => add(t.topic));
+      db.lessons.filter(l => l.cls === cls && l.subject === subject && l.status !== 'rejected' && l.status !== 'withdrawn').forEach(l => add(l.topic));
+      db.papers.filter(p => p.cls === cls && p.subject === subject && p.status !== 'rejected' && p.status !== 'withdrawn').forEach(p => (p.questions || []).forEach(q => add(q.topic)));
+      return [...set.values()].sort((a, b) => a.localeCompare(b));
+    },
+    _addTopic(cls, subject, name) {
+      name = String(name || '').replace(/\s+/g, ' ').trim(); if (name.length < 2 || name.length > 80) return 'A topic name needs 2 to 80 characters.';
+      if (!/^[\p{L}\p{N}][\p{L}\p{N} ,.'&()/:+-]*$/u.test(name)) return 'Topic names can use letters, numbers and simple punctuation only.';
+      db.topics = db.topics || []; if (!Server.topicsFor(cls, subject).some(t => t.toLowerCase() === name.toLowerCase())) db.topics.push({ cls, subject, topic: name }); return null;
+    },
+    addTopic(cls, subject, name) {
+      const r = auth('submit'); if (r.e) return r.e; if (!db.classes.find(c => c.id === cls) || !db.subjects.find(s => s.id === subject)) return err('Choose a class and subject.');
+      if (!inScope(r.u, cls, subject)) return err('You can only add or open material for the classes and subjects assigned to you.');
+      const e = Server._addTopic(cls, subject, name); if (e) return err(e); audit('topic.added', r.u.id, cls + ' ' + subject + ' ' + name); save(); return okr({ topics: Server.topicsFor(cls, subject) });
+    },
+    setTeaching(userId, list) {
+      const r = auth('*'); if (r.e) return r.e; const u = db.users.find(x => x.id === userId); if (!u || u.role !== 'teacher') return err('That account is not a teacher.');
+      const c = Server._cleanTeaching(list); if (c.error) return err(c.error); const out = c.out;
+      u.teaching = out; audit('teacher.assigned', r.u.id, u.contact + ': ' + out.map(x => x.cls + '/' + x.subject).join(', ')); save(); return okr();
+    },
+    _cleanTeaching(list) {
+      const seen = new Set(), out = []; for (const t of (Array.isArray(list) ? list : [])) { const sub = db.subjects.find(x => x.id === t.subject); if (!db.classes.find(c => c.id === t.cls) || !sub || !sub.classes.includes(t.cls)) return { error: 'Each assignment needs a class and a subject taught in that class.' }; const k = t.cls + '|' + t.subject; if (!seen.has(k)) { seen.add(k); out.push({ cls: t.cls, subject: t.subject }); } }
+      return { out };
+    },
+    teachers() { const r = auth('*'); if (r.e) return r.e; return okr({ teachers: db.users.filter(u => u.role === 'teacher').map(u => ({ id: u.id, name: u.name, contact: u.contact, status: u.status, teaching: teachingOf(u) })) }); },
+    submitLesson(f) {
+      const r = auth('submit'); if (r.e) return r.e;
+      if (!db.classes.find(c => c.id === f.cls) || !db.subjects.find(s => s.id === f.subject)) return err('Choose a class and subject.');
+      if (!inScope(r.u, f.cls, f.subject)) { audit('permission.denied', r.u.id, 'lesson outside teaching scope'); save(); return err('You can only add or open material for the classes and subjects assigned to you.'); }
+      if (!(f.title || '').trim() || !(f.topic || '').trim() || !(f.notes || '').trim()) return err('Title, topic and notes are required.');
+      if (r.u.role === 'teacher') { const tp = f.topic.trim(), known = Server.topicsFor(f.cls, f.subject); const hit = known.find(x => x.toLowerCase() === tp.toLowerCase()); if (!hit) { if (!f.newTopic) return err('Choose a topic from the list, or add a new topic for this class and subject.'); const ad = Server._addTopic(f.cls, f.subject, tp); if (ad) return err(ad); } else f = Object.assign({}, f, { topic: hit }); }
+      if (!PERMS.includes(f.permission)) return err('Choose the permission status.');
+      const q = parseQuiz(f.quizText); if (q.errors.length) return err(q.errors[0]);
+      const l = { id: uid('l'), cls: f.cls, subject: f.subject, topic: f.topic.trim(), subtopic: (f.subtopic || '').trim(), title: f.title.trim(), objectives: String(f.objectives || '').split('\n').map(s => s.trim()).filter(Boolean), notes: textToHtml(f.notes), example: (f.example || '').trim(), quiz: q.quiz, status: 'pending', review: 'pending', source: (f.source || '').trim() || 'Contributor', permission: f.permission, submittedBy: r.u.id, createdAt: now() };
+      db.lessons.push(l); audit('lesson.submitted', r.u.id, l.title); save(); return okr({ id: l.id });
+    },
+    reviewItem(kind, id, decision, note) {
+      const r = auth('review'); if (r.e) return r.e; const list = kind === 'lesson' ? db.lessons : db.papers; const it = list.find(x => x.id === id); if (!it || it.status !== 'pending') return err('Item is not waiting for review.');
+      if (it.submittedBy === r.u.id) return err('You cannot review your own submission. Ask another reviewer.');
+      if (decision === 'approve') {
+        if (it.permission === 'Permission pending') return err('Cannot publish: permission to distribute this material is still pending.');
+        if (kind === 'paper' && !it.questions.length) return err('The paper has no questions.');
+        it.status = 'published'; if (kind === 'paper') { it.verified = false; it.reviewer = 'Reviewed by ' + r.u.name + ' (' + new Date().toISOString().slice(0, 10) + ')'; it.verified = it.category !== 'AI-generated practice'; } else it.review = 'reviewed';
+      } else { it.status = 'rejected'; if (kind === 'paper') it.reviewer = 'Rejected by ' + r.u.name; }
+      db.reviews.unshift({ id: uid('rv'), kind, itemId: id, title: it.title, decision, note: (note || '').trim(), by: r.u.name, at: now() }); audit('review.' + decision, r.u.id, kind + ' ' + it.title); save(); return okr();
+    },
+    withdraw(kind, id) { const r = auth('*'); if (r.e) return r.e; const it = (kind === 'lesson' ? db.lessons : db.papers).find(x => x.id === id); if (!it) return err('Not found.'); it.status = 'withdrawn'; audit('content.withdrawn', r.u.id, kind + ' ' + it.title); save(); return okr(); },
+    mySubmissions() { const r = auth('submit'); if (r.e) return []; return { papers: db.papers.filter(p => p.submittedBy === r.u.id), lessons: db.lessons.filter(l => l.submittedBy === r.u.id) }; },
+  };
+
+  /* ---------- server-side start-up and what each browser may see ---------- */
+  Server.init = async function () { load(); if (!db || db.v !== 1) { await seed(); save(); } return db; };
+  Server._view = function () {
+    load(); const r = sessionUser(), u = r.user, tok = LS.getItem(TOK), st = (HOOKS().status && HOOKS().status()) || {};
+    const pubCfg = { price: db.cfg.price, currency: db.cfg.currency, days: db.cfg.days, trialMinutes: db.cfg.trialMinutes, payNumber: db.cfg.payNumber, aiDailyLimit: db.cfg.aiDailyLimit, payAuto: !!st.pay };
+    const out = Object.assign(EMPTY(), { classes: db.classes, subjects: db.subjects, orgs: db.orgs, syllabus: db.syllabus, topics: db.topics || [], cfg: pubCfg });
+    if (!u) { out.lessons = db.lessons.filter(l => l.status === 'published').map(l => ({ id: l.id, cls: l.cls, subject: l.subject, topic: l.topic, subtopic: l.subtopic, title: l.title, status: l.status, locked: true, objectives: [], notes: '', example: '', quiz: [] })); return out; }
+    const admin = u.role === 'admin', review = can(u, 'review'), hasAcc = allowed(accessOf(u)), strip = x => { const c = Object.assign({}, x); delete c.pw; delete c.salt; delete c.failed; delete c.lockUntil; return c; };
+    out.sessions[tok] = db.sessions[tok];
+    out.users = admin ? db.users.map(strip) : [strip(u)].concat(u.role === 'student' ? [] : db.users.filter(x => x.id !== u.id).map(x => ({ id: x.id, name: x.name, role: x.role, classId: x.classId, status: x.status })));
+    const seeLesson = l => admin || review || (u.role === 'student' ? l.status === 'published' && l.cls === u.classId : (l.status === 'published' && inScope(u, l.cls, l.subject)) || l.submittedBy === u.id);
+    const full = x => hasAcc || admin || review || x.submittedBy === u.id || u.role === 'teacher' || u.role === 'contributor';
+    out.lessons = db.lessons.filter(seeLesson).map(l => full(l) ? l : Object.assign({}, l, { objectives: Array.isArray(l.objectives) ? [] : '', notes: Array.isArray(l.notes) ? [] : '', example: Array.isArray(l.example) ? [] : '', quiz: [], locked: true }));
+    const noKeys = pp => Object.assign({}, pp, { questions: (pp.questions || []).map(q => { const c = Object.assign({}, q); delete c.a; delete c.model; return c; }) }); // answer keys stay on the server for students
+    out.papers = db.papers.filter(pp => seeLesson(pp)).map(pp => full(pp) ? (u.role === 'student' ? noKeys(pp) : pp) : Object.assign({}, pp, { questions: (pp.questions || []).map(q => ({ marks: q.marks, topic: q.topic })), locked: true }));
+    out.progress = db.progress[u.id] ? { [u.id]: db.progress[u.id] } : {}; out.notifications = db.notifications.filter(n => n.userId === u.id).slice(0, 30);
+    if (admin) { out.attempts = db.attempts; out.payments = db.payments; out.subs = db.subs; out.aiUsage = db.aiUsage; out.reviews = db.reviews; out.audit = db.audit; out.outbox = db.outbox; out.cfg = Object.assign({}, db.cfg, { payAuto: !!st.pay, services: st }); }
+    else { const keysOf = id => { const pp = db.papers.find(x => x.id === id); return pp ? Object.fromEntries((pp.questions || []).map(q => [q.id, { a: q.a, model: q.model }])) : {}; }; out.attempts = db.attempts.filter(a => a.userId === u.id).map(a => a.status === 'in_progress' || u.role !== 'student' ? a : Object.assign({}, a, { keys: keysOf(a.paperId) })); out.payments = db.payments.filter(x => x.userId === u.id).map(x => { const c = Object.assign({}, x); return c; }); out.subs = db.subs.filter(x => x.userId === u.id); out.aiUsage = Object.fromEntries(Object.entries(db.aiUsage).filter(([k]) => k.startsWith(u.id + '|'))); if (review) out.reviews = db.reviews; }
+    return out;
+  };
+  Server._pass = function () { const r = sessionUser(); return r.user && allowed(accessOf(r.user)) ? r.user.id : null; };
+
+  /* ---------- browser side: everything that changes data is sent to the server ---------- */
+  const REMOTE = ['register', 'resendCode', 'verifyRegistration', 'login', 'completeTransfer', 'requestReset', 'resetPassword', 'logout', 'startTrial', 'updateProfile', 'markNotificationsRead', 'saveQuiz', 'markComplete', 'touchLesson', 'startAttempt', 'saveAnswers', 'submitAttempt', 'selfMark', 'aiUse', 'initiatePayment', 'checkPayment', 'submitManualPayment', 'approvePayment', 'rejectPayment', 'reversePayment', 'setUserStatus', 'resetDevice', 'addStaff', 'saveConfig', 'upsertClass', 'upsertSubject', 'deleteSubject', 'markOutboxSent', 'addOrg', 'setRole', 'setSyllabus', 'submitPaper', 'addTopic', 'setTeaching', 'submitLesson', 'reviewItem', 'withdraw', 'sendOutbox'];
+  const QUIET = ['touchLesson', 'saveAnswers'];
+  if (!SERVER) {
+    const mergeView = v => { const old = load() || {}; db = Object.assign(EMPTY(), v, { messages: old.messages || [], mutes: old.mutes || {} }); save(); };
+    const rpc = async (method, args, noView) => {
+      let res; const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null, to = ctl && setTimeout(() => ctl.abort(), 30000);
+      try { const r = await fetch('api/rpc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, cache: 'no-store', body: JSON.stringify({ m: method, a: args, d: deviceId(), t: LS.getItem(TOK) || '', nv: !!noView }), signal: ctl && ctl.signal }); try { res = await r.json(); } catch (e) { res = null; } if (!res) res = { error: r.status === 404 ? 'The server functions were not found. Upload the api folder and deploy on Vercel.' : 'Server error (' + r.status + '). Please try again.' }; }
+      catch (e) { return err('Could not reach the server. Check your internet connection and try again.'); } finally { if (to) clearTimeout(to); }
+      if (res.error && !('result' in res)) return err(res.error);
+      if ('token' in res) { if (res.token) LS.setItem(TOK, res.token); else LS.removeItem(TOK); }
+      if ('pass' in res) { if (res.pass) LS.setItem(PASS, res.pass); else LS.removeItem(PASS); }
+      if (res.view) mergeView(res.view);
+      return res.result;
+    };
+    REMOTE.forEach(m => { Server[m] = (...a) => rpc(m, a, QUIET.includes(m)); });
+    Server.sync = () => rpc('sync', [], false);
+  } else Server.sendOutbox = function () { const r = auth('*'); return r.e || okr(); };
+  const ready = SERVER ? Promise.resolve() : (async () => { load(); if (!db || db.v !== 1) { db = EMPTY(); save(); } await Server.sync(); })();
+
+  /* ---------- grounded tutor (local retrieval). Swap `AI.provider` for an LLM behind your server. ---------- */
+  const STOP = new Set('the a an of to in is are was what how why does do did can could would i me my you your please explain about tell give with and or for on it this that be as at by from show teach'.split(' '));
+  const stem = w => w.length > 4 ? w.replace(/(ing|es|s)$/, '') : w;
+  const tok = s => String(s).toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(w => w && w.length > 1 && !STOP.has(w)).map(stem);
+  const plain = h => String(h || '').replace(/<br\s*\/?>/g, '. ').replace(/<\/(p|li|h3|div)>/g, '. ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').replace(/\.\s*\./g, '.').trim();
+  const AI = {
+    provider: 'local-retrieval',
+    search(q, classId, subjectId) {
+      load(); const qt = [...new Set(tok(q))]; if (!qt.length) return null;
+      let best = null;
+      db.lessons.filter(l => l.status === 'published' && l.cls === classId && (!subjectId || l.subject === subjectId)).forEach(l => {
+        const head = tok(l.title + ' ' + l.topic + ' ' + l.subtopic), body = tok(plain(l.notes) + ' ' + (l.objectives || []).join(' ') + ' ' + l.example);
+        let s = 0, m = 0; qt.forEach(w => { if (head.includes(w)) { s += 3; m++; } else if (body.includes(w)) { s += 1; m++; } });
+        if (m >= Math.ceil(qt.length / 2) && (!best || s > best.s)) best = { l, s, qt };
+      });
+      return best;
+    },
+    answer(q, o) {
+      const hit = AI.search(q, o.classId, o.subjectId);
+      if (!hit) return { found: false, text: 'I could not find that in the approved notes for this class and subject, so I will not guess. Try different words, pick another subject, or ask your teacher. You can also browse the Library.' };
+      const l = hit.l, notes = plain(l.notes), sents = notes.match(/[^.!?]+[.!?]+/g) || [notes];
+      let text;
+      if (o.mode === 'example') text = 'Worked example: ' + plain(l.example);
+      else if (o.mode === 'simple') text = 'In simple terms: ' + sents.slice(0, 2).join(' ').trim() + (l.objectives && l.objectives.length ? ' The key things to remember: ' + l.objectives.join('; ') + '.' : '');
+      else { const m = sents.filter(s => tok(s).some(w => hit.qt.includes(w))).slice(0, 3); text = (m.length ? m : sents.slice(0, 2)).join(' ').trim(); }
+      return { found: true, text, lesson: l };
+    },
+    quizQuestion(classId, subjectId, weak) {
+      load(); const pool = [];
+      db.lessons.filter(l => l.status === 'published' && l.cls === classId && (!subjectId || l.subject === subjectId)).forEach(l => (l.quiz || []).forEach((q, i) => pool.push({ l, q, i, weak: weak.some(w => w.topic === l.topic && w.subject === l.subject) })));
+      if (!pool.length) return null; const w = pool.filter(p => p.weak); const src = w.length ? w : pool; return src[Math.floor(Math.random() * src.length)];
+    }
+  };
+
+  /* ---------- speech ----------
+     Voice quality: the browser's default voice is often a robotic one. We (1) pick the most natural installed voice
+     (neural/"Google"/"Natural" voices first, British/African English preferred), (2) clean the text before speaking
+     (no symbols, "S4" -> "Senior 4"), and (3) use Google's neural voice through /api/tts when the site owner has set GOOGLE_API_KEY. */
+  const Speech = {
+    rate: parseFloat(LS && LS.getItem('usl_rate')) || 0.95, last: '', cloud: false, _audio: null, _q: [], _token: 0, _playing: false,
+    voices() { return isBrowser && 'speechSynthesis' in root ? (root.speechSynthesis.getVoices() || []).filter(v => /^en/i.test(v.lang)) : []; },
+    score(v) {
+      const n = v.name || '', l = (v.lang || '').replace('_', '-'); let s = 0;
+      if (/natural|neural|online|premium|enhanced|studio|wavenet/i.test(n)) s += 60; if (/^Google/i.test(n)) s += 35; if (/Samantha|Daniel|Serena|Karen|Moira|Libby|Sonia|Ryan|Aria|Jenny|Guy/i.test(n)) s += 30;
+      if (/en-(GB|UG|KE|TZ|ZA|NG)/i.test(l)) s += 22; else if (/en-(US|AU|IN)/i.test(l)) s += 14; if (/female/i.test(n)) s += 3;
+      if (/espeak|compact|festival|robot|pico/i.test(n)) s -= 80; if (v.localService === false) s += 6; return s;
+    },
+    best() { const saved = LS && LS.getItem('usl_voice'), vs = Speech.voices(); return vs.find(v => v.name === saved) || vs.slice().sort((a, b) => Speech.score(b) - Speech.score(a))[0] || null; },
+    supported() { return isBrowser && ('speechSynthesis' in root || Speech.cloud); },
+    clean(text) {
+      return String(text || '').replace(/https?:\/\/\S+/g, ' ').replace(/\[(\d+)\]/g, ' ').replace(/[*_#`>|~^]+/g, ' ').replace(/\be\.g\./gi, 'for example').replace(/\bi\.e\./gi, 'that is').replace(/\betc\./gi, 'et cetera')
+        .replace(/\bS([1-6])\b/g, 'Senior $1').replace(/\bUGX\s?([\d,]+)/g, '$1 Uganda shillings').replace(/(\d)\s?%/g, '$1 percent').replace(/\s=\s/g, ' equals ').replace(/\s\+\s/g, ' plus ').replace(/\s[−-]\s/g, ' minus ').replace(/\s×\s|\s\*\s/g, ' times ').replace(/\s÷\s|\s\/\s/g, ' divided by ')
+        .replace(/CO2|CO₂/g, 'carbon dioxide').replace(/H2O|H₂O/g, 'water').replace(/\(([^)]{0,60})\)/g, ', $1,').replace(/\s+/g, ' ').trim();
+    },
+    chunks(text, max) { const sents = String(text).match(/[^.!?;:]+[.!?;:]*/g) || [text], parts = []; let cur = ''; sents.forEach(s => { if ((cur + s).length > max) { if (cur) parts.push(cur.trim()); cur = s; } else cur += s; }); if (cur.trim()) parts.push(cur.trim()); return parts; },
+    speak(text) {
+      Speech.stop(); const t = Speech.clean(text); if (!t) return false; Speech.last = text; const tok = ++Speech._token;
+      if (Speech.cloud) { Speech._cloud(t, tok); return true; }
+      if (!('speechSynthesis' in root)) return false; const v = Speech.best();
+      Speech.chunks(t, 160).forEach(p => { const u = new SpeechSynthesisUtterance(p); u.rate = Speech.rate; u.pitch = 1; u.lang = v ? v.lang : 'en-GB'; if (v) u.voice = v; root.speechSynthesis.speak(u); }); return true;
+    },
+    async _cloud(t, tok) {
+      const parts = Speech.chunks(t, 380); const fetchOne = async p => { try { const r = await fetch('api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pass: LS.getItem(PASS) || '', text: p, rate: Speech.rate }) }); const j = await r.json(); return r.ok && j.ok && j.audio ? 'data:audio/mp3;base64,' + j.audio : null; } catch (e) { return null; } };
+      let next = fetchOne(parts[0]);
+      for (let i = 0; i < parts.length; i++) {
+        const url = await next; if (tok !== Speech._token) return; if (i + 1 < parts.length) next = fetchOne(parts[i + 1]);
+        if (!url) { Speech.cloud = false; const rest = parts.slice(i).join(' '); if ('speechSynthesis' in root) { const v = Speech.best(); Speech.chunks(rest, 160).forEach(p => { const u = new SpeechSynthesisUtterance(p); u.rate = Speech.rate; if (v) { u.voice = v; u.lang = v.lang; } root.speechSynthesis.speak(u); }); } return; }
+        await new Promise(res => { const a = new Audio(url); Speech._audio = a; a.onended = a.onerror = () => res(); a.play().catch(() => res()); });
+        if (tok !== Speech._token) return;
+      }
+    },
+    pause() { if (Speech._audio && !Speech._audio.paused) Speech._audio.pause(); else Speech.supported() && 'speechSynthesis' in root && root.speechSynthesis.pause(); },
+    resume() { if (Speech._audio && Speech._audio.paused && !Speech._audio.ended) Speech._audio.play(); else Speech.supported() && 'speechSynthesis' in root && root.speechSynthesis.resume(); },
+    stop() { Speech._token++; if (Speech._audio) { try { Speech._audio.pause(); } catch (e) { /* ignore */ } Speech._audio = null; } if (isBrowser && 'speechSynthesis' in root) root.speechSynthesis.cancel(); },
+    replay() { if (Speech.last) Speech.speak(Speech.last); },
+    setRate(r) { Speech.rate = r; LS.setItem('usl_rate', r); },
+    listen(onResult, onEnd, onErr) {
+      const SR = root.SpeechRecognition || root.webkitSpeechRecognition; if (!SR) return null;
+      const r = new SR(); r.lang = 'en-GB'; r.interimResults = false; r.maxAlternatives = 1;
+      r.onresult = e => onResult(e.results[0][0].transcript); r.onend = onEnd; r.onerror = e => onErr && onErr(e.error); r.start(); return r;
+    },
+    bar(el, getText) {
+      if (!Speech.supported()) { el.innerHTML = '<p class="hint">Read-aloud is not supported by this browser. Try Chrome on Android or a recent desktop browser.</p>'; return; }
+      const vopts = () => { const vs = Speech.voices().sort((a, b) => Speech.score(b) - Speech.score(a)), cur = Speech.best(); return vs.map(v => '<option value="' + v.name.replace(/"/g, '&quot;') + '"' + (cur && cur.name === v.name ? ' selected' : '') + '>' + v.name.replace(/</g, '') + ' (' + v.lang + ')</option>').join(''); };
+      el.innerHTML = '<div class="speechbar" role="group" aria-label="Read aloud controls"><button class="btn sm orange" data-a="play">🔊 Listen</button><button class="btn sm ghost" data-a="pause">⏸ Pause</button><button class="btn sm ghost" data-a="resume">▶ Resume</button><button class="btn sm ghost" data-a="replay">⟲ Replay</button><button class="btn sm ghost" data-a="stop">⏹ Stop</button><label class="small" style="margin:0">Speed <select data-a="rate" aria-label="Speaking speed">' + [0.75, 0.9, 0.95, 1.1, 1.25, 1.5].map(v => '<option value="' + v + '"' + (v === Speech.rate ? ' selected' : '') + '>' + v + '×</option>').join('') + '</select></label>' + (Speech.cloud ? '<span class="badge ok">Natural voice</span>' : '<label class="small" style="margin:0">Voice <select id="voicesel" aria-label="Voice">' + vopts() + '</select></label>') + '</div>';
+      el.onclick = e => { const a = e.target.closest('button') && e.target.closest('button').dataset.a; if (a === 'play') Speech.speak(getText()); if (a === 'pause') Speech.pause(); if (a === 'resume') Speech.resume(); if (a === 'replay') Speech.replay(); if (a === 'stop') Speech.stop(); };
+      el.querySelector('select[data-a=rate]').onchange = e => { Speech.setRate(parseFloat(e.target.value)); if (Speech.last) Speech.replay(); };
+      const vs = el.querySelector('#voicesel'); if (vs) { vs.onchange = () => { LS.setItem('usl_voice', vs.value); if (Speech.last) Speech.replay(); }; if (root.speechSynthesis) root.speechSynthesis.onvoiceschanged = () => { vs.innerHTML = vopts(); }; }
+    }
+  };
+
+  /* ---------- UI helpers (browser only) ---------- */
+  function toast(msg, type) {
+    let box = $('#toasts'); if (!box) { box = document.createElement('div'); box.id = 'toasts'; box.setAttribute('aria-live', 'polite'); document.body.appendChild(box); }
+    const t = document.createElement('div'); t.className = 'toast ' + (type || ''); t.textContent = msg; box.appendChild(t); setTimeout(() => t.remove(), type === 'bad' ? 7000 : 5000);
+  }
+  function modal(html, o) {
+    o = o || {}; const ov = document.createElement('div'); ov.className = 'overlay';
+    ov.innerHTML = '<div class="modal' + (o.wide ? ' wide' : '') + '" role="dialog" aria-modal="true">' + html + '</div>'; document.body.appendChild(ov);
+    const close = () => { ov.remove(); document.removeEventListener('keydown', onk); };
+    const onk = e => { if (e.key === 'Escape' && !o.locked) close(); }; document.addEventListener('keydown', onk);
+    const f = ov.querySelector('button,input,select,textarea,a'); f && f.focus(); return { el: ov.firstChild, close };
+  }
+  function confirmBox(msg, o) {
+    o = o || {}; return new Promise(res => {
+      const m = modal('<h3>' + esc(o.title || 'Please confirm') + '</h3><p>' + msg + '</p><div class="row" style="justify-content:flex-end"><button class="btn ghost" data-v="0">' + esc(o.cancel || 'Cancel') + '</button><button class="btn ' + (o.danger ? 'danger' : 'orange') + '" data-v="1">' + esc(o.ok || 'Confirm') + '</button></div>');
+      m.el.onclick = e => { const b = e.target.closest('button'); if (b) { m.close(); res(b.dataset.v === '1'); } };
+    });
+  }
+  function csv(rows) { return rows.map(r => r.map(c => '"' + String(c == null ? '' : c).replace(/"/g, '""') + '"').join(',')).join('\n'); }
+  function download(name, text) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'text/csv' })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+  function pill(a) {
+    const cfg = Server.cfg();
+    if (a.state === 'paid') return ['paid', '✓ Subscribed · ' + fmtMs(a.msLeft) + ' left'];
+    if (a.state === 'trial') return ['trial', '⏱ Free trial ' + fmtMs(a.msLeft)];
+    if (a.state === 'trial_ready') return ['ready', 'Start free trial'];
+    if (a.state === 'staff') return ['paid', a.role === 'teacher' ? 'Teacher · free' : 'Staff'];
+    return ['expired', 'Subscribe · ' + fmtUGX(cfg.price)];
+  }
+  function shell(user, page, a) {
+    const staff = user.role !== 'student';
+    const isTeacher = user.role === 'teacher';
+    const items = isTeacher ? [['teacher', 'teacher.html', 'Teach', '🧑‍🏫'], ['library', 'library.html', 'My notes', '📚'], ['papers', 'papers.html', 'My papers', '📝'], ['discuss', 'discuss.html', 'Class chats', '💬'], ['profile', 'profile.html', 'Account', '👤']] : [['dashboard', 'dashboard.html', 'Home', '🏠'], ['library', 'library.html', 'Library', '📚'], ['papers', 'papers.html', 'Exam centre', '📝'], ['tutor', 'tutor.html', 'AI tutor', '🎙️'], ['discuss', 'discuss.html', 'Discuss', '💬'], ['profile', 'profile.html', 'Account', '👤']];
+    if (staff && !isTeacher) items.push(['admin', 'admin.html', 'Admin', '🛠️']);
+    const cur = k => k === page ? ' aria-current="page"' : ''; const [pc, pt] = pill(a);
+    if (user.classId) { const cc = classColor(user.classId); document.documentElement.style.setProperty('--cls', cc); document.body.classList.add('has-cls'); }
+    const head = document.createElement('div');
+    head.innerHTML = '<a class="skip" href="#main">Skip to content</a><header class="topbar"><div class="container"><a class="brand" href="' + (isTeacher ? 'teacher.html' : 'dashboard.html') + '"><span class="logo" aria-hidden="true">🎓</span><span>Uganda Smart Learning</span></a><nav class="nav" aria-label="Main">' + items.map(i => '<a href="' + i[1] + '"' + cur(i[0]) + '>' + i[2] + '</a>').join('') + '</nav><div class="top-right"><a id="pill" class="pill ' + pc + '" href="subscription.html">' + esc(pt) + '</a></div></div></header>';
+    document.body.prepend(head);
+    const bn = document.createElement('nav'); bn.className = 'bottomnav'; bn.setAttribute('aria-label', 'Main'); bn.style.gridTemplateColumns = 'repeat(' + items.length + ',1fr)';
+    bn.innerHTML = items.map(i => '<a href="' + i[1] + '"' + cur(i[0]) + '><span aria-hidden="true">' + i[3] + '</span>' + i[2].replace('Exam centre', 'Exams') + '</a>').join(''); document.body.appendChild(bn);
+  }
+  function lockedOverlay(reason) {
+    if ($('#locked')) return; root.dispatchEvent(new Event('usl:locked'));
+    const m = modal('<h3>' + esc(reason === 'trial' ? 'Your free trial has ended' : 'Your access has ended') + '</h3><p>Your progress is saved. Subscribe for ' + fmtUGX(Server.cfg().price) + ' per month to keep learning.</p><a class="btn orange block" href="subscription.html">See plans &amp; pay</a>', { locked: true }); m.el.id = 'locked';
+  }
+  async function boot(o) {
+    o = o || {}; await ready; load();
+    const cu = Server.currentUser();
+    if (o.auth !== false && !cu.user) { location.replace('index.html' + (cu.reason ? '?msg=' + encodeURIComponent(cu.reason) : '')); return new Promise(() => { }); }
+    if (!cu.user) return { user: null };
+    const user = cu.user; let a = Server.access(user);
+    if (o.staff && !can(user, o.staff)) { location.replace('dashboard.html'); return new Promise(() => { }); }
+    if (o.paid && !allowed(a)) { location.replace('subscription.html?need=1&from=' + encodeURIComponent(o.page || '')); return new Promise(() => { }); }
+    shell(user, o.page, a);
+    setInterval(() => { Server.sync(); }, 30000);
+    setInterval(() => {
+      const cur = Server.currentUser(); if (!cur.user) { location.replace('index.html?msg=' + encodeURIComponent(cur.reason || 'Please log in again.')); return; }
+      a = Server.access(cur.user); const p = $('#pill'); if (p) { const [c, t] = pill(a); p.className = 'pill ' + c; p.textContent = t; }
+      root.dispatchEvent(new CustomEvent('usl:tick', { detail: a }));
+      if (o.paid && !allowed(a)) lockedOverlay(a.hadSub ? 'sub' : 'trial');
+    }, 1000);
+    return { user, access: a };
+  }
+
+  const waLink = (to, text) => 'https://wa.me/' + String(to || '').replace(/\D/g, '') + '?text=' + encodeURIComponent(text || '');
+  const classColor = id => { load(); const c = db && db.classes.find(x => x.id === id); return (c && c.color) || CLASS_COLORS[id] || '#2563eb'; };
+  const USL = { Remote, Media, classColor, LS, waLink, ready, Server, REMOTE, AI, Speech, boot, toast, modal, confirmBox, esc, $, $$, fmtUGX, fmtDate, fmtMs, csv, download, textToHtml, parseQuestions, parseQuiz, plain, allowed, can, normContact, deviceId, CATEGORIES, PERMS, today };
+  root.USL = USL; if (typeof module !== 'undefined' && module.exports) module.exports = USL;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+(async function () {
+  const { Server, Media, Remote, esc, toast, modal, confirmBox } = USL;
+  await Remote.init();
+  const ctx = await USL.boot({ page: 'discuss', paid: true });
+  const me = ctx.user, main = document.getElementById('main'), staff = me.role !== 'student', qs = new URLSearchParams(location.search);
+  main.classList.add('wa-main');
+  const D0 = Server.data(), isTeacher = me.role === 'teacher', SC = Server.scope(), pairs = isTeacher ? SC.pairs : [];
+  const classes = isTeacher ? D0.classes.filter(c => SC.classes.includes(c.id)) : staff ? D0.classes : D0.classes.filter(c => c.id === me.classId);
+  if (!classes.length) { main.innerHTML = '<div class="card" style="margin:20px"><h2>No class rooms yet</h2><p>You have not been assigned a class. Ask the administrator to assign your classes and subjects.</p><a class="btn" href="teacher.html">Back</a></div>'; return; }
+  let cls = staff ? (classes.find(c => c.id === qs.get('cls')) || classes[0]).id : me.classId;
+  const SUBJ = id => (D0.subjects.find(x => x.id === id) || {}).name || id;
+  const CNAME = id => (D0.classes.find(c => c.id === id) || {}).name || id, CCOLOR = id => (D0.classes.find(c => c.id === id) || {}).color || '#2563eb';
+  const hue = s => { let h = 0; for (let i = 0; i < String(s).length; i++) h = (h * 31 + String(s).charCodeAt(i)) % 360; return 'hsl(' + h + ',60%,36%)'; };
+  const initials = n => String(n || '?').trim().split(/\s+/).slice(0, 2).map(x => x[0]).join('').toUpperCase();
+  const time = t => new Date(t).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  const dayKey = t => new Date(t).toDateString();
+  const dayLabel = t => { const d = new Date(t), n = new Date(); if (d.toDateString() === n.toDateString()) return 'Today'; const y = new Date(n); y.setDate(n.getDate() - 1); if (d.toDateString() === y.toDateString()) return 'Yesterday'; return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); };
+  const mmss = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  const lsk = (k, c) => 'usl_' + k + '_' + me.id + '_' + (c || cls);
+  const getSet = k => { try { return new Set(JSON.parse(USL.LS.getItem(lsk(k)) || '[]')); } catch (e) { return new Set(); } };
+  const putSet = (k, set) => USL.LS.setItem(lsk(k), JSON.stringify([...set]));
+  const getNum = (k, c) => Number(USL.LS.getItem(lsk(k, c))) || 0;
+  const QUICK = ['👍', '❤️', '😂', '😮', '😢', '🙏', '🎉', '👏', '🔥', '💯'];
+  const EMO = { '😀': '😀😃😄😁😆😅😂🤣🙂😉😊😇🥰😍🤩😘😋😛😜🤪😎🤓🥳😏😒😞😔😟😕🙁😣😖😫😩🥺😢😭😤😠😡🤯😳😱😨😰😥😓🤗🤔🤭🤫🤥😶😐😑😬🙄😯😦😧😮😲🥱😴🤤😪😵🤐🥴🤢🤮🤧😷', '👍': '👍👎👌✌️🤞🤟🤘🤙👈👉👆👇☝️✋🤚🖐️🖖👋🤝🙏✍️💪👏🙌👐🤲🫶🙋', '❤️': '❤️🧡💛💚💙💜🖤🤍🤎💔❣️💕💞💓💗💖💘💝', '📚': '📚📖📝✏️🖊️📏📐🧮🔬🔭🧪🧬🌍🗺️💡🏆🥇🎓🏫🎒🕒⏰✅❌❓❗💯🔥⭐🌟✨🎉🎊', '🍎': '🍎🍌🍉🍇🍓🥭🍍🥕🌽🍞🍚🍲🥤⚽🏀🏐🎵🎶🚌🚲🌳🌧️☀️🌈' };
+  const urlCache = new Map();
+  const recentSeen = new Set();
+
+  let msgs = [], pres = [], call = null, searchTerm = '', matchIdx = -1, replyTo = null, editing = null, recState = null, emoCat = '😀', lastSig = '', newBelow = 0;
+  let myRead = 0, unreadFrom = 0, typingUntil = 0, lastTypingPush = 0, legacy = false, presOK = true, lastPing = Date.now(), overlayOn = false, info = null, hbTimer = null;
+  const player = { a: null, id: null, rate: 1 };
+
+  /* ---------- transport for call signalling ----------
+     Prototype: BroadcastChannel, so it only links tabs of the SAME browser on ONE device.
+     For real calls between phones, replace open() with a WebSocket / Supabase Realtime / Firebase channel (same send/onmessage shape)
+     and add a TURN server to iceServers. */
+  const Transport = {
+    open(name, onmsg) {
+      if (!Remote.on) { if (typeof BroadcastChannel === 'undefined') return null; const bc = new BroadcastChannel(name); bc.onmessage = e => onmsg(e.data); return { send: m => bc.postMessage(m), close: () => bc.close() }; }
+      // shared server: signalling rows are polled; everything older than 2 minutes is cleaned up
+      let cursor = 0, stop = false, busy = false; const q = [];
+      const pump = async () => { if (busy) return; busy = true; while (q.length && !stop) { const m = q.shift(); await Remote.rest('POST', 'usl_signals', { room: name, from_id: m.from, to_id: m.to || null, payload: m, at: Date.now() }, { Prefer: 'return=minimal' }); } busy = false; };
+      const poll = async () => {
+        if (stop) return;
+        const rows = await Remote.rest('GET', 'usl_signals?room=eq.' + encodeURIComponent(name) + '&id=gt.' + cursor + '&order=id.asc&limit=300&select=id,payload');
+        if (rows) rows.forEach(r => { cursor = Math.max(cursor, r.id); try { onmsg(r.payload); } catch (e) { /* ignore */ } });
+        if (!stop) setTimeout(poll, 600);
+      };
+      (async () => {
+        await Remote.rest('DELETE', 'usl_signals?room=eq.' + encodeURIComponent(name) + '&at=lt.' + (Date.now() - 120000));
+        const last = await Remote.rest('GET', 'usl_signals?room=eq.' + encodeURIComponent(name) + '&order=id.desc&limit=1&select=id'); cursor = last && last[0] ? last[0].id : 0; poll();
+      })();
+      return { send: m => { q.push(m); pump(); }, close: () => { stop = true; } };
+    }
+  };
+  const ICE = Remote.ice;
+
+  /* ---------- group call (WebRTC mesh) with a teacher-only "big screen" (stage) ---------- */
+  const PRESENTERS = ['teacher'];
+  function Call(roomName, myName, myRole, onChange) {
+    const myId = 'p_' + Math.random().toString(36).slice(2, 10);
+    const peers = new Map(), present = new Map(), early = new Map();
+    let ch = null, joined = false, local = null, hb = null, muted = false, camOn = false, stage = null, myStage = null;
+    const send = m => ch && ch.send(Object.assign({ from: myId, name: myName, role: myRole }, m));
+    const flush = async p => { p.has = true; for (const c of p.pending.splice(0)) { try { await p.pc.addIceCandidate(c); } catch (e) { /* ignore */ } } };
+    function drop(id) { const p = peers.get(id); if (p) { try { p.pc.close(); } catch (e) { /* ignore */ } peers.delete(id); if (stage && stage.from === id) stage = null; onChange(); } }
+    const desc = pc => ({ type: pc.localDescription.type, sdp: pc.localDescription.sdp });
+    async function reneg(id) {
+      const p = peers.get(id); if (!p) return; if (p.pc.signalingState !== 'stable') { p.renegPending = true; return; }
+      const o = await p.pc.createOffer(); await p.pc.setLocalDescription(o); send({ t: 'offer', to: id, reneg: true, sdp: desc(p.pc) });
+    }
+    function make(id, name, role) {
+      const pc = new RTCPeerConnection({ iceServers: ICE }), p = { pc, name, role, stream: null, streams: new Map(), pending: (early.get(id) || []), has: false, state: 'connecting', senders: null, renegPending: false }; early.delete(id);
+      local.getTracks().forEach(t => pc.addTrack(t, local));
+      if (myStage) p.senders = myStage.stream.getTracks().map(t => pc.addTrack(t, myStage.stream));
+      pc.ontrack = e => {
+        const st = e.streams[0] || new MediaStream([e.track]); p.streams.set(st.id, st); const isStage = stage && stage.from === id && stage.sid === st.id;
+        if (!isStage && (!p.stream || (st.getAudioTracks().length && !p.stream.getAudioTracks().length))) p.stream = st; st.onremovetrack = () => onChange(); onChange();
+      };
+      pc.onicecandidate = e => { if (e.candidate) send({ t: 'ice', to: id, candidate: e.candidate.toJSON() }); };
+      pc.onconnectionstatechange = () => { p.state = pc.connectionState; if (p.state === 'failed' || p.state === 'closed') drop(id); else onChange(); };
+      peers.set(id, p); onChange(); return p;
+    }
+    async function offerTo(id, name, role) { const p = make(id, name, role); const o = await p.pc.createOffer(); await p.pc.setLocalDescription(o); send({ t: 'offer', to: id, sdp: desc(p.pc) }); }
+    function meet(id, name, role, reply) { if (!joined) return; if (reply) send({ t: 'hello', to: id }); if (!peers.has(id) && myId < id) offerTo(id, name, role); } // the smaller id always starts the offer, so two peers never offer at once
+    async function onmsg(m) {
+      if (!m || m.from === myId || (m.to && m.to !== myId)) return;
+      if (m.t === 'hb' || m.t === 'join' || m.t === 'hello') { present.set(m.from, { name: m.name, role: m.role, seen: Date.now() }); }
+      if (m.t === 'hb') { if (m.stage && PRESENTERS.includes(m.role)) { if (!stage || stage.from !== m.from || stage.sid !== m.stage) { if (myStage) stopStage(true); stage = { from: m.from, sid: m.stage }; } } else if (stage && stage.from === m.from) stage = null; onChange(); }
+      if (m.t === 'join' || m.t === 'hello') onChange();
+      if (m.t === 'join') meet(m.from, m.name, m.role, true); else if (m.t === 'hello') meet(m.from, m.name, m.role, false);
+      else if (m.t === 'leave') { present.delete(m.from); drop(m.from); onChange(); }
+      else if (!joined) return;
+      else if (m.t === 'stage') { if (m.on && PRESENTERS.includes(m.role)) { if (myStage) stopStage(true); stage = { from: m.from, sid: m.sid }; } else if (!m.on && stage && stage.from === m.from) stage = null; onChange(); }
+      else if (m.t === 'offer') {
+        const ex = peers.get(m.from);
+        if (m.reneg && ex && ex.pc.signalingState === 'stable') { await ex.pc.setRemoteDescription(m.sdp); const a = await ex.pc.createAnswer(); await ex.pc.setLocalDescription(a); send({ t: 'answer', to: m.from, sdp: desc(ex.pc) }); }
+        else { drop(m.from); const p = make(m.from, m.name, m.role); await p.pc.setRemoteDescription(m.sdp); await flush(p); const a = await p.pc.createAnswer(); await p.pc.setLocalDescription(a); send({ t: 'answer', to: m.from, sdp: desc(p.pc) }); }
+      }
+      else if (m.t === 'answer') { const p = peers.get(m.from); if (p && p.pc.signalingState === 'have-local-offer') { await p.pc.setRemoteDescription(m.sdp); if (!p.has) await flush(p); if (p.renegPending) { p.renegPending = false; reneg(m.from); } } }
+      else if (m.t === 'ice') { const p = peers.get(m.from); if (p && p.has) { try { await p.pc.addIceCandidate(m.candidate); } catch (e) { /* ignore */ } } else if (p) p.pending.push(m.candidate); else { early.set(m.from, (early.get(m.from) || []).concat([m.candidate])); } }
+    }
+    function stopStage(quiet) {
+      if (!myStage) return; const st = myStage; myStage = null; st.stream.getTracks().forEach(t => t.stop());
+      peers.forEach((p, id) => { (p.senders || []).forEach(sn => { try { p.pc.removeTrack(sn); } catch (e) { /* ignore */ } }); p.senders = null; reneg(id); });
+      if (stage && stage.from === myId) stage = null; if (!quiet) send({ t: 'stage', on: false }); onChange();
+    }
+    ch = Transport.open(roomName, onmsg);
+    const prune = setInterval(() => { const t = Date.now(); present.forEach((v, id) => { if (t - v.seen > 10000) { present.delete(id); drop(id); } }); onChange(); }, 2000);
+    return {
+      id: myId, role: myRole, supported: !!ch && !!window.RTCPeerConnection && !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
+      get joined() { return joined; }, get muted() { return muted; }, get cam() { return camOn; }, get local() { return local; }, get canPresent() { return PRESENTERS.includes(myRole); }, get presenting() { return !!myStage; }, get presentKind() { return myStage ? myStage.kind : ''; },
+      peers: () => [...peers.entries()].map(([id, p]) => ({ id, name: p.name, role: p.role, stream: p.stream, state: p.state })),
+      present: () => [...present.entries()].map(([id, v]) => ({ id, name: v.name, role: v.role })),
+      stage() { if (!stage) return null; if (stage.from === myId) return myStage ? { from: myId, name: myName, stream: myStage.stream, self: true } : null; const p = peers.get(stage.from); const st = p && p.streams.get(stage.sid); return p ? { from: stage.from, name: p.name, stream: st || null, self: false } : null; },
+      async join(video) {
+        if (joined) return; local = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true }, video: video ? { width: 320, height: 240 } : false });
+        joined = true; muted = false; camOn = !!video; send({ t: 'join' }); hb = setInterval(() => send({ t: 'hb', stage: myStage ? myStage.stream.id : null }), 3000); onChange();
+      },
+      async startPresent(kind) {
+        if (!PRESENTERS.includes(myRole)) throw new Error('Only teachers can use the big screen.'); if (!joined) throw new Error('Join the call first.'); if (myStage) stopStage(true);
+        const stream = kind === 'screen' ? await navigator.mediaDevices.getDisplayMedia({ video: true, audio: false }) : await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 }, audio: false });
+        myStage = { stream, kind }; stage = { from: myId, sid: stream.id }; const vt = stream.getVideoTracks()[0]; if (vt) vt.addEventListener('ended', () => stopStage());
+        peers.forEach((p, id) => { p.senders = stream.getTracks().map(t => p.pc.addTrack(t, stream)); reneg(id); }); send({ t: 'stage', on: true, sid: stream.id }); onChange();
+      },
+      stopPresent() { stopStage(false); },
+      leave() { if (!joined) return; stopStage(true); send({ t: 'leave' }); clearInterval(hb); [...peers.keys()].forEach(drop); local.getTracks().forEach(t => t.stop()); local = null; joined = false; stage = null; onChange(); },
+      mute(v) { muted = v; if (local) local.getAudioTracks().forEach(t => { t.enabled = !v; }); onChange(); },
+      camera(v) { camOn = v; if (local) local.getVideoTracks().forEach(t => { t.enabled = v; }); onChange(); },
+      close() { this.leave(); clearInterval(prune); ch && ch.close(); }
+    };
+  }
+
+  /* ---------- shared server sync (only when the shared server is configured) ---------- */
+  const RICH = 'id,cls,user_id,name,role,text,media_id,dur,mime,at,deleted,reports,reply,reactions,edited_at,wave,media_kind', BASIC = 'id,cls,user_id,name,role,text,media_id,dur,mime,at,deleted,reports';
+  const NEWCOLS = ['reply', 'reactions', 'edited_at', 'wave', 'media_kind'];
+  const sync = {
+    async pull() {
+      if (!Remote.on) return;
+      const q = c => 'usl_messages?cls=eq.' + encodeURIComponent(cls) + '&order=at.desc&limit=150&select=' + c;
+      let rows = legacy ? null : await Remote.rest('GET', q(RICH));
+      if (!rows) { rows = await Remote.rest('GET', q(BASIC)); if (rows && !legacy) legacy = true; }
+      const mutes = await Remote.rest('GET', 'usl_mutes?until=gt.' + Date.now() + '&select=user_id,until');
+      if (rows) { const r = Server.mergeRemote(cls, rows, mutes || []); if (r.ok && r.changed) refresh(false); }
+      if (presOK) { const p = await Remote.rest('GET', 'usl_presence?cls=eq.' + encodeURIComponent(cls) + '&select=user_id,name,role,seen_at,read_at,typing_until'); if (p === null) { if (!legacy) presOK = false; } else { pres = p; refreshChrome(); refresh(false); } }
+    },
+    async heartbeat() {
+      if (!Remote.on || !presOK) return; const now = Date.now();
+      const r = await Remote.rest('POST', 'usl_presence', { user_id: me.id, cls, name: me.name, role: me.role, seen_at: now, read_at: myRead, typing_until: typingUntil > now ? typingUntil : 0 }, { Prefer: 'resolution=merge-duplicates,return=minimal' });
+      if (r === null && Remote.healthy) presOK = false;
+    },
+    async push(id) {
+      if (!Remote.on) return; const row = Server.messageRow(id); if (!row) return;
+      if (row.media_id) { const b = await Media.get(row.media_id); if (b) row.audio = await new Promise(res => { const f = new FileReader(); f.onload = () => res(String(f.result).split(',')[1] || ''); f.readAsDataURL(b); }); }
+      if (legacy) NEWCOLS.forEach(c => delete row[c]);
+      let ok = await Remote.rest('POST', 'usl_messages', row, { Prefer: 'resolution=merge-duplicates,return=minimal' });
+      if (ok === null && !legacy) { legacy = true; NEWCOLS.forEach(c => delete row[c]); ok = await Remote.rest('POST', 'usl_messages', row, { Prefer: 'resolution=merge-duplicates,return=minimal' }); }
+      if (ok === null) toast('Could not reach the class server. Your message is only on this device.', 'bad');
+    },
+    async del(id) { if (Remote.on) await Remote.rest('PATCH', 'usl_messages?id=eq.' + encodeURIComponent(id), { deleted: true, text: '', audio: null }, { Prefer: 'return=minimal' }); },
+    async report(id) { if (!Remote.on) return; const row = Server.messageRow(id); if (row) await Remote.rest('PATCH', 'usl_messages?id=eq.' + encodeURIComponent(id), { reports: row.reports }, { Prefer: 'return=minimal' }); },
+    async mute(userId, mins) { if (Remote.on) await Remote.rest('POST', 'usl_mutes', { user_id: userId, until: Date.now() + mins * 60000 }, { Prefer: 'resolution=merge-duplicates,return=minimal' }); },
+    async edit(id) { if (!Remote.on || legacy) return; const row = Server.messageRow(id); if (row) await Remote.rest('PATCH', 'usl_messages?id=eq.' + encodeURIComponent(id), { text: row.text, edited_at: row.edited_at }, { Prefer: 'return=minimal' }); },
+    async react(id, emoji) {
+      if (!Remote.on || legacy) return; const cur = await Remote.rest('GET', 'usl_messages?id=eq.' + encodeURIComponent(id) + '&select=reactions'); const rx = (cur && cur[0] && cur[0].reactions) || {};
+      if (emoji) rx[me.id] = emoji; else delete rx[me.id]; await Remote.rest('PATCH', 'usl_messages?id=eq.' + encodeURIComponent(id), { reactions: rx }, { Prefer: 'return=minimal' });
+    },
+    async audio(msgId, mediaId) { const r = await Remote.rest('GET', 'usl_messages?id=eq.' + encodeURIComponent(msgId) + '&select=audio,mime'); if (!r || !r[0] || !r[0].audio) return null; const bin = atob(r[0].audio), a = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); const b = new Blob([a], { type: r[0].mime || 'audio/webm' }); await Media.put(mediaId, b); return b; }
+  };
+
+  /* ---------- helpers ---------- */
+  const TICK1 = '<svg viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.8l3.2 3.2L12 1.8"/></svg>';
+  const TICK2 = '<svg viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5.8l3.2 3.2L10.5 1.8M6 8.6l.6.6L14 1.8"/></svg>';
+  const others = () => pres.filter(p => p.user_id !== me.id);
+  function statusOf(m) {
+    if (m.userId !== me.id) return ''; const o = others(); if (!Remote.on || !presOK || !o.length) return 'sent';
+    if (o.every(p => Number(p.read_at) >= m.at)) return 'read'; if (o.some(p => Number(p.seen_at) >= m.at)) return 'delivered'; return 'sent';
+  }
+  const tickHtml = st => !st ? '' : (st === 'sent' ? TICK1 : (st === 'read' ? '<span class="rd">' + TICK2 + '</span>' : TICK2));
+  const isSys = m => !m.deleted && /^📞 .* started a .* call/.test(m.text || '');
+  const nameOf = id => { if (id === me.id) return 'You'; const p = pres.find(x => x.user_id === id); if (p) return p.name; const m = msgs.find(x => x.userId === id); return m ? m.name : 'Someone'; };
+  const snippet = m => m.media ? (m.media.kind === 'image' ? '📷 Photo' : '🎤 Voice message ' + mmss(m.media.dur)) : (m.text || '');
+  function body(text) {
+    let t = esc(text);
+    if (searchTerm) { const re = new RegExp('(' + searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'); return t.replace(re, '<mark>$1</mark>'); }
+    return t.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+  }
+  function waveBars(m) {
+    const n = 34, w = m.media.wave && m.media.wave.length ? m.media.wave : null; let seed = 0; for (const ch of m.id) seed = (seed * 31 + ch.charCodeAt(0)) % 997;
+    return Array.from({ length: n }, (_, i) => { const v = w ? w[Math.floor(i * w.length / n)] : 18 + ((seed * (i + 3) * 7919) % 70); return '<i style="height:' + Math.max(12, Math.min(100, v)) + '%"></i>'; }).join('');
+  }
+  function ping() {
+    try { const ac = new (window.AudioContext || window.webkitAudioContext)(), o = ac.createOscillator(), g = ac.createGain(); o.connect(g); g.connect(ac.destination); o.type = 'sine'; o.frequency.setValueAtTime(880, ac.currentTime); o.frequency.setValueAtTime(1175, ac.currentTime + .09); g.gain.setValueAtTime(.0001, ac.currentTime); g.gain.exponentialRampToValueAtTime(.12, ac.currentTime + .02); g.gain.exponentialRampToValueAtTime(.0001, ac.currentTime + .3); o.start(); o.stop(ac.currentTime + .32); setTimeout(() => ac.close(), 600); } catch (e) { /* no audio */ }
+  }
+  const muted = () => USL.LS.getItem(lsk('mutenotif')) === '1';
+
+  /* ---------- shell ---------- */
+  main.innerHTML = '<div class="wa" id="wa"><aside class="wa-side"><div class="top"><span>Class chats</span></div><div class="find"><input id="cf" placeholder="Search" aria-label="Search chats"></div><div class="wa-list" id="clist"></div></aside><section class="wa-chat" id="chat"></section></div>';
+  const wa = document.getElementById('wa');
+  if (!staff) wa.classList.add('solo'); wa.classList.add('show-chat');
+  const callov = document.createElement('div'); callov.className = 'callov'; callov.id = 'callov'; document.body.appendChild(callov);
+
+  function renderSide() {
+    const q = (document.getElementById('cf').value || '').toLowerCase();
+    document.getElementById('clist').innerHTML = classes.filter(c => (c.id + ' ' + c.name).toLowerCase().includes(q)).map(c => {
+      const r = Server.listMessages(c.id); const list = r.ok ? r.messages.filter(m => !m.deleted) : []; const last = list[list.length - 1], rd = c.id === cls ? myRead : getNum('read', c.id);
+      const unread = list.filter(m => m.at > rd && m.userId !== me.id && !isSys(m)).length;
+      const pv = last ? (last.userId === me.id ? 'You: ' : last.name.split(' ')[0] + ': ') + snippet(last) : 'No messages yet';
+      return '<button class="ci' + (c.id === cls ? ' on' : '') + '" data-c="' + esc(c.id) + '" style="--c:' + esc(c.color) + '"><div class="av">' + esc(c.id) + '</div><div class="mid"><div class="t1"><b>' + esc(c.id) + ' · ' + esc(c.name) + '</b><span>' + (last ? time(last.at) : '') + '</span></div><div class="t2"><span class="pv">' + esc(pv) + '</span>' + (unread ? '<span class="badge-n">' + unread + '</span>' : '') + '</div></div></button>';
+    }).join('') || '<p class="muted center" style="padding:20px">No chats match.</p>';
+  }
+  document.getElementById('clist').onclick = e => { const b = e.target.closest('.ci'); if (b) openRoom(b.dataset.c); };
+  document.getElementById('cf').oninput = renderSide;
+
+  const chat = document.getElementById('chat');
+  function buildChat() {
+    const c = classes.find(x => x.id === cls) || { id: cls, name: cls, color: '#2563eb' }; wa.style.setProperty('--c', c.color);
+    chat.innerHTML = '<div class="wa-head"><button class="ic back" id="bk" aria-label="Back to chats">←</button><div class="av sm" style="--c:rgba(255,255,255,.25)">' + esc(c.id) + '</div><button class="tt" id="htt" aria-label="Group info"><b>' + esc(c.id) + ' · ' + esc(c.name) + '</b><span id="sub"></span></button>' + (isTeacher ? '<button class="ic" id="hv" title="Start a class video call" aria-label="Start class video call">🎥</button><button class="ic" id="ha" title="Start a class voice call" aria-label="Start class voice call">📞</button>' : '') + '<button class="ic" id="hs" title="Search" aria-label="Search in chat">🔍</button><button class="ic" id="hm" title="Menu" aria-label="Menu">⋮</button></div>'
+      + '<div class="wa-search" id="srch"><input id="sq" placeholder="Search in this chat" aria-label="Search in this chat"><span class="small muted" id="sc"></span><button class="ic" id="sup" aria-label="Previous match">▲</button><button class="ic" id="sdn" aria-label="Next match">▼</button><button class="ic" id="sx" aria-label="Close search">✕</button></div>'
+      + '<div class="netbar" id="net"></div><div id="callpill"></div><div class="wa-msgs" id="msgs" role="log" aria-live="polite" aria-label="Class messages"></div><button class="fab" id="fab" aria-label="Jump to latest">⌄</button><div id="rpwrap"></div><div class="wa-comp" id="comp"></div><aside class="info" id="info" aria-label="Group info"></aside>';
+    document.getElementById('bk').onclick = () => { wa.classList.remove('show-chat'); renderSide(); };
+    document.getElementById('htt').onclick = () => openInfo(); if (isTeacher) { document.getElementById('hv').onclick = () => startModal(true); document.getElementById('ha').onclick = () => startModal(false); }
+    document.getElementById('hs').onclick = () => toggleSearch(true); document.getElementById('sx').onclick = () => toggleSearch(false);
+    document.getElementById('sq').oninput = e => { searchTerm = e.target.value.trim(); matchIdx = -1; lastSig = ''; refresh(true, true); stepMatch(1); };
+    document.getElementById('sdn').onclick = () => stepMatch(1); document.getElementById('sup').onclick = () => stepMatch(-1);
+    document.getElementById('hm').onclick = e => headMenu(e.currentTarget);
+    const box = document.getElementById('msgs'); box.onscroll = () => { updFab(); if (nearBottom()) markRead(); };
+    document.getElementById('fab').onclick = () => { box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' }); };
+    box.onclick = onMsgClick; bindGestures(box); buildComposer();
+  }
+  const nearBottom = () => { const b = document.getElementById('msgs'); return !b || b.scrollHeight - b.scrollTop - b.clientHeight < 60; };
+  function updFab() { const f = document.getElementById('fab'); if (!f) return; const away = !nearBottom(); f.classList.toggle('on', away); f.innerHTML = '⌄' + (away && newBelow ? '<i>' + newBelow + '</i>' : ''); if (!away) newBelow = 0; }
+  function toggleSearch(on) { const s = document.getElementById('srch'); s.classList.toggle('on', on); if (on) document.getElementById('sq').focus(); else { searchTerm = ''; document.getElementById('sq').value = ''; document.getElementById('sc').textContent = ''; lastSig = ''; refresh(true); } }
+  function stepMatch(d) {
+    const hits = [...document.querySelectorAll('#msgs .b mark')].map(m => m.closest('.b')).filter((b, i, a) => a.indexOf(b) === i); const sc = document.getElementById('sc');
+    if (!searchTerm) { sc.textContent = ''; return; } if (!hits.length) { sc.textContent = 'No matches'; return; }
+    matchIdx = ((matchIdx < 0 ? (d > 0 ? -1 : 0) : matchIdx) + d + hits.length) % hits.length; sc.textContent = (matchIdx + 1) + ' of ' + hits.length; hits[matchIdx].scrollIntoView({ block: 'center', behavior: 'smooth' }); flash(hits[matchIdx]);
+  }
+  const flash = el => { el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1200); };
+
+  /* ---------- header / chrome ---------- */
+  function refreshChrome() {
+    const sub = document.getElementById('sub'); if (!sub) return; const now = Date.now();
+    const typing = others().filter(p => Number(p.typing_until) > now).map(p => p.name.split(' ')[0]);
+    const online = others().filter(p => now - Number(p.seen_at) < 12000).length + 1;
+    const known = new Set(pres.map(p => p.user_id).concat(msgs.map(m => m.userId), [me.id])).size; const ri = Server.roomInfo(cls), members = Math.max(known, ri.ok ? ri.members : 0);
+    sub.textContent = typing.length ? (typing.length === 1 ? typing[0] + ' is typing…' : typing.join(', ') + ' are typing…') : (Remote.on && presOK ? online + ' online · ' + members + ' members' : members + ' member' + (members === 1 ? '' : 's') + ' · tap for group info');
+    const n = document.getElementById('net'); if (n) {
+      let html = ''; if (!Remote.on) html = '⚠️ <b>Not connected to the class server.</b> Messages and calls stay on this device only. The site owner must finish the shared-server setup (README → Class rooms).';
+      else if (!Remote.healthy) html = 'Connection to the class server was lost. Retrying…'; else if (legacy || !presOK) html = '⚙️ Run <b>supabase-upgrade.sql</b> in Supabase to turn on replies, reactions, read ticks and typing.';
+      n.innerHTML = html; n.classList.toggle('ok', !html);
+    }
+    renderCall(); const unreadAll = classes.reduce((a, c) => a + (c.id === cls ? 0 : 0), 0); void unreadAll;
+  }
+  function applyMuteBox() {
+    const m = Server.roomInfo(cls); const comp = document.getElementById('comp'); if (!comp || !m.ok) return; const isMuted = !!m.mutedUntil;
+    if (isMuted && !comp.dataset.muted) { comp.dataset.muted = '1'; comp.innerHTML = '<div class="alert warn" style="margin:0;flex:1">You are muted in this room until ' + time(m.mutedUntil) + '.</div>'; }
+    if (!isMuted && comp.dataset.muted) { delete comp.dataset.muted; buildComposer(); }
+  }
+
+  /* ---------- messages ---------- */
+  function visibleMsgs() { const hide = getSet('hide'), cleared = getNum('clear'); return msgs.filter(m => !hide.has(m.id) && m.at > cleared); }
+  function refresh(force, keepScroll) {
+    const r = Server.listMessages(cls); if (!r.ok) return; msgs = r.messages; const list = visibleMsgs(), star = getSet('star');
+    const sig = list.map(m => [m.id, m.deleted ? 'd' : '', m.editedAt, JSON.stringify(m.reactions), statusOf(m), star.has(m.id) ? 's' : '', m.reports || ''].join(':')).join(',') + '|' + searchTerm; const box = document.getElementById('msgs'); if (!box) return;
+    // new incoming messages: sound, desktop notification, unread counter
+    const incoming = list.filter(m => m.at > lastPing && m.userId !== me.id && !m.deleted && !isSys(m)); if (incoming.length) { lastPing = Math.max(...incoming.map(m => m.at)); if (!recentSeen.has(lastPing)) { recentSeen.add(lastPing); if (!muted() && (document.hidden || !nearBottom())) { ping(); if (!nearBottom()) newBelow += incoming.length; } if (document.hidden && 'Notification' in window && Notification.permission === 'granted' && !muted()) { try { new Notification(cls + ' room · ' + incoming[incoming.length - 1].name, { body: snippet(incoming[incoming.length - 1]).slice(0, 90) }); } catch (e) { /* ignore */ } } } }
+    if (!force && sig === lastSig) { updTitle(); return; } lastSig = sig;
+    const stick = force && !keepScroll ? true : nearBottom(), prevTop = box.scrollTop; let prev = null, prevDay = '', shownUnread = false;
+    const html = list.map(m => {
+      let out = ''; const dk = dayKey(m.at); if (dk !== prevDay) { out += '<div class="dchip">' + dayLabel(m.at) + '</div>'; prevDay = dk; prev = null; }
+      if (!shownUnread && unreadFrom && m.at > unreadFrom && m.userId !== me.id && !isSys(m)) { out += '<div class="unread">Unread messages</div>'; shownUnread = true; prev = null; }
+      if (isSys(m)) { prev = null; return out + '<div class="sys">' + esc(m.text) + ' · ' + time(m.at) + '</div>'; }
+      const mine = m.userId === me.id, first = !prev || prev.userId !== m.userId || m.at - prev.at > 5 * 60000; prev = m;
+      const st = statusOf(m), rx = Object.values(m.reactions || {}), meta = '<span class="meta">' + (star.has(m.id) ? '⭐' : '') + (m.editedAt && !m.deleted ? '<i style="font-style:normal">edited</i>' : '') + time(m.at) + (mine ? tickHtml(st) : '') + '</span>';
+      if (m.deleted) return out + '<div class="b ' + (mine ? 'me ' : '') + (first ? 'first ' : '') + 'del" data-id="' + esc(m.id) + '"><span class="tx">🚫 ' + (mine ? 'You deleted this message' : 'This message was deleted') + '</span>' + meta + '</div>';
+      let inner = '';
+      if (!mine && first) inner += '<div class="who"><span style="color:' + hue(m.name) + '">' + esc(m.name) + '</span>' + (m.role !== 'student' ? '<span class="tag">' + (m.role === 'admin' ? 'Admin' : 'Teacher') + '</span>' : '') + '</div>';
+      if (m.reply) inner += '<button class="quote" data-q="' + esc(m.reply.id) + '" style="--q:' + hue(m.reply.name) + '"><b>' + esc(m.reply.userId === me.id ? 'You' : m.reply.name) + '</b><span>' + esc(m.reply.kind === 'image' ? '📷 Photo' : m.reply.kind === 'voice' ? '🎤 Voice message' : m.reply.text) + '</span></button>';
+      if (m.media && m.media.kind === 'image') inner += '<img class="ph" data-img="' + esc(m.media.id) + '" data-mid="' + esc(m.id) + '" alt="Picture shared by ' + esc(m.name) + '" width="260" height="180" style="background:#e6e9ec">';
+      else if (m.media) inner += '<div class="vn" data-id="' + esc(m.id) + '" data-m="' + esc(m.media.id) + '" data-dur="' + m.media.dur + '"><button class="pl" aria-label="Play voice message">▶</button><div class="wv">' + waveBars(m) + '</div><span class="dur">' + mmss(m.media.dur) + '</span><button class="sp" aria-label="Playback speed">1×</button></div>';
+      if (m.text) inner += '<span class="tx">' + body(m.text) + '</span>';
+      const rxs = rx.length ? '<div class="rxs">' + Object.entries(rx.reduce((a, e) => (a[e] = (a[e] || 0) + 1, a), {})).map(([e, n]) => '<button data-rx="' + esc(m.id) + '" aria-label="Reaction ' + e + '">' + e + (n > 1 ? ' ' + n : '') + '</button>').join('') + '</div>' : '';
+      return out + '<div class="b ' + (mine ? 'me ' : '') + (first ? 'first ' : '') + (rx.length ? 'hasrx' : '') + '" data-id="' + esc(m.id) + '">' + inner + meta + '<button class="chev" data-menu="' + esc(m.id) + '" aria-label="Message options">▾</button>' + rxs + '</div>';
+    }).join('');
+    box.innerHTML = html || '<div class="sys" style="margin:auto">No messages yet. Say hello! 👋</div>';
+    if (stick) box.scrollTop = box.scrollHeight; else box.scrollTop = prevTop; hydrate(box); updPlayer(); updFab(); if (searchTerm) stepMatch(0);
+    if (nearBottom()) markRead(); renderSide(); refreshChrome(); updTitle();
+  }
+  function hydrate(box) {
+    box.querySelectorAll('img.ph[data-img]').forEach(async img => {
+      const id = img.dataset.img; let u = urlCache.get(id); if (!u) { let b = await Media.get(id); if (!b && Remote.on) b = await sync.audio(img.dataset.mid, id); if (!b) { img.alt = '📷 Photo unavailable on this device'; return; } u = URL.createObjectURL(b); urlCache.set(id, u); } img.src = u; img.removeAttribute('width'); img.removeAttribute('height'); img.style.background = 'none';
+    });
+  }
+  function updTitle() { const n = visibleMsgs().filter(m => m.at > myRead && m.userId !== me.id && !m.deleted && !isSys(m)).length; document.title = (n ? '(' + n + ') ' : '') + 'Class chat – Uganda Smart Learning'; }
+  function markRead() {
+    if (document.visibilityState !== 'visible' || !msgs.length) return; const latest = Math.max(...msgs.map(m => m.at)); if (latest > myRead) { myRead = latest; USL.LS.setItem(lsk('read'), String(myRead)); sync.heartbeat(); renderSide(); updTitle(); }
+  }
+
+  /* ---------- gestures: tap chevron / long-press for menu, swipe right to reply ---------- */
+  function bindGestures(box) {
+    let t0 = null, timer = null, sx = 0, sy = 0, el = null, dx = 0;
+    box.addEventListener('pointerdown', e => { const b = e.target.closest('.b:not(.del)'); if (!b || e.target.closest('button,a,img')) return; el = b; sx = e.clientX; sy = e.clientY; dx = 0; t0 = Date.now(); if (e.pointerType === 'touch') timer = setTimeout(() => { timer = null; const m = msgs.find(x => x.id === b.dataset.id); if (m) openMenu(m, b); }, 480); });
+    box.addEventListener('pointermove', e => { if (!el) return; dx = e.clientX - sx; if (Math.abs(e.clientY - sy) > 12 || Math.abs(dx) > 12) { clearTimeout(timer); timer = null; } if (e.pointerType === 'touch' && dx > 0 && Math.abs(e.clientY - sy) < 30) el.style.transform = 'translateX(' + Math.min(dx, 70) + 'px)'; });
+    const end = () => { clearTimeout(timer); if (el) { if (dx > 60) { const m = msgs.find(x => x.id === el.dataset.id); if (m && !m.deleted) startReply(m); } el.style.transform = ''; } el = null; };
+    box.addEventListener('pointerup', end); box.addEventListener('pointercancel', end); box.addEventListener('contextmenu', e => { const b = e.target.closest('.b:not(.del)'); if (b) { e.preventDefault(); const m = msgs.find(x => x.id === b.dataset.id); if (m) openMenu(m, b); } });
+  }
+  function onMsgClick(e) {
+    const mn = e.target.closest('[data-menu]'); if (mn) { const m = msgs.find(x => x.id === mn.dataset.menu); if (m) openMenu(m, mn.closest('.b')); return; }
+    const q = e.target.closest('[data-q]'); if (q) { const t = document.querySelector('.b[data-id="' + CSS.escape(q.dataset.q) + '"]'); if (t) { t.scrollIntoView({ block: 'center', behavior: 'smooth' }); flash(t); } else toast('That message is older than what is loaded.', ''); return; }
+    const rx = e.target.closest('[data-rx]'); if (rx) { showReactors(rx.dataset.rx); return; }
+    const img = e.target.closest('img.ph'); if (img && img.src) { const lb = document.createElement('div'); lb.className = 'lightbox'; lb.innerHTML = '<img alt="Picture">'; lb.firstChild.src = img.src; lb.onclick = () => lb.remove(); document.body.appendChild(lb); return; }
+    const vn = e.target.closest('.vn'); if (vn) { if (e.target.closest('.sp')) { player.rate = player.rate === 1 ? 1.5 : player.rate === 1.5 ? 2 : 1; if (player.a) player.a.playbackRate = player.rate; updPlayer(); } else if (e.target.closest('.pl')) playVoice(vn.dataset.id, vn.dataset.m); else if (e.target.closest('.wv')) { /* seek */ const wv = e.target.closest('.wv'), rc = wv.getBoundingClientRect(); if (player.id === vn.dataset.id && player.a) player.a.currentTime = ((e.clientX - rc.left) / rc.width) * Number(vn.dataset.dur); } }
+  }
+
+  /* ---------- voice playback ---------- */
+  async function playVoice(msgId, mediaId) {
+    if (player.id === msgId && player.a) { player.a.paused ? player.a.play() : player.a.pause(); return; }
+    stopPlayer(); let url = urlCache.get(mediaId); if (!url) { let b = await Media.get(mediaId); if (!b && Remote.on) b = await sync.audio(msgId, mediaId); if (!b) return toast('This voice message is not available on your device.', 'bad'); url = URL.createObjectURL(b); urlCache.set(mediaId, url); }
+    const a = new Audio(url); a.playbackRate = player.rate; player.a = a; player.id = msgId; a.ontimeupdate = updPlayer; a.onpause = updPlayer; a.onplay = updPlayer; a.onended = () => { stopPlayer(); }; a.play().catch(() => stopPlayer()); updPlayer();
+  }
+  function stopPlayer() { if (player.a) { try { player.a.pause(); } catch (e) { /* ignore */ } } player.a = null; player.id = null; updPlayer(); }
+  function updPlayer() {
+    document.querySelectorAll('.vn').forEach(el => {
+      const on = el.dataset.id === player.id && player.a, dur = Number(el.dataset.dur) || 1, pr = on ? Math.min(1, player.a.currentTime / dur) : 0;
+      el.querySelector('.pl').textContent = on && !player.a.paused ? '⏸' : '▶'; el.querySelectorAll('.wv i').forEach((b, i, all) => b.classList.toggle('on', i / all.length < pr));
+      el.querySelector('.dur').textContent = on ? mmss(Math.floor(player.a.currentTime)) : mmss(dur); el.querySelector('.sp').textContent = (on ? player.rate : 1) + '×';
+    });
+  }
+
+  /* ---------- message menu ---------- */
+  let menuEl = null;
+  const closeMenu = () => { if (menuEl) { menuEl.remove(); menuEl = null; } };
+  document.addEventListener('pointerdown', e => { if (menuEl && !menuEl.contains(e.target) && !e.target.closest('[data-menu]')) closeMenu(); }, true);
+  function openMenu(m, anchor) {
+    closeMenu(); const mine = m.userId === me.id, star = getSet('star'), mem = m.at > Date.now() - 15 * 60000, items = [];
+    if (!m.deleted) {
+      items.push(['reply', '↩️', 'Reply']); if (m.text) items.push(['copy', '📋', 'Copy']); items.push(['star', '⭐', star.has(m.id) ? 'Unstar' : 'Star']);
+      if (mine || staff) items.push(['info', 'ℹ️', 'Message info']); if (mine && !m.media && mem) items.push(['edit', '✏️', 'Edit']);
+      if (!mine) items.push(['report', '🚩', 'Report']); if (staff && !mine && m.role === 'student') items.push(['mute', '🔇', 'Mute student 60 min']);
+    }
+    items.push(['del', '🗑️', 'Delete', 'bad']);
+    const mm = document.createElement('div'); mm.className = 'mmenu'; mm.setAttribute('role', 'menu');
+    mm.innerHTML = (m.deleted ? '' : '<div class="rxbar">' + QUICK.map(e => '<button data-e="' + e + '" class="' + (m.reactions && m.reactions[me.id] === e ? 'mine' : '') + '" aria-label="React ' + e + '">' + e + '</button>').join('') + '</div>') + items.map(i => '<button class="it ' + (i[3] || '') + '" data-a="' + i[0] + '" role="menuitem"><span>' + i[1] + '</span>' + i[2] + '</button>').join('');
+    document.body.appendChild(mm); menuEl = mm; const r = anchor.getBoundingClientRect(), w = mm.offsetWidth, h = mm.offsetHeight;
+    let left = mine ? r.right - w : r.left; left = Math.max(8, Math.min(left, window.innerWidth - w - 8)); let top = r.bottom + 4; if (top + h > window.innerHeight - 8) top = Math.max(8, r.top - h - 4); mm.style.left = left + 'px'; mm.style.top = top + 'px';
+    mm.onclick = async e => {
+      const eb = e.target.closest('[data-e]'), ab = e.target.closest('[data-a]'); if (eb) { closeMenu(); return react(m, eb.dataset.e); } if (!ab) return; closeMenu(); const a = ab.dataset.a;
+      if (a === 'reply') startReply(m); if (a === 'copy') { try { await navigator.clipboard.writeText(m.text); toast('Copied.', 'ok'); } catch (er) { toast('Could not copy on this browser.', 'bad'); } }
+      if (a === 'star') { const s = getSet('star'); s.has(m.id) ? s.delete(m.id) : s.add(m.id); putSet('star', s); refresh(true, true); }
+      if (a === 'info') showInfo(m); if (a === 'edit') startEdit(m); if (a === 'del') askDelete(m);
+      if (a === 'report') { if (await confirmBox('Report this message to the teachers? They will review it.', { title: 'Report message', ok: 'Report' })) { const r = Server.reportMessage(m.id); if (r.ok) sync.report(m.id); toast(r.ok ? 'Reported. Thank you.' : r.error, r.ok ? 'ok' : 'bad'); refresh(true, true); } }
+      if (a === 'mute') { const r = Server.muteUser(m.userId, 60); if (r.ok) sync.mute(m.userId, 60); toast(r.ok ? 'Student muted for 60 minutes.' : r.error, r.ok ? 'ok' : 'bad'); }
+    };
+  }
+  function react(m, emoji) { const r = Server.reactMessage(m.id, emoji); if (!r.ok) return toast(r.error, 'bad'); sync.react(m.id, r.reactions[me.id] || null); refresh(true, true); }
+  function askDelete(m) {
+    const mine = m.userId === me.id, canAll = (mine || staff) && !m.deleted;
+    const dlg = modal('<h3>Delete message?</h3><div class="stack" style="gap:8px">' + (canAll ? '<button class="btn danger block" data-v="all">Delete for everyone</button>' : '') + '<button class="btn ghost block" data-v="me">Delete for me</button><button class="btn ghost block" data-v="no">Cancel</button></div>');
+    dlg.el.onclick = e => { const b = e.target.closest('button'); if (!b) return; const v = b.dataset.v; dlg.close(); if (v === 'me') { const s = getSet('hide'); s.add(m.id); putSet('hide', s); refresh(true, true); }
+      if (v === 'all') { const r = Server.deleteMessage(m.id); if (!r.ok) return toast(r.error, 'bad'); if (r.mediaId) Media.del(r.mediaId); sync.del(m.id); refresh(true, true); } };
+  }
+  function showInfo(m) {
+    const o = others(), read = o.filter(p => Number(p.read_at) >= m.at), deliv = o.filter(p => Number(p.seen_at) >= m.at && Number(p.read_at) < m.at);
+    const li = (a, t) => a.length ? '<h4 style="margin:12px 0 4px">' + t + '</h4>' + a.map(p => '<div class="mem"><div class="av sm" style="--c:' + hue(p.name) + '">' + esc(initials(p.name)) + '</div>' + esc(p.name) + '</div>').join('') : '';
+    modal('<h3>Message info</h3><div class="b me first" style="max-width:100%;--c:' + esc(CCOLOR(cls)) + '"><span class="tx">' + esc(snippet(m)) + '</span><span class="meta">' + time(m.at) + '</span></div>' + (Remote.on && presOK ? (li(read, 'Read by') + li(deliv, 'Delivered to') || '<p class="muted">Nobody else has opened the room since this was sent.</p>') : '<p class="muted">Read receipts need the shared class server.</p>') + '<div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn ghost" data-close>Close</button></div>').el.onclick = e => { if (e.target.closest('[data-close]')) e.currentTarget.closest('.overlay').remove(); };
+  }
+  function showReactors(id) {
+    const m = msgs.find(x => x.id === id); if (!m) return; const rows = Object.entries(m.reactions || {}).map(([uid2, e]) => '<div class="mem"><div class="av sm" style="--c:' + hue(nameOf(uid2)) + '">' + esc(initials(nameOf(uid2))) + '</div><b>' + esc(nameOf(uid2)) + '</b><span style="margin-left:auto;font-size:1.3rem">' + e + '</span></div>').join('');
+    const d = modal('<h3>Reactions</h3>' + (rows || '<p class="muted">No reactions.</p>') + '<div class="row" style="justify-content:space-between;margin-top:12px">' + (m.reactions && m.reactions[me.id] ? '<button class="btn ghost" data-rm>Remove my reaction</button>' : '<span></span>') + '<button class="btn ghost" data-close>Close</button></div>');
+    d.el.onclick = e => { if (e.target.closest('[data-rm]')) { d.close(); react(m, m.reactions[me.id]); } else if (e.target.closest('[data-close]')) d.close(); };
+  }
+  function headMenu(anchor) {
+    closeMenu(); const mm = document.createElement('div'); mm.className = 'mmenu'; const mu = muted();
+    mm.innerHTML = [['info', 'ℹ️', 'Group info'], ['search', '🔍', 'Search'], ['starred', '⭐', 'Starred messages'], ['mute', mu ? '🔔' : '🔕', mu ? 'Unmute notifications' : 'Mute notifications'], ['clear', '🧹', 'Clear chat (for me)']].map(i => '<button class="it" data-a="' + i[0] + '"><span>' + i[1] + '</span>' + i[2] + '</button>').join('');
+    document.body.appendChild(mm); menuEl = mm; const r = anchor.getBoundingClientRect(); mm.style.top = (r.bottom + 4) + 'px'; mm.style.left = Math.max(8, Math.min(r.right - mm.offsetWidth, window.innerWidth - mm.offsetWidth - 8)) + 'px';
+    mm.onclick = async e => { const b = e.target.closest('[data-a]'); if (!b) return; closeMenu(); const a = b.dataset.a;
+      if (a === 'info') openInfo(); if (a === 'search') toggleSearch(true); if (a === 'starred') showStarred(); if (a === 'mute') { USL.LS.setItem(lsk('mutenotif'), mu ? '0' : '1'); toast(mu ? 'Notifications on.' : 'Notifications muted for this chat.', 'ok'); }
+      if (a === 'clear' && await confirmBox('Clear this chat on your device? Other people still keep their messages.', { title: 'Clear chat', ok: 'Clear' })) { USL.LS.setItem(lsk('clear'), String(Date.now())); refresh(true); } };
+  }
+  function showStarred() {
+    const st = getSet('star'), list = msgs.filter(m => st.has(m.id) && !m.deleted); const d = modal('<h3>Starred messages</h3>' + (list.length ? list.map(m => '<div class="card flat" style="margin-bottom:8px;padding:10px"><b style="color:' + hue(m.name) + '">' + esc(m.name) + '</b> <span class="muted small">' + dayLabel(m.at) + ' ' + time(m.at) + '</span><br>' + esc(snippet(m)) + '</div>').join('') : '<p class="muted">Long-press or tap ▾ on a message and choose Star to keep it here.</p>') + '<div class="row" style="justify-content:flex-end"><button class="btn ghost" data-close>Close</button></div>');
+    d.el.onclick = e => { if (e.target.closest('[data-close]')) d.close(); };
+  }
+  function openInfo() {
+    const c = classes.find(x => x.id === cls) || { id: cls, name: cls, color: '#2563eb' }, el = document.getElementById('info'), now = Date.now(); const ri = Server.roomInfo(cls);
+    const map = new Map(); msgs.forEach(m => map.set(m.userId, { name: m.name, role: m.role })); pres.forEach(p => map.set(p.user_id, { name: p.name, role: p.role })); map.set(me.id, { name: me.name, role: me.role });
+    const mem = [...map.entries()].map(([id, v]) => ({ id, name: v.name, role: v.role, online: id === me.id || pres.some(p => p.user_id === id && now - Number(p.seen_at) < 12000) })).sort((a, b) => (b.online - a.online) || a.name.localeCompare(b.name));
+    el.innerHTML = '<div class="hd"><button class="ic" id="ix" aria-label="Close">←</button>Group info</div><div class="sec ctr"><div class="av lg" style="margin:0 auto">' + esc(c.id) + '</div><h3>' + esc(c.id) + ' · ' + esc(c.name) + '</h3><span class="muted small">Class group · ' + Math.max(mem.length, ri.ok ? ri.members : 0) + ' members</span></div>'
+      + '<div class="sec"><b>Room rules</b><p class="small muted mb0" style="margin-top:6px">Be kind and stay on schoolwork. Teachers and school staff can read this room. Never share phone numbers, addresses, passwords or photos of yourself. Report anything that worries you. There are no private messages.</p></div>'
+      + '<div class="sec"><button class="row2" id="ist"><span>⭐ Starred messages</span><span class="muted">' + getSet('star').size + '</span></button><button class="row2" id="imu"><span>' + (muted() ? '🔕 Notifications muted' : '🔔 Notifications on') + '</span><span class="muted">tap to change</span></button></div>'
+      + '<div class="sec"><b>' + mem.length + ' member' + (mem.length === 1 ? '' : 's') + ' seen here</b>' + mem.map(m => '<div class="mem"><div class="av sm" style="--c:' + hue(m.name) + '">' + esc(initials(m.name)) + '</div><div>' + esc(m.id === me.id ? m.name + ' (you)' : m.name) + (m.role !== 'student' ? ' <span class="badge info">' + (m.role === 'admin' ? 'Admin' : 'Teacher') + '</span>' : '') + '</div>' + (m.online && Remote.on ? '<span class="dot" title="Online"></span>' : '') + '</div>').join('') + '</div>' + (staff ? '<div class="sec"><a class="btn ghost block" href="admin.html">Open moderation tools</a></div>' : '');
+    el.classList.add('on'); document.getElementById('ix').onclick = () => el.classList.remove('on'); document.getElementById('ist').onclick = showStarred;
+    document.getElementById('imu').onclick = () => { USL.LS.setItem(lsk('mutenotif'), muted() ? '0' : '1'); openInfo(); };
+  }
+
+  /* ---------- composer ---------- */
+  const newMediaId = () => 'm_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+  function buildComposer() {
+    const comp = document.getElementById('comp'); if (!comp) return; delete comp.dataset.muted;
+    comp.innerHTML = '<div class="emo" id="emo"></div><div class="pill"><button class="ic" id="emb" aria-label="Emoji" type="button">😊</button><textarea id="tx" rows="1" placeholder="Type a message" maxlength="1000" aria-label="Message"></textarea>' + (staff ? '<button class="ic" id="att" aria-label="Send a picture" type="button">📎</button><input type="file" id="file" accept="image/jpeg,image/png,image/webp" hidden>' : '') + '</div><button class="go" id="go" aria-label="Record voice message" type="button">🎤</button>';
+    const tx = document.getElementById('tx'), go = document.getElementById('go');
+    const sync2 = () => { tx.style.height = 'auto'; tx.style.height = Math.min(120, tx.scrollHeight) + 'px'; go.textContent = tx.value.trim() ? '➤' : '🎤'; go.setAttribute('aria-label', tx.value.trim() ? 'Send' : 'Record voice message'); };
+    tx.oninput = () => { sync2(); const n = Date.now(); typingUntil = n + 4000; if (n - lastTypingPush > 2500) { lastTypingPush = n; sync.heartbeat(); } };
+    tx.onkeydown = e => { if (e.key === 'Enter' && !e.shiftKey && !('ontouchstart' in window)) { e.preventDefault(); sendText(); } };
+    go.onclick = () => { if (tx.value.trim()) sendText(); else startRec(); };
+    document.getElementById('emb').onclick = () => toggleEmoji();
+    const att = document.getElementById('att'); if (att) { att.onclick = () => document.getElementById('file').click(); document.getElementById('file').onchange = e => { const f = e.target.files[0]; e.target.value = ''; if (f) sendPhoto(f); }; }
+    renderReplyBar(); sync2();
+  }
+  function renderReplyBar() {
+    const w = document.getElementById('rpwrap'); if (!w) return; const x = editing || replyTo;
+    w.innerHTML = x ? '<div class="rpbar"><div class="quote" style="--q:' + hue(x.name) + '"><b>' + (editing ? 'Edit message' : 'Replying to ' + esc(x.userId === me.id ? 'yourself' : x.name)) + '</b><span>' + esc(snippet(x)) + '</span></div><button class="ic" id="rpx" aria-label="Cancel">✕</button></div>' : '';
+    const b = document.getElementById('rpx'); if (b) b.onclick = () => { const wasEdit = !!editing; replyTo = null; editing = null; renderReplyBar(); if (wasEdit) { const tx = document.getElementById('tx'); if (tx) { tx.value = ''; tx.dispatchEvent(new Event('input')); } } };
+  }
+  function startReply(m) { editing = null; replyTo = m; renderReplyBar(); const tx = document.getElementById('tx'); if (tx) tx.focus(); }
+  function startEdit(m) { replyTo = null; editing = m; renderReplyBar(); const tx = document.getElementById('tx'); if (tx) { tx.value = m.text; tx.dispatchEvent(new Event('input')); tx.focus(); } }
+  function toggleEmoji() {
+    const e = document.getElementById('emo'); if (!e) return; if (e.classList.toggle('on')) renderEmoji(); }
+  function renderEmoji() {
+    const e = document.getElementById('emo'); const list = [...EMO[emoCat]].filter(x => x.trim() && x !== '️');
+    // split into whole emoji (handles variation selectors and ZWJ pairs well enough for this fixed set)
+    const items = EMO[emoCat].match(/\p{Extended_Pictographic}(?:️|‍\p{Extended_Pictographic}️?)*/gu) || list;
+    e.innerHTML = '<div class="cats">' + Object.keys(EMO).map(k => '<button type="button" data-k="' + k + '" class="' + (k === emoCat ? 'on' : '') + '">' + k + '</button>').join('') + '</div><div class="grid8">' + items.map(x => '<button type="button" data-e="' + x + '">' + x + '</button>').join('') + '</div>';
+    e.onclick = ev => { const k = ev.target.closest('[data-k]'), em = ev.target.closest('[data-e]'); if (k) { emoCat = k.dataset.k; renderEmoji(); } if (em) { const tx = document.getElementById('tx'), s = tx.selectionStart || tx.value.length; tx.value = tx.value.slice(0, s) + em.dataset.e + tx.value.slice(tx.selectionEnd || s); tx.focus(); tx.selectionStart = tx.selectionEnd = s + em.dataset.e.length; tx.dispatchEvent(new Event('input')); } };
+  }
+  function sendText() {
+    const tx = document.getElementById('tx'), v = tx.value.trim(); if (!v) return; if ('Notification' in window && Notification.permission === 'default') { try { Notification.requestPermission(); } catch (e) { /* ignore */ } }
+    if (editing) { const m = editing, r = Server.editMessage(m.id, v); if (!r.ok) return toast(r.error, 'bad'); sync.edit(m.id); editing = null; tx.value = ''; renderReplyBar(); tx.dispatchEvent(new Event('input')); refresh(true, true); return; }
+    const r = Server.postMessage(cls, { text: v, reply: replyTo && replyTo.id }); if (!r.ok) return toast(r.error, 'bad');
+    tx.value = ''; replyTo = null; typingUntil = 0; renderReplyBar(); tx.dispatchEvent(new Event('input')); (r.dropped || []).forEach(id => Media.del(id)); refresh(true); sync.push(r.id); sync.heartbeat();
+  }
+  async function sendPhoto(file) {
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return toast('Choose a JPG, PNG or WebP picture.', 'bad');
+    try {
+      const bmp = await createImageBitmap(file), sc = Math.min(1, 1000 / Math.max(bmp.width, bmp.height)), cv = document.createElement('canvas'); cv.width = Math.round(bmp.width * sc); cv.height = Math.round(bmp.height * sc); cv.getContext('2d').drawImage(bmp, 0, 0, cv.width, cv.height);
+      const blob = await new Promise(res => cv.toBlob(res, 'image/jpeg', 0.75)); if (!blob) throw new Error('encode'); const id = newMediaId(); await Media.put(id, blob);
+      const r = Server.postMessage(cls, { media: { id, kind: 'image', mime: 'image/jpeg' }, text: '', reply: replyTo && replyTo.id }); if (!r.ok) { Media.del(id); return toast(r.error, 'bad'); }
+      replyTo = null; renderReplyBar(); refresh(true); sync.push(r.id);
+    } catch (e) { toast('Could not use that picture.', 'bad'); }
+  }
+
+  /* ---------- voice messages ---------- */
+  async function startRec() {
+    if (!navigator.mediaDevices || !window.MediaRecorder) return toast('Voice messages are not supported in this browser.', 'bad');
+    let stream; try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (e) { return toast('Microphone permission was denied. Allow it in the browser to record.', 'bad'); }
+    const rec = new MediaRecorder(stream), chunks = [], samples = []; recState = { rec, stream, chunks, samples, t0: Date.now(), cancel: false };
+    try { const ac = new (window.AudioContext || window.webkitAudioContext)(), an = ac.createAnalyser(); an.fftSize = 512; ac.createMediaStreamSource(stream).connect(an); const buf = new Uint8Array(an.fftSize); recState.ac = ac; recState.an = an; recState.buf = buf; } catch (e) { /* no meter */ }
+    rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); }; rec.onstop = onRecStop; rec.start();
+    const comp = document.getElementById('comp'); comp.innerHTML = '<div class="recrow"><span class="dot"></span><span id="rt">0:00</span><div class="lv" id="lv" aria-hidden="true"></div><button class="ic" id="rc" aria-label="Cancel recording" type="button">🗑️</button></div><button class="go" id="rs" aria-label="Send voice message" type="button">➤</button>';
+    document.getElementById('rc').onclick = () => stopRec(true); document.getElementById('rs').onclick = () => stopRec(false);
+    recState.timer = setInterval(() => {
+      const s = Math.round((Date.now() - recState.t0) / 1000), el = document.getElementById('rt'); if (el) el.textContent = mmss(s);
+      if (recState.an) { recState.an.getByteTimeDomainData(recState.buf); let pk = 0; recState.buf.forEach(v => { pk = Math.max(pk, Math.abs(v - 128)); }); recState.samples.push(pk); const lv = document.getElementById('lv'); if (lv) { lv.insertAdjacentHTML('beforeend', '<i style="height:' + Math.max(10, Math.min(100, pk * 2.2)) + '%"></i>'); while (lv.children.length > 60) lv.firstChild.remove(); } }
+      if (s >= 120) stopRec(false);
+    }, 100);
+  }
+  function stopRec(cancel) { if (!recState) return; recState.cancel = !!cancel; if (recState.rec.state !== 'inactive') recState.rec.stop(); }
+  async function onRecStop() {
+    const s = recState; recState = null; clearInterval(s.timer); s.stream.getTracks().forEach(t => t.stop()); if (s.ac) { try { s.ac.close(); } catch (e) { /* ignore */ } }
+    const dur = Math.round((Date.now() - s.t0) / 1000); buildComposer(); if (s.cancel || dur < 1) return;
+    const blob = new Blob(s.chunks, { type: s.rec.mimeType || 'audio/webm' }); if (blob.size > 3 * 1024 * 1024) return toast('That voice message is too large. Keep it under 2 minutes.', 'bad');
+    const n = 40, sm = s.samples, peak = Math.max(1, ...sm), wave = sm.length ? Array.from({ length: n }, (_, i) => { const a = Math.floor(i * sm.length / n), b = Math.max(a + 1, Math.floor((i + 1) * sm.length / n)); return Math.max(14, Math.round(Math.max(...sm.slice(a, b)) / peak * 100)); }) : [];
+    const id = newMediaId(); await Media.put(id, blob);
+    const r = Server.postMessage(cls, { media: { id, dur: Math.max(1, dur), mime: blob.type || 'audio/webm', kind: 'voice', wave }, reply: replyTo && replyTo.id }); if (!r.ok) { Media.del(id); return toast(r.error, 'bad'); }
+    replyTo = null; renderReplyBar(); refresh(true); sync.push(r.id);
+  }
+
+  /* ---------- class calls: one live call per class + subject, hosted by that subject's teacher ---------- */
+  const enc = encodeURIComponent, LKEY = 'usl_calls_local', roomOf = (c, sub) => 'usl-call-' + c + '-' + sub;
+  const Dir = {
+    local() { try { return JSON.parse(USL.LS.getItem(LKEY) || '{}'); } catch (e) { return {}; } },
+    saveLocal(m) { try { USL.LS.setItem(LKEY, JSON.stringify(m)); } catch (e) { /* ignore */ } },
+    async list(c) { const now = Date.now(); if (Remote.on) { const r = await Remote.rest('GET', 'usl_calls?cls=eq.' + enc(c) + '&beat_at=gt.' + (now - 12000) + '&select=*'); if (r) return r; } return Object.values(this.local()).filter(x => x.cls === c && now - x.beat_at < 12000); },
+    async beat(row) { row.beat_at = Date.now(); if (Remote.on) { const r = await Remote.rest('POST', 'usl_calls', row, { Prefer: 'resolution=merge-duplicates,return=minimal' }); if (r !== null) return; } const m = this.local(); m[row.room] = row; this.saveLocal(m); },
+    async end(room) { if (Remote.on) await Remote.rest('DELETE', 'usl_calls?room=eq.' + enc(room)); const m = this.local(); delete m[room]; this.saveLocal(m); }
+  };
+  let live = [], cur = null, hostBeat = null;
+  const canJoin = c => !isTeacher || pairs.some(p => p.cls === c.cls && p.subject === c.subject_id);
+  async function pollCalls() { const c = cls; const l = await Dir.list(c); if (c !== cls) return; live = l; renderCall(); }
+  const tiles = new Map(); let stageEl = null;
+  function pillHtml() {
+    if (!live.length) return '';
+    return live.map(c => '<div class="callpill"><span>📞 <b>' + esc(c.subject_name) + '</b> class call' + (c.title ? ' · ' + esc(c.title) : '') + ' · ' + esc(c.host_name) + ' · ' + (c.count || 1) + ' in call</span>' + (canJoin(c) ? '<button data-j="' + esc(c.room) + '">Join</button>' : '<span class="small" style="margin-left:auto;opacity:.8">other teacher\'s subject</span>') + '</div>').join('');
+  }
+  function renderCall() {
+    const pill = document.getElementById('callpill'); if (!pill) return;
+    if (!call || !call.joined) {
+      overlayOn = false; callov.classList.remove('on', 'has-stage'); if (callov.innerHTML) { callov.innerHTML = ''; callov.dataset.built = ''; } tiles.clear(); stageEl = null;
+      pill.innerHTML = pillHtml(); pill.querySelectorAll('[data-j]').forEach(b => { b.onclick = () => { const c = live.find(x => x.room === b.dataset.j); if (c) joinLive(c); }; }); return;
+    }
+    pill.innerHTML = overlayOn ? '' : '<div class="callpill live">● In ' + esc(cur.subject_name) + ' call · ' + (call.peers().length + 1) + ' here<button id="cr">Return to call</button></div>'; const cr = document.getElementById('cr'); if (cr) cr.onclick = () => { overlayOn = true; renderCall(); };
+    callov.classList.toggle('on', overlayOn); if (!overlayOn) return;
+    const hasCam = call.local && call.local.getVideoTracks().length, st = call.stage();
+    if (!callov.dataset.built) { callov.dataset.built = '1'; callov.innerHTML = '<div class="ct"><button class="ic" id="cmn" aria-label="Back to chat" style="color:#fff">←</button><div><b id="ctt"></b><span id="cts"></span></div></div><div class="stagebox" id="stagebox"><video autoplay playsinline id="stagev"></video><span class="nm" id="stagenm"></span></div><div class="callgrid" id="callgrid"></div><div class="ctrl" id="ctrl"></div>'; tiles.clear(); document.getElementById('cmn').onclick = () => { overlayOn = false; renderCall(); }; }
+    document.getElementById('ctt').textContent = cur.subject_name + ' · ' + cls + (cur.title ? ' · ' + cur.title : ''); document.getElementById('cts').textContent = (call.peers().length + 1) + ' in call · host ' + cur.host_name;
+    const sv = document.getElementById('stagev'); callov.classList.toggle('has-stage', !!(st && st.stream));
+    if (st && st.stream) { if (sv.srcObject !== st.stream) sv.srcObject = st.stream; sv.muted = true; document.getElementById('stagenm').textContent = st.name + (st.self ? ' (you) · sharing' : ' · big screen'); } else if (sv.srcObject) sv.srcObject = null;
+    const ctrl = document.getElementById('ctrl'), sig = [call.muted, call.cam, call.presenting, hasCam, call.canPresent].join();
+    if (ctrl.dataset.sig !== sig) {
+      ctrl.dataset.sig = sig;
+      ctrl.innerHTML = '<button id="cm" class="' + (call.muted ? 'off' : '') + '" aria-label="' + (call.muted ? 'Unmute' : 'Mute') + '">' + (call.muted ? '🔇' : '🎤') + '</button>' + (hasCam ? '<button id="cc" class="' + (call.cam ? '' : 'off') + '" aria-label="Camera">' + (call.cam ? '📹' : '🚫') + '</button>' : '')
+        + (call.canPresent ? (call.presenting ? '<button id="cp" class="on" aria-label="Stop big screen" title="Stop big screen">⏹️</button>' : (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia ? '<button id="cs" aria-label="Share screen on the big screen" title="Share your screen">🖥️</button>' : '') + '<button id="cv" aria-label="Show camera on the big screen" title="Show camera on the big screen">🎦</button>') : '')
+        + '<button id="cl" class="end" aria-label="Leave call">📞</button>';
+      document.getElementById('cm').onclick = () => call.mute(!call.muted); const cc = document.getElementById('cc'); if (cc) cc.onclick = () => call.camera(!call.cam); document.getElementById('cl').onclick = leaveLive;
+      const pr = k => async () => { try { await call.startPresent(k); } catch (e) { toast(e && e.name === 'NotAllowedError' ? 'Sharing was cancelled or blocked.' : (e && e.message) || 'Could not start the big screen.', 'bad'); } };
+      const cs = document.getElementById('cs'), cv = document.getElementById('cv'), cp = document.getElementById('cp'); if (cs) cs.onclick = pr('screen'); if (cv) cv.onclick = pr('camera'); if (cp) cp.onclick = () => call.stopPresent();
+    }
+    const grid = document.getElementById('callgrid'), want = [{ id: 'me', name: 'You', stream: call.local, self: true, state: 'you', role: me.role }].concat(call.peers());
+    [...tiles.keys()].forEach(id => { if (!want.find(w => w.id === id)) { tiles.get(id).el.remove(); tiles.delete(id); } });
+    want.forEach(w => {
+      let t = tiles.get(w.id); if (!t) { const el = document.createElement('div'); el.className = 'tile'; el.innerHTML = '<video autoplay playsinline' + (w.self ? ' muted' : '') + '></video><div class="av" style="--c:' + hue(w.name) + '">' + esc(initials(w.name)) + '</div><span class="nm"></span><span class="st"></span>'; grid.appendChild(el); t = { el, video: el.querySelector('video') }; tiles.set(w.id, t); }
+      if (t.video.srcObject !== w.stream && w.stream) t.video.srcObject = w.stream; const hasVideo = w.stream && w.stream.getVideoTracks().some(x => x.enabled && x.readyState === 'live');
+      t.el.classList.toggle('audio', !hasVideo); t.el.dataset.state = w.state; t.el.dataset.name = w.name; t.el.querySelector('.nm').textContent = w.name + (w.role === 'teacher' ? ' · Teacher' : '') + (w.self && call.muted ? ' 🔇' : ''); t.el.querySelector('.st').textContent = w.self ? 'you' : (w.state === 'connected' ? 'connected' : 'connecting…');
+    });
+  }
+  async function joinLive(info, video, announce) {
+    if (!canJoin(info)) return toast('This call belongs to another teacher\'s subject.', 'bad');
+    if (call && call.joined) { if (cur && cur.room === info.room) { overlayOn = true; return renderCall(); } return toast('Leave your current call first.', 'bad'); }
+    const c = Call(info.room, me.name, me.role, renderCall); if (!c.supported) { c.close(); return toast('Calls are not supported in this browser. Try Chrome, Edge or Safari over https.', 'bad'); }
+    try { await c.join(!!video); } catch (e) { c.close(); return toast(e && e.name === 'NotAllowedError' ? 'Microphone permission was denied. Allow it to join the call.' : 'Could not start the call: ' + (e && e.message || e), 'bad'); }
+    call = c; cur = info; overlayOn = true; callov.dataset.built = '';
+    if (info.host_id === me.id) { const row = Object.assign({}, info); const go = () => Dir.beat(Object.assign(row, { count: call ? call.peers().length + 1 : 1 })); go(); hostBeat = setInterval(go, 4000); }
+    renderCall();
+    if (announce) { const r = Server.postMessage(cls, { text: '📞 ' + me.name + ' started a ' + info.subject_name + ' class call' + (info.video ? ' (video)' : '') + (info.title ? ' — ' + info.title : '') }); if (r.ok) { refresh(true); sync.push(r.id); } }
+  }
+  async function leaveLive() {
+    const c = call, i = cur; clearInterval(hostBeat); hostBeat = null; call = null; cur = null;
+    if (c) c.close(); if (i && i.host_id === me.id) await Dir.end(i.room);
+    live = live.filter(x => !i || x.room !== i.room || i.host_id !== me.id); renderCall(); pollCalls();
+  }
+  function startModal(video, subject) {
+    const mine = pairs.filter(p => p.cls === cls); if (!mine.length) return toast('You are not assigned to teach in ' + cls + '.', 'bad');
+    const md = modal('<h2>Start a class call</h2><p class="muted small">Only you and your learners in ' + esc(CNAME(cls)) + ' will see this call. Teachers of other subjects can run their own calls at the same time.</p>'
+      + '<label>Subject<select id="cs-sub">' + mine.map(p => '<option value="' + esc(p.subject) + '"' + (p.subject === subject ? ' selected' : '') + '>' + esc(SUBJ(p.subject)) + '</option>').join('') + '</select></label>'
+      + '<label>Topic / title (optional)<input id="cs-title" maxlength="60" placeholder="e.g. Revision: Transport in animals"></label>'
+      + '<label>Type<select id="cs-kind"><option value="0"' + (video ? '' : ' selected') + '>Voice only</option><option value="1"' + (video ? ' selected' : '') + '>Video</option></select></label>'
+      + '<div class="row" style="margin-top:12px"><button class="btn" id="cs-go">Start call</button><button class="btn ghost" id="cs-x">Cancel</button></div>');
+    document.getElementById('cs-x').onclick = () => md.close();
+    document.getElementById('cs-go').onclick = async () => {
+      const sub = document.getElementById('cs-sub').value, vid = document.getElementById('cs-kind').value === '1', title = document.getElementById('cs-title').value.trim();
+      md.close(); const ex = (await Dir.list(cls)).find(x => x.subject_id === sub);
+      if (ex) { toast('A ' + SUBJ(sub) + ' call is already live — joining it.'); return joinLive(ex, vid, false); }
+      joinLive({ room: roomOf(cls, sub), cls, subject_id: sub, subject_name: SUBJ(sub), host_id: me.id, host_name: me.name, title, video: vid, started_at: Date.now(), beat_at: Date.now(), count: 1 }, vid, true);
+    };
+  }
+
+  /* ---------- open a room ---------- */
+  function openRoom(cid) {
+    if (call && cur && cur.cls !== cid) { toast('Leaving your call to switch class.'); leaveLive(); }
+    if (!(call && call.joined)) { overlayOn = false; callov.classList.remove('on'); callov.dataset.built = ''; callov.innerHTML = ''; }
+    cls = cid; live = []; msgs = []; pres = []; replyTo = null; editing = null; searchTerm = ''; matchIdx = -1; lastSig = ''; newBelow = 0; typingUntil = 0; legacy = legacy; recentSeen.clear(); stopPlayer();
+    const r = Server.roomInfo(cls); if (!r.ok) { chat.innerHTML = '<div class="card" style="margin:20px"><h2>Room unavailable</h2><p>' + esc(r.error) + '</p><a class="btn" href="dashboard.html">Back</a></div>'; wa.classList.add('show-chat'); return; }
+    myRead = getNum('read'); unreadFrom = myRead; lastPing = Date.now(); buildChat(); wa.classList.add('show-chat');
+    refresh(true); applyMuteBox(); renderSide(); pollCalls(); sync.pull().then(() => { sync.heartbeat(); refresh(true); });
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeMenu(); const i = document.getElementById('info'); if (i) i.classList.remove('on'); const em = document.getElementById('emo'); if (em) em.classList.remove('on'); } });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { markRead(); updTitle(); } });
+  window.addEventListener('storage', () => refresh(false));
+  window.addEventListener('beforeunload', () => { if (hostBeat && cur) { try { const m = Dir.local(); delete m[cur.room]; Dir.saveLocal(m); if (Remote.on) Remote.rest('DELETE', 'usl_calls?room=eq.' + enc(cur.room)); } catch (e) { /* ignore */ } } if (call) call.close(); });
+  openRoom(cls); renderSide();
+  setInterval(() => { refresh(false); applyMuteBox(); }, 1500);
+  setInterval(() => sync.pull(), 2000); setInterval(pollCalls, 3000);
+  if (isTeacher && qs.get('call')) setTimeout(() => startModal(false, qs.get('call')), 400);
+  hbTimer = setInterval(() => sync.heartbeat(), 4000);
+})();
+
+</script>
+</body>
+</html>
