@@ -1,0 +1,6 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "functions": { "api/*.js": { "maxDuration": 30, "includeFiles": "{usl.js,api/_core/**}" } },
+  "headers": [ { "source": "/(usl.js|usl.css)", "headers": [ { "key": "Cache-Control", "value": "no-cache" } ] } ]
+}
